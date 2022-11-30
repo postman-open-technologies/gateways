@@ -92,7 +92,7 @@
                 <ul>
                 {% assign folder = file[1] %}
                 {% for openapi in folder %}
-                    <li>{{ openapi[1].info.title }}</li>
+                    <li><strong>{{ openapi[1].info.title }}</strong> <a href="https://raw.githubusercontent.com/postman-open-technologies/gateways/main/_data/{{ file[0] }}/{{ openapi[0] }}.yaml"><img src="{{ site.url }}/images/openapi-icon.png" width="25"></a></li>
                         <ul>
                         {% for path in openapi[1].paths %}
                             <li>{{ path[0] }}</li>
