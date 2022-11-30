@@ -7,6 +7,7 @@ title: Policies
 	<div class="row align-top">
 		<div class="col-10" style="padding-left: 35px;">
 			<h1>Traffic Management</h1>
+			<ul>
 			{% assign gateways = site.data.gateways | sort %}					  
 			{% assign capabilities = '' %}	
 			{% for gateway in gateways %}			
@@ -27,11 +28,12 @@ title: Policies
 			{% assign capabilities = capabilities | split: "," | sort %}
 			{% for capability in capabilities %}
 				{% if capability != '' %}
-					- {{ capability }}<br>
+					<li>{{ capability }}</li>
 				{% endif %}		
 			{% endfor %}
-
+			</ul>
 			<h1>Mediation</h1>
+			<ul>
 			{% assign gateways = site.data.gateways | sort %}					  
 			{% assign capabilities = '' %}	
 			{% for gateway in gateways %}			
@@ -52,11 +54,12 @@ title: Policies
 			{% assign capabilities = capabilities | split: "," | sort %}
 			{% for capability in capabilities %}
 				{% if capability != '' %}
-					- {{ capability }}<br>
+					<li>{{ capability }}</li>
 				{% endif %}		
 			{% endfor %}	
-			
+			</ul>
 			<h1>Security</h1>
+			<ul>
 			{% assign gateways = site.data.gateways | sort %}					  
 			{% assign capabilities = '' %}	
 			{% for gateway in gateways %}			
@@ -77,11 +80,12 @@ title: Policies
 			{% assign capabilities = capabilities | split: "," | sort %}
 			{% for capability in capabilities %}
 				{% if capability != '' %}
-					- {{ capability }}<br>
+					<li>{{ capability }}</li>
 				{% endif %}		
 			{% endfor %}	
-			
+			</ul>
 			<h1>Extensions</h1>
+			<ul>
 			{% assign gateways = site.data.gateways | sort %}					  
 			{% assign capabilities = '' %}	
 			{% for gateway in gateways %}			
@@ -102,9 +106,10 @@ title: Policies
 			{% assign capabilities = capabilities | split: "," | sort %}
 			{% for capability in capabilities %}
 				{% if capability != '' %}
-					- {{ capability }}<br>
+					<li>{{ capability }}</li>
 				{% endif %}		
-			{% endfor %}			
+			{% endfor %}
+			</ul>				
 		</div>
 	</div>
 	<div class="col-2"></div>	
