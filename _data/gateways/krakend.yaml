@@ -1,0 +1,102 @@
+---
+class:
+  - gateway
+
+properties:
+  name: KrakenD
+  provider: KrakenD
+  slug: krakend
+  rating: 1
+  license: Apache/2.0, Proprietary
+  status: Pending Review
+  researchDate: 2021-10
+  description: >
+    KrakenD offers two different editions, KrakenD CE (Community Edition)  and KrakenD EE (Enteprise Edition).  The Gateway engine of KrakenD,  an open source project, has joined the Linux Foundation as [Lura](https://github.com/luraproject/lura). KrakenD touts that it's built for performance.  This Gateway is often deployed as a backend-for-frontend or a façade aggregator on top of many different
+    microservices. KrakenD is primarily used as a stateless component in user infrastructure.  There's no data store dependency required for most
+    operations, which may simplify deployment and management. Message transformation can be configured using the [Martian DSL](https://github.com/google/martian) while message validation can benefit
+    from Google's [Common Expression Language CEL)](https://github.com/google/cel-spec). KrakenD has a JSON-based file configuration with a Web-based editor in
+    KrakenD Designer (CE) or KrakenD Studio (EE). Enterprise features include commercial support, KrakenD studio, and enterprise plugins.
+  platformCapabilities:
+    - Gateway
+    - Monitoring
+    - Documentation
+    - Threat Protection
+    - Analytics
+  gatewayCapabilities:
+    - Custom Code Execution
+    - Mediation
+    - Traffic Management
+    - OpenAPI Integration
+    - Protocol Transformation
+  customCodeSupport:
+    - Go
+    - Lua
+    - Martian DSL
+  upstreamProtocols:
+    - HTTP/1.1
+    - HTTP/2
+    - gRPC
+    - WebSockets
+    - SOAP
+    - AWS Lambda
+  downstreamProtocols:
+    - HTTP/1.1
+    - HTTP/2
+    - gRPC
+    - AMQP
+  deliveryModels:
+    - SaaS
+    - Customer Managed (Cloud)
+    - Customer Managed (On-Premises)
+    - Hybrid
+  policies:
+    - category: Security
+      capabilities:
+        - OAuth 2.0
+        - JWT
+        - Basic Authentication
+        - API Key Authentication
+        - Mutual TLS
+        - Bot Detector
+        - XSS Protection
+        - CORS
+
+    - category: Traffic Management
+      capabilities:
+        - Circuit Breaker
+        - Spike Arrest
+        - Rate Limiting
+        - Service Discovery
+        - Concurrent Rate Limiting
+    - category: Mediation
+      capabilities:
+        - Cache Lookup
+        - Cache Store
+        - Cache Eviction
+        - Request Transformation
+        - Response Transformation
+    - category: Extensions
+      capabilities:
+        - Auth0 Integration
+        - Keycloak Integration
+        - Message Logging
+        - Lua Scripting
+        - Go Extensions
+
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://www.krakend.io
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://www.krakend.io/docs/overview/introduction/
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/krakend.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/krakend.png     

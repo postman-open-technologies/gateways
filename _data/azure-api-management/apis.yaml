@@ -1,0 +1,1373 @@
+openapi: 3.0.0
+info:
+  title: Azure API Management - APIs
+  description: Use these REST APIs for performing operations on API entity and their
+    Operations associated with your Azure API Management deployment.
+  version: 2017-03-01
+security:
+  - apim_key: []
+paths:
+  /apis:
+    get:
+      tags:
+        - Apis
+      operationId: Api_List
+      description: Lists all APIs of the API Management service instance.
+      externalDocs:
+        url: https://docs.microsoft.com/en-us/azure/api-management/api-management-howto-create-apis
+      parameters:
+        - name: $filter
+          in: query
+          required: false
+          description: >-
+            | Field       | Supported operators    | Supported
+            functions               |
+
+            |-------------|------------------------|-----------------------------------|
+
+            | id          | ge, le, eq, ne, gt, lt | substringof, startswith, endswith |
+
+            | name        | ge, le, eq, ne, gt, lt | substringof, startswith, endswith |
+
+            | description | ge, le, eq, ne, gt, lt | substringof, startswith, endswith |
+
+            | serviceUrl  | ge, le, eq, ne, gt, lt | substringof, startswith, endswith |
+
+            | path        | ge, le, eq, ne, gt, lt | substringof, startswith, endswith |
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/TopQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/SkipQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: Paged Result response of Apis.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiCollection"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+      x-ms-pageable:
+        nextLinkName: nextLink
+      x-ms-odata: "#/components/schemas/ApiContract"
+  "/apis/{apiId}":
+    get:
+      tags:
+        - Apis
+      operationId: Api_Get
+      description: Gets the details of the API specified by its identifier.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: The response body contains the specified API entity.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiContract"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    put:
+      tags:
+        - Apis
+      operationId: Api_CreateOrUpdate
+      description: Creates new or updates existing specified API of the API Management
+        service instance.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - name: If-Match
+          in: header
+          required: false
+          description: ETag of the Api Entity. For Create Api Etag should not be specified.
+            For Update Etag should match the existing Entity or it can be * for
+            unconditional update.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiCreateOrUpdateParameter"
+        description: Create or update parameters.
+        required: true
+      responses:
+        "200":
+          description: API was successfully updated.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiContract"
+        "201":
+          description: API was successfully created.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiContract"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    patch:
+      tags:
+        - Apis
+      operationId: Api_Update
+      description: Updates the specified API of the API Management service instance.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - name: If-Match
+          in: header
+          required: true
+          description: ETag of the API entity. ETag should match the current entity state
+            in the header response of the GET request or it should be * for
+            unconditional update.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiUpdateContract"
+        description: API Update Contract parameters.
+        required: true
+      responses:
+        "204":
+          description: The API was successfully updated.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    delete:
+      tags:
+        - Apis
+      operationId: Api_Delete
+      description: Deletes the specified API of the API Management service instance.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - name: If-Match
+          in: header
+          required: true
+          description: ETag of the API Entity. ETag should match the current entity state
+            from the header response of the GET request or it should be * for
+            unconditional update.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "204":
+          description: The API was successfully deleted.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/apis/{apiId}/operations":
+    get:
+      tags:
+        - Operations
+      operationId: ApiOperation_ListByApi
+      description: Lists a collection of the operations for the specified API.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - name: $filter
+          in: query
+          required: false
+          description: >-
+            | Field       | Supported operators    | Supported
+            functions               |
+
+            |-------------|------------------------|-----------------------------------|
+
+            | name        | ge, le, eq, ne, gt, lt | substringof, startswith, endswith |
+
+            | method      | ge, le, eq, ne, gt, lt | substringof, startswith, endswith |
+
+            | description | ge, le, eq, ne, gt, lt | substringof, startswith, endswith |
+
+            | urlTemplate | ge, le, eq, ne, gt, lt | substringof, startswith, endswith |
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/TopQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/SkipQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: A collection of operation summary entities at the API level.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperationCollection"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+      x-ms-pageable:
+        nextLinkName: nextLink
+      x-ms-odata: "#/components/schemas/OperationContract"
+  "/apis/{apiId}/operations/{operationId}":
+    get:
+      tags:
+        - Operations
+      operationId: ApiOperation_Get
+      description: Gets the details of the API Operation specified by its identifier.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: "#/components/parameters/OperationIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: The response body contains the specified Operation entity.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperationContract"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    put:
+      tags:
+        - Operations
+      operationId: ApiOperation_CreateOrUpdate
+      description: Creates a new operation in the API or updates an existing one.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: "#/components/parameters/OperationIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OperationContract"
+        description: Create parameters.
+        required: true
+      responses:
+        "200":
+          description: Operation was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperationContract"
+        "201":
+          description: Operation was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperationContract"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    patch:
+      tags:
+        - Operations
+      operationId: ApiOperation_Update
+      description: Updates the details of the operation in the API specified by its
+        identifier.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: "#/components/parameters/OperationIdParameter"
+        - name: If-Match
+          in: header
+          required: true
+          description: ETag of the API Operation Entity. ETag should match the current
+            entity state from the header response of the GET request or it
+            should be * for unconditional update.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OperationUpdateContract"
+        description: API Operation Update parameters.
+        required: true
+      responses:
+        "204":
+          description: The operation was successfully updated.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    delete:
+      tags:
+        - Operations
+      operationId: ApiOperation_Delete
+      description: Deletes the specified operation in the API.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: "#/components/parameters/OperationIdParameter"
+        - name: If-Match
+          in: header
+          required: true
+          description: ETag of the API Operation Entity. ETag should match the current
+            entity state from the header response of the GET request or it
+            should be * for unconditional update.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "204":
+          description: The operation was successfully deleted.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/apis/{apiId}/operations/{operationId}/policies":
+    get:
+      tags:
+        - ApiOperationPolicies
+      operationId: ApiOperationPolicy_ListByOperation
+      description: Get the list of policy configuration at the API Operation level.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: "#/components/parameters/OperationIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: Api Operations Policy Collection.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyCollection
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/apis/{apiId}/operations/{operationId}/policies/{policyId}":
+    get:
+      tags:
+        - ApiOperationPolicies
+      operationId: ApiOperationPolicy_Get
+      description: Get the policy configuration at the API Operation level.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: "#/components/parameters/OperationIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/PolicyIdParameter
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: Api Operation Policy information.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyContract
+            application/vnd.ms-azure-apim.policy+xml:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyContract
+            application/vnd.ms-azure-apim.policy.raw+xml:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyContract
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+            application/vnd.ms-azure-apim.policy+xml:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+            application/vnd.ms-azure-apim.policy.raw+xml:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    put:
+      tags:
+        - ApiOperationPolicies
+      operationId: ApiOperationPolicy_CreateOrUpdate
+      description: Creates or updates policy configuration for the API Operation level.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: "#/components/parameters/OperationIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/PolicyIdParameter
+        - name: If-Match
+          in: header
+          required: true
+          description: The entity state (Etag) version of the Api Operation policy to
+            update. A value of "*" can be used for If-Match to unconditionally
+            apply the operation.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        $ref: "#/components/requestBodies/./apimanagement.json#/definitions/PolicyC\
+          ontract"
+      responses:
+        "200":
+          description: Api Operation policy configuration of the tenant was successfully
+            updated.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyContract
+        "201":
+          description: Api Operation policy configuration was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyContract
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    delete:
+      tags:
+        - ApiOperationPolicies
+      operationId: ApiOperationPolicy_Delete
+      description: Deletes the policy configuration at the Api Operation.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: "#/components/parameters/OperationIdParameter"
+        - name: If-Match
+          in: header
+          required: true
+          description: The entity state (Etag) version of the Api Operation Policy to
+            delete. A value of "*" can be used for If-Match to unconditionally
+            apply the operation.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/PolicyIdParameter
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "204":
+          description: Successfully deleted the policy configuration at the API Operation
+            level.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/apis/{apiId}/products":
+    get:
+      tags:
+        - ApiProduct
+      operationId: ApiProduct_ListByApis
+      description: Lists all Products, which the API is part of.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - name: $filter
+          in: query
+          required: false
+          description: >-
+            | Field | Supported operators    | Supported
+            functions                         |
+
+            |-------|------------------------|---------------------------------------------|
+
+            | name  | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/TopQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/SkipQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: The operation returns a collection of products which have the Api
+            entity.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimproducts.json#/definitions/ProductCollection
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+      x-ms-pageable:
+        nextLinkName: nextLink
+      x-ms-odata: ./apimproducts.json#/definitions/ProductContract
+  "/apis/{apiId}/policies":
+    get:
+      tags:
+        - ApiPolicy
+      operationId: ApiPolicy_ListByApi
+      description: Get the policy configuration at the API level.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: Apis Policy Collection.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyCollection
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/apis/{apiId}/policies/{policyId}":
+    get:
+      tags:
+        - ApiPolicy
+      operationId: ApiPolicy_Get
+      description: Get the policy configuration at the API level.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/PolicyIdParameter
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: Api Policy information.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyContract
+            application/vnd.ms-azure-apim.policy+xml:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyContract
+            application/vnd.ms-azure-apim.policy.raw+xml:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyContract
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+            application/vnd.ms-azure-apim.policy+xml:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+            application/vnd.ms-azure-apim.policy.raw+xml:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    put:
+      tags:
+        - ApiPolicy
+      operationId: ApiPolicy_CreateOrUpdate
+      description: Creates or updates policy configuration for the API.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/PolicyIdParameter
+        - name: If-Match
+          in: header
+          required: true
+          description: The entity state (Etag) version of the Api Policy to update. A value
+            of "*" can be used for If-Match to unconditionally apply the
+            operation.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        $ref: "#/components/requestBodies/./apimanagement.json#/definitions/PolicyC\
+          ontract"
+      responses:
+        "200":
+          description: Api policy configuration of the tenant was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyContract
+        "201":
+          description: Api policy configuration was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyContract
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    delete:
+      tags:
+        - ApiPolicy
+      operationId: ApiPolicy_Delete
+      description: Deletes the policy configuration at the Api.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/PolicyIdParameter
+        - name: If-Match
+          in: header
+          required: true
+          description: The entity state (Etag) version of the Api policy to update. A value
+            of "*" can be used for If-Match to unconditionally apply the
+            operation.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "204":
+          description: Successfully deleted the policy configuration at the API level.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/apis/{apiId}/schemas":
+    get:
+      tags:
+        - ApiSchema
+      operationId: ApiSchema_ListByApi
+      description: Get the schema configuration at the API level.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: Apis Schema Collection.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SchemaCollection"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+      x-ms-pageable:
+        nextLinkName: nextLink
+  "/apis/{apiId}/schemas/{schemaId}":
+    get:
+      tags:
+        - ApiSchema
+      operationId: ApiSchema_Get
+      description: Get the schema configuration at the API level.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: "#/components/parameters/SchemaIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: Api Schema information.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SchemaContract"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    put:
+      tags:
+        - ApiSchema
+      operationId: ApiSchema_CreateOrUpdate
+      description: Creates or updates schema configuration for the API.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: "#/components/parameters/SchemaIdParameter"
+        - name: If-Match
+          in: header
+          required: false
+          description: The entity state (Etag) version of the Api Schema to update. A value
+            of "*" can be used for If-Match to unconditionally apply the
+            operation.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SchemaContract"
+        description: The schema contents to apply.
+        required: true
+      responses:
+        "200":
+          description: Api schema configuration of the tenant was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SchemaContract"
+        "201":
+          description: Api schema configuration was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SchemaContract"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    delete:
+      tags:
+        - ApiSchema
+      operationId: ApiSchema_Delete
+      description: Deletes the schema configuration at the Api.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - $ref: "#/components/parameters/SchemaIdParameter"
+        - name: If-Match
+          in: header
+          required: true
+          description: The entity state (Etag) version of the Api schema to update. A value
+            of "*" can be used for If-Match to unconditionally apply the
+            operation.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "204":
+          description: Successfully deleted the schema configuration at the API level.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+x-ms-paths:
+  "/apis/{apiId}?export=true":
+    get:
+      tags:
+        - Apis
+      operationId: ApiExport_Get
+      description: Gets the details of the API specified by its identifier in the format
+        specified to the Storage Blob with SAS Key valid for 5 minutes.
+      parameters:
+        - $ref: "#/components/parameters/ApiIdParameter"
+        - name: Accept
+          in: header
+          required: true
+          x-ms-enum:
+            name: ExportFormat
+            modelAsString: true
+            values:
+              - value: application/vnd.swagger.link+json
+                description: Export the Api Definition in OpenApi Specification 2.0 format
+                  to the Storage Blob.
+                name: OpenApi2
+              - value: application/vnd.ms.wsdl.link+xml
+                description: Export the Api Definition in WSDL Schema to Storage Blob.
+                name: Wsdl
+              - value: application/vnd.sun.wadl.link+json
+                description: Export the Api Definition in WADL Schema to Storage Blob.
+                name: Wadl
+          description: Format in which to export the Api Details to the Storage Blob with
+            Sas Key valid for 5 minutes.
+          schema:
+            type: string
+            enum:
+              - application/vnd.swagger.link+json
+              - application/vnd.sun.wadl.link+json
+              - application/vnd.ms.wsdl.link+xml
+        - name: export
+          in: query
+          required: true
+          x-ms-enum:
+            modelAsString: true
+            name: ExportApi
+          description: Query parameter required to export the API details.
+          schema:
+            type: string
+            enum:
+              - "true"
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: The response contains a stream with a full set of API metadata and
+            includes API entity with an embedded array of operation entities.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiExportResult"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+servers:
+  - url: "{apimBaseUrl}"
+    variables:
+      apimBaseUrl:
+        description: The management endpoint of the API Management service, for example
+          https://myapimservice.management.azure-api.net.
+        x-ms-skip-url-encoding: true
+        default: ""
+components:
+  parameters:
+    ApiIdParameter:
+      name: apiId
+      in: path
+      required: true
+      description: API identifier. Must be unique in the current API Management service
+        instance.
+      x-ms-parameter-location: method
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 256
+        pattern: ^[^*#&+:<>?]+$
+    OperationIdParameter:
+      name: operationId
+      in: path
+      required: true
+      description: Operation identifier within an API. Must be unique in the current API
+        Management service instance.
+      x-ms-parameter-location: method
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 256
+        pattern: ^[^*#&+:<>?]+$
+    SchemaIdParameter:
+      name: schemaId
+      in: path
+      required: true
+      description: Schema identifier within an API. Must be unique in the current API
+        Management service instance.
+      x-ms-parameter-location: method
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 256
+        pattern: ^[^*#&+:<>?]+$
+  requestBodies:
+    ./apimanagement.json#/definitions/PolicyContract:
+      content:
+        application/json:
+          schema:
+            $ref: ./apimanagement.json#/definitions/PolicyContract
+        application/vnd.ms-azure-apim.policy+xml:
+          schema:
+            $ref: ./apimanagement.json#/definitions/PolicyContract
+        application/vnd.ms-azure-apim.policy.raw+xml:
+          schema:
+            $ref: ./apimanagement.json#/definitions/PolicyContract
+      description: The policy contents to apply.
+      required: true
+  securitySchemes:
+    apim_key:
+      type: apiKey
+      name: Authorization
+      in: header
+  schemas:
+    ApiExportResult:
+      properties:
+        link:
+          type: string
+          description: Link to the Storage Blob containing the result of the export
+            operation. The Blob Uri is only valid for 5 minutes.
+      description: API Export result Blob Uri.
+    ApiCollection:
+      properties:
+        value:
+          type: array
+          items:
+            $ref: "#/components/schemas/ApiContract"
+        count:
+          type: integer
+          description: Total number of entities
+        nextLink:
+          type: string
+          description: Next page link if any.
+      description: Paged Api list representation.
+    ApiCreateOrUpdateParameter:
+      properties:
+        id:
+          type: string
+          description: Identifier of the entity
+        contentValue:
+          type: string
+          description: Content value when Importing an API.
+        contentFormat:
+          type: string
+          description: Format of the Content in which the API is getting imported.
+          enum:
+            - wadl-xml
+            - wadl-link-json
+            - swagger-json
+            - swagger-link-json
+            - wsdl
+            - wsdl-link
+          x-ms-enum:
+            name: ContentFormat
+            modelAsString: true
+            values:
+              - value: wadl-xml
+                description: The contents are inline and Content type is a WADL document.
+              - value: wadl-link-json
+                description: The WADL document is hosted on a publicly accessible internet
+                  address.
+              - value: swagger-json
+                description: The contents are inline and Content Type if a OpenApi 2.0
+                  Document.
+              - value: swagger-link-json
+                description: The Open Api 2.0 document is hosted on a publicly accessible
+                  internet address.
+              - value: wsdl
+                description: The contents are inline and the document is a WSDL/Soap
+                  document.
+              - value: wsdl-link
+                description: The WSDL document is hosted on a publicly accessible internet
+                  address.
+        wsdlSelector:
+          type: object
+          description: Criteria to limit import of WSDL to a subset of the document.
+          properties:
+            wsdlServiceName:
+              type: string
+              description: Name of service to import from WSDL
+            wsdlEndpointName:
+              type: string
+              description: Name of endpoint(port) to import from WSDL
+      allOf:
+        - $ref: "#/components/schemas/ApiContractProperties"
+      description: Api Create or Update Properties.
+    ApiContract:
+      properties:
+        id:
+          type: string
+          description: Identifier of the Entity
+      allOf:
+        - $ref: "#/components/schemas/ApiContractProperties"
+      description: Api Contract Details
+    ApiContractProperties:
+      properties:
+        name:
+          type: string
+          description: API name.
+          minLength: 1
+          maxLength: 300
+        serviceUrl:
+          type: string
+          description: Absolute URL of the backend service implementing this API.
+          minLength: 1
+          maxLength: 2000
+        path:
+          type: string
+          description: Relative URL uniquely identifying this API and all of its resource
+            paths within the API Management service instance. It is appended to
+            the API endpoint base URL specified during the service instance
+            creation to form a public URL for this API.
+          minLength: 0
+          maxLength: 400
+        protocols:
+          type: array
+          items:
+            type: string
+            enum:
+              - http
+              - https
+            x-ms-enum:
+              name: Protocol
+              modelAsString: false
+          description: Describes on which protocols the operations in this API can be
+            invoked.
+      allOf:
+        - $ref: "#/components/schemas/ApiEntityBaseContract"
+      required:
+        - path
+      description: Api Entity Properties
+    ApiUpdateContract:
+      properties:
+        name:
+          type: string
+          description: API name.
+          minLength: 1
+          maxLength: 300
+        serviceUrl:
+          type: string
+          description: Absolute URL of the backend service implementing this API.
+          minLength: 1
+          maxLength: 2000
+        path:
+          type: string
+          description: Relative URL uniquely identifying this API and all of its resource
+            paths within the API Management service instance. It is appended to
+            the API endpoint base URL specified during the service instance
+            creation to form a public URL for this API.
+          minLength: 0
+          maxLength: 400
+        protocols:
+          type: array
+          items:
+            type: string
+            enum:
+              - http
+              - https
+            x-ms-enum:
+              name: Protocol
+              modelAsString: false
+          description: Describes on which protocols the operations in this API can be
+            invoked.
+      allOf:
+        - $ref: "#/components/schemas/ApiEntityBaseContract"
+      description: API update contract properties.
+    ApiEntityBaseContract:
+      properties:
+        description:
+          type: string
+          description: Description of the API. May include HTML formatting tags.
+        authenticationSettings:
+          $ref: "#/components/schemas/AuthenticationSettingsContract"
+        subscriptionKeyParameterNames:
+          $ref: "#/components/schemas/SubscriptionKeyParameterNamesContract"
+        type:
+          type: string
+          description: Type of API.
+          enum:
+            - http
+            - soap
+          x-ms-client-name: ApiType
+          x-ms-enum:
+            name: ApiType
+            modelAsString: true
+        apiRevision:
+          type: string
+          description: Describes the Revision of the Api. If no value is provided, default
+            revision 1 is created
+          minLength: 1
+          maxLength: 100
+        isCurrent:
+          type: boolean
+          description: Indicates if API revision is current api revision.
+        isOnline:
+          type: boolean
+          description: Indicates if API revision is accessible via the gateway.
+      description: API base contract details.
+    AuthenticationSettingsContract:
+      properties:
+        oAuth2:
+          $ref: "#/components/schemas/OAuth2AuthenticationSettingsContract"
+      description: API Authentication Settings.
+    OAuth2AuthenticationSettingsContract:
+      properties:
+        authorizationServerId:
+          type: string
+          description: OAuth authorization server identifier.
+        scope:
+          type: string
+          description: operations scope.
+      description: API OAuth2 Authentication settings details.
+    OperationCollection:
+      properties:
+        value:
+          type: array
+          items:
+            $ref: "#/components/schemas/OperationContract"
+          description: Page values.
+        count:
+          type: integer
+          description: Total number of entities
+        nextLink:
+          type: string
+          description: Next page link if any.
+      description: Paged Operation list representation.
+    OperationContract:
+      properties:
+        id:
+          type: string
+          description: Identifier of the Operation.
+      allOf:
+        - $ref: "#/components/schemas/OperationContractProperties"
+      description: Api Operation details.
+    OperationContractProperties:
+      properties:
+        name:
+          type: string
+          description: Operation Name.
+          minLength: 1
+          maxLength: 300
+        method:
+          type: string
+          description: A Valid HTTP Operation Method. Typical Http Methods like GET, PUT,
+            POST but not limited by only them.
+          externalDocs:
+            description: As defined by RFC.
+            url: http://www.rfc-editor.org/rfc/rfc7230.txt
+        urlTemplate:
+          type: string
+          description: "Relative URL template identifying the target resource for this
+            operation. May include parameters. Example:
+            /customers/{cid}/orders/{oid}/?date={date}"
+          minLength: 1
+          maxLength: 1000
+      allOf:
+        - $ref: "#/components/schemas/OperationEntityBaseContract"
+      required:
+        - name
+        - method
+        - urlTemplate
+      description: Operation Contract Properties
+    OperationUpdateContract:
+      properties:
+        name:
+          type: string
+          description: Operation Name.
+          minLength: 1
+          maxLength: 300
+        method:
+          type: string
+          description: A Valid HTTP Operation Method. Typical Http Methods like GET, PUT,
+            POST but not limited by only them.
+          externalDocs:
+            description: As defined by RFC.
+            url: http://www.rfc-editor.org/rfc/rfc7230.txt
+        urlTemplate:
+          type: string
+          description: "Relative URL template identifying the target resource for this
+            operation. May include parameters. Example:
+            /customers/{cid}/orders/{oid}/?date={date}"
+          minLength: 1
+          maxLength: 1000
+      allOf:
+        - $ref: "#/components/schemas/OperationEntityBaseContract"
+      description: Operation Update Contract Properties.
+    OperationEntityBaseContract:
+      properties:
+        templateParameters:
+          type: array
+          items:
+            $ref: "#/components/schemas/ParameterContract"
+          description: Collection of URL template parameters.
+        description:
+          type: string
+          description: Description of the operation. May include HTML formatting tags.
+          maxLength: 1000
+        request:
+          $ref: "#/components/schemas/RequestContract"
+        responses:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResponseContract"
+          description: Array of Operation responses.
+        policies:
+          type: string
+          description: Operation Policies
+      description: Api Operation Entity Base Contract details.
+    ParameterContract:
+      properties:
+        name:
+          type: string
+          description: Parameter name.
+        description:
+          type: string
+          description: Parameter description.
+        type:
+          type: string
+          description: Parameter type.
+        defaultValue:
+          type: string
+          description: Default parameter value.
+        required:
+          type: boolean
+          description: whether parameter is required or not.
+        values:
+          type: array
+          items:
+            type: string
+          description: Parameter values.
+      required:
+        - name
+        - type
+      description: Operation parameters details.
+    RepresentationContract:
+      properties:
+        contentType:
+          type: string
+          description: Specifies a registered or custom content type for this
+            representation, e.g. application/xml.
+        sample:
+          type: string
+          description: An example of the representation.
+        schemaId:
+          type: string
+          description: Schema identifier. Applicable only if 'contentType' value is neither
+            'application/x-www-form-urlencoded' nor 'multipart/form-data'.
+        typeName:
+          type: string
+          description: Type name defined by the schema. Applicable only if 'contentType'
+            value is neither 'application/x-www-form-urlencoded' nor
+            'multipart/form-data'.
+        formParameters:
+          type: array
+          items:
+            $ref: "#/components/schemas/ParameterContract"
+          description: Collection of form parameters. Required if 'contentType' value is
+            either 'application/x-www-form-urlencoded' or
+            'multipart/form-data'..
+      required:
+        - contentType
+      description: Operation request/response representation details.
+    RequestContract:
+      properties:
+        description:
+          type: string
+          description: Operation request description.
+        queryParameters:
+          type: array
+          items:
+            $ref: "#/components/schemas/ParameterContract"
+          description: Collection of operation request query parameters.
+        headers:
+          type: array
+          items:
+            $ref: "#/components/schemas/ParameterContract"
+          description: Collection of operation request headers.
+        representations:
+          type: array
+          items:
+            $ref: "#/components/schemas/RepresentationContract"
+          description: Collection of operation request representations.
+      description: Operation request details.
+    ResponseContract:
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          description: Operation response HTTP status code.
+        description:
+          type: string
+          description: Operation response description.
+        representations:
+          type: array
+          items:
+            $ref: "#/components/schemas/RepresentationContract"
+          description: Collection of operation response representations.
+        headers:
+          type: array
+          items:
+            $ref: "#/components/schemas/ParameterContract"
+          description: Collection of operation response headers.
+      required:
+        - statusCode
+      description: Operation response details.
+    SubscriptionKeyParameterNamesContract:
+      properties:
+        header:
+          type: string
+          description: Subscription key header name.
+        query:
+          type: string
+          description: Subscription key query string parameter name.
+      description: Subscription key parameter names details.
+      example:
+        subscriptionKeyParameterNames:
+          query: customQueryParameterName
+          header: customHeaderParameterName
+    SchemaCollection:
+      properties:
+        value:
+          type: array
+          items:
+            $ref: "#/components/schemas/SchemaContract"
+          description: Api Schema Contract value.
+        count:
+          type: integer
+          description: Total number of entities
+        nextLink:
+          type: string
+          description: Next page link if any.
+      description: The response of the list schema operation.
+    SchemaContract:
+      properties:
+        id:
+          type: string
+          description: Identifier of the Schema.
+      allOf:
+        - $ref: "#/components/schemas/SchemaContractProperties"
+      description: Schema Contract details.
+    SchemaContractProperties:
+      properties:
+        contentType:
+          type: string
+          description: Must be a valid a media type used in a Content-Type header as
+            defined in the RFC 2616. Media type of the schema document (e.g.
+            application/json, application/xml).
+        document:
+          $ref: "#/components/schemas/SchemaDocumentProperties"
+      required:
+        - contentType
+      description: Schema contract Properties.
+    SchemaDocumentProperties:
+      properties:
+        value:
+          type: string
+          description: Json escaped string defining the document representing the Schema.
+      description: Schema Document Properties.

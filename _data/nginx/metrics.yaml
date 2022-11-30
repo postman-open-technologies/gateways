@@ -1,0 +1,369 @@
+openapi: 3.0.0
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+info:
+  description: Use the Metrics API to retrieve system Metrics.
+  version: v1
+  title: Metrics API
+paths:
+  /analytics/metrics:
+    get:
+      tags:
+        - Metrics
+      summary: Get Metrics
+      operationId: queryMetrics
+      description: >
+        Returns system Metrics data based on the query parameters
+        provided.
+
+
+        Supports filtering based on name and/or timestamp;
+        aggregation over a configurable time span; and grouping by
+        dimension.
+      parameters:
+        - name: names
+          in: query
+          description: >
+            Identifies the Metrics data that you want to receive.
+
+
+            - Provide multiple names as a comma-separated list.
+
+            - You can provide an aggregate function for each
+            Metric (`AVG`, `SUM`, `COUNT`, `MAX`, `MIN`, or
+            `RATE`).
+
+            - Combining non-aggregated and aggregated Metrics in a
+            single query would apply any `groupBy` clause to only
+            the latter.
+
+            - Metrics with aggregates require the `startTime`
+            parameter.
+          required: true
+          schema:
+            type: string
+            example: >-
+              AVG(controller.agent.cpu.system),SUM(plus.upstream.bytes_rcvd)
+        - name: startTime
+          in: query
+          description: >
+            Indicates the start of the time window to include
+            Metrics from (inclusive).
+
+
+            - If `startTime` is omitted, the last recorded value
+            for the queried Metrics will be returned.
+
+            - For aggregated Metrics, you must provide `startTime`
+            in order to calculate the resolution.
+          schema:
+            $ref: '#/components/schemas/Time'
+          example: now-5h
+        - name: endTime
+          in: query
+          description: >
+            Indicates the end of the time window to include
+            Metrics from (non-inclusive).
+
+
+            - Must be greater than `startTime`.
+
+            - If `endTime` is not specified when `startTime` is
+            present, `endTime` defaults to the current time.
+          schema:
+            $ref: '#/components/schemas/Time'
+        - name: resolution
+          in: query
+          description: >
+            Changes the granularity of the returned data.
+
+
+            - Must be a valid duration -- a string starting with a
+            number followed by a unit of time (`y`, `M`, `w`, `d`,
+            `h`, `m` or `s`).
+
+            - When using a resolution, you must provide an
+            aggregate function (or functions) in the `names`
+            parameter and `startTime`.
+
+            - If you do not provide a resolution, the maximum
+            available resolution will be returned (`endTime` -
+            `startTime`).
+          schema:
+            type: string
+            example: 30s
+        - name: filter
+          in: query
+          description: >
+            Filters results based on dimension values.
+
+
+            Consists of one or more predicates in the form 
+            `<dimension><operator><dimension value>` where:
+
+            - `<dimension>` is the name of the dimension.
+
+            - `<operator>` is one of the supported operators (`=`,
+            `!=`, `<`, `<=`, `>=` `>`, `in` or `not`).
+
+            - `<dimension value>` is value of the dimension(s)
+            that you want to filter on.
+
+            - `<dimension> and <dimension value>` is case
+            sensitive.
+
+
+            For example: 'count > 100'
+
+
+            Predicates can be combined into logical expressions
+            using `OR`, `AND`, and `(` `)`.
+
+            For matching values, wildcard (`*`) use is supported.
+
+
+            Wrapping predicates in single quotes is recommended to
+            ensure that the full query string is processed
+            correctly.
+
+
+            See the Dimensions [Catalog](#/tags/catalogs) to find
+            out more about Dimensions.
+          schema:
+            type: string
+            example: >-
+              ((app!='app1' OR app='app2') AND environment in
+              ('aa', 'bb')) AND (tags!='*tag1*' AND
+              interface='ens*')
+        - name: groupBy
+          in: query
+          description: >
+            Groups the results according to the specified
+            dimension(s).
+
+
+            - Provide multiple dimension names as a
+            comma-separated list.
+
+            - All Metric names that you pass into the `names`
+            parameter must be aggregated for the `groupBy` to
+            work.
+          schema:
+            type: string
+            example: 'app,environment'
+        - name: seriesLimit
+          in: query
+          description: >
+            Sets an upper limit on the number of series returned.
+
+            Always returns additional series with dimension value
+            named `all` (aggregating the values of all the metrics
+            included in the results).
+
+            If the result does not include `all` stored dimensions
+            values, the Metrics query returns series with
+            dimension value named `other` (aggregating the values
+            of all the metrics not included in the results).
+
+            Has to be used along with the `orderSeriesBy`
+            parameter.
+
+
+            - Exactly one groupBy parameter must be provided in
+            the query
+
+            - Cannot be used along with `dimensions` parameter.
+          schema:
+            type: integer
+            example: 25
+        - name: orderSeriesBy
+          in: query
+          description: |
+            Sorts the results according to the order specified. 
+
+            Used along with the `seriesLimit` parameter.
+          schema:
+            type: string
+            example: MAX DESC
+            default: SUM DESC
+        - name: dimensions
+          in: query
+          description: >
+            List of dimensions that should be returned in the
+            response for each metric series.
+
+
+            Dimensions not specified in this parameter will be
+            hidden in the results.
+
+            This might result in series having exact same
+            dimension set, but being visible as separate.
+
+
+            If the `aggregation` and `groupBy` parameters are
+            provided for a metric, any dimension provided in
+
+            the `dimensions` query parameter also has to be
+            provided in the `groupBy` parameter.
+
+
+            Dimensions provided in the `groupBy` query parameter
+            do not have to be provided in the `dimensions` query
+            parameter.
+
+
+            - To get a single series, provide the metric name with
+            aggregation and the dimensions parameter with an empty
+            value.
+
+            - Cannot be used along with `seriesLimit`.
+          schema:
+            type: string
+            example: 'app,environment'
+      responses:
+        '200':
+          description: Successfully returned the requested Metrics data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricQueryResult'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+components:
+  schemas:
+    Time:
+      description: >
+        Indicates a point in time.
+
+
+        You can provide time using ISO 8601 format or as an
+        offset. An offset is a string that starts with `+` or `-`,
+        followed by a number and a unit of time (`y`, `M`, `w`,
+        `d`, `h`, `m` or `s`).
+
+        Examples: "2019-08-07T09:57:36.088757764Z", "now-3h"
+      type: string
+      example: '2019-08-07T09:57:36.088757764Z'
+    MetricQueryResult:
+      type: object
+      properties:
+        queryMetadata:
+          $ref: '#/components/schemas/MetricQueryMetadata'
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metric'
+        responseMetadata:
+          $ref: '#/components/schemas/MetricResponseMetadata'
+    MetricResponseMetadata:
+      type: object
+      properties:
+        warning:
+          type: string
+    MetricQueryMetadata:
+      type: object
+      properties:
+        startTime:
+          type: string
+          format: date-time
+          example: '2019-08-07T09:57:36.088757764Z'
+        endTime:
+          type: string
+          format: date-time
+          example: '2019-08-07T09:57:36.088757764Z'
+        resolution:
+          type: string
+          example: 30m
+    Metric:
+      type: object
+      description: >-
+        Metrics provide a means of measuring and analyzing the
+        performance of your systems and of NGINX Controller.
+      properties:
+        name:
+          type: string
+          example: plus.upstream.response.count
+        aggr:
+          type: string
+          enum:
+            - AVG
+            - COUNT
+            - SUM
+            - MAX
+            - MIN
+            - RATE
+          example: AVG
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/Series'
+    Series:
+      type: object
+      properties:
+        dimensions:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            app: app1
+            env: prod
+        timestamps:
+          type: array
+          items:
+            type: string
+            format: date-time
+          example:
+            - '2019-08-07T09:57:30'
+            - '2019-08-07T09:57:35'
+        values:
+          type: array
+          items:
+            type: number
+          example:
+            - 4.2
+            - 4.4
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: ' ''url'' is not a valid dimension of ''http.request.bytes_rcvd''.'
+          description: >
+            Support oriented and human readable error message in
+            English.
+
+            The message explains the error condition and may offer
+            a solution.
+        code:
+          type: integer
+          example: 0
+          description: >
+            Support oriented numerical error code in English.
+
+            Note that this is not the HTTP code representing the
+            error.
+
+            The message should explain the error.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          description: |
+            An internal error detail returned from the server.

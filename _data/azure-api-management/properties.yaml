@@ -1,0 +1,274 @@
+openapi: 3.0.0
+info:
+  title: Azure API Management - Properties
+  description: Use these REST APIs for performing operations on Property entity associated
+    with your Azure API Management deployment. API Management policies are a
+    powerful capability of the system that allow the publisher to change the
+    behavior of the API through configuration. Policies are a collection of
+    statements that are executed sequentially on the request or response of an
+    API. Policy statements can be constructed using literal text values, policy
+    expressions, and properties. Each API Management service instance has a
+    properties collection of key/value pairs that are global to the service
+    instance. These properties can be used to manage constant string values
+    across all API configuration and policies.
+  version: 2017-03-01
+security:
+  - apim_key: []
+paths:
+  /properties:
+    get:
+      tags:
+        - Property
+      operationId: Property_List
+      description: Lists a collection of properties defined within a service instance.
+      externalDocs:
+        url: https://docs.microsoft.com/en-us/azure/api-management/api-management-howto-properties
+      parameters:
+        - name: $filter
+          in: query
+          required: false
+          description: >-
+            | Field | Supported operators    | Supported
+            functions                                   |
+
+            |-------|------------------------|-------------------------------------------------------|
+
+            | tags  | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith, any, all |
+
+            | name  | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith           |
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/TopQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/SkipQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: A Collection of the Property entities for the specified API
+            Management service instance.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyCollection"
+      x-ms-pageable:
+        nextLinkName: nextLink
+      x-ms-odata: "#/components/schemas/PropertyContract"
+  "/properties/{propId}":
+    get:
+      tags:
+        - Property
+      operationId: Property_Get
+      description: Gets the details of the property specified by its identifier.
+      parameters:
+        - $ref: "#/components/parameters/PropertyIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: The response body contains the specified Property entity.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyContract"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    put:
+      tags:
+        - Property
+      operationId: Property_CreateOrUpdate
+      description: Creates or updates a property.
+      parameters:
+        - $ref: "#/components/parameters/PropertyIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PropertyContract"
+        description: Create parameters.
+        required: true
+      responses:
+        "200":
+          description: Property was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyContract"
+        "201":
+          description: Property was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyContract"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    patch:
+      tags:
+        - Property
+      operationId: Property_Update
+      description: Updates the specific property.
+      parameters:
+        - $ref: "#/components/parameters/PropertyIdParameter"
+        - name: If-Match
+          in: header
+          required: true
+          description: The entity state (Etag) version of the property to update. A value
+            of "*" can be used for If-Match to unconditionally apply the
+            operation.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PropertyUpdateParameters"
+        description: Update parameters.
+        required: true
+      responses:
+        "204":
+          description: Property was successfully updated.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    delete:
+      tags:
+        - Property
+      operationId: Property_Delete
+      description: Deletes specific property from the API Management service instance.
+      parameters:
+        - $ref: "#/components/parameters/PropertyIdParameter"
+        - name: If-Match
+          in: header
+          required: true
+          description: The entity state (Etag) version of the property to delete. A value
+            of "*" can be used for If-Match to unconditionally apply the
+            operation.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "204":
+          description: Property was successfully deleted.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+servers:
+  - url: "{apimBaseUrl}"
+    variables:
+      apimBaseUrl:
+        description: The management endpoint of the API Management service, for example
+          https://myapimservice.management.azure-api.net.
+        x-ms-skip-url-encoding: true
+        default: ""
+components:
+  parameters:
+    PropertyIdParameter:
+      name: propId
+      in: path
+      required: true
+      description: Identifier of the property.
+      x-ms-parameter-location: method
+      schema:
+        type: string
+        maxLength: 256
+        pattern: ^[^*#&+:<>?]+$
+  securitySchemes:
+    apim_key:
+      type: apiKey
+      name: Authorization
+      in: header
+  schemas:
+    PropertyCollection:
+      properties:
+        value:
+          type: array
+          items:
+            $ref: "#/components/schemas/PropertyContract"
+          description: Page values.
+        count:
+          type: integer
+          description: Total number of entities
+        nextLink:
+          type: string
+          description: Next page link if any.
+      description: Paged Property list representation.
+    PropertyContract:
+      properties:
+        id:
+          type: string
+          description: Identifier of the Property.
+      allOf:
+        - $ref: "#/components/schemas/PropertyContractProperties"
+      description: Property details.
+    PropertyContractProperties:
+      properties:
+        name:
+          type: string
+          description: Unique name of Property. It may contain only letters, digits,
+            period, dash, and underscore characters.
+          minLength: 1
+          maxLength: 256
+          pattern: ^[A-Za-z0-9-._]+$
+        value:
+          type: string
+          description: Value of the property. Can contain policy expressions. It may not be
+            empty or consist only of whitespace.
+          minLength: 1
+          maxLength: 4096
+      allOf:
+        - $ref: "#/components/schemas/PropertyEntityBaseParameters"
+      required:
+        - name
+        - value
+      description: Property Contract properties.
+    PropertyUpdateParameters:
+      properties:
+        name:
+          type: string
+          description: Unique name of Property. It may contain only letters, digits,
+            period, dash, and underscore characters.
+          minLength: 1
+          maxLength: 256
+          pattern: ^[A-Za-z0-9-._]+$
+        value:
+          type: string
+          description: Value of the property. Can contain policy expressions. It may not be
+            empty or consist only of whitespace.
+          minLength: 1
+          maxLength: 4096
+      allOf:
+        - $ref: "#/components/schemas/PropertyEntityBaseParameters"
+      description: Property Contract properties.
+    PropertyEntityBaseParameters:
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+          maxItems: 32
+          description: Optional tags that when provided can be used to filter the property
+            list.
+        secret:
+          description: Determines whether the value is a secret and should be encrypted or
+            not. Default value is false.
+          type: boolean
+      description: Property Entity Base Parameters set.

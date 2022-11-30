@@ -1,0 +1,657 @@
+openapi: 3.0.0
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+info:
+  title: Apps API
+  description: Use the Apps API to manage App resources.
+  version: v1
+paths:
+  '/services/environments/{environmentName}/apps':
+    get:
+      tags:
+        - Apps
+      summary: List all Apps
+      description: |
+        Returns a list of all App resources.
+      operationId: listApps
+      responses:
+        '200':
+          description: Successfully retrieved a list of all App resources.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppList'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      tags:
+        - Apps
+      summary: Create an App
+      description: Creates a new App resource.
+      operationId: createApp
+      requestBody:
+        description: An App.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/App'
+      responses:
+        '201':
+          description: Successfully created the specified App resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App'
+        '202':
+          description: >-
+            The App resource has been accepted for creation. The
+            App will be created after it is done configuring.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '409':
+          description: >-
+            The request failed due to a naming conflict with an
+            existing resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    parameters:
+      - name: environmentName
+        description: The name of the Environment that contains the App.
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/EnvironmentName'
+  '/services/environments/{environmentName}/apps/{appName}':
+    get:
+      tags:
+        - Apps
+      summary: Get an App
+      description: |
+        Gets the information for a specific App resource.
+      operationId: getApp
+      responses:
+        '200':
+          description: >-
+            Successfully retrieved information for the requested
+            App resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    put:
+      tags:
+        - Apps
+      summary: Upsert an App
+      description: >
+        Creates a new App resource or updates an existing App
+        resource.
+      operationId: updateApp
+      requestBody:
+        description: Defines the App resource to create or update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/App'
+      responses:
+        '200':
+          description: Successfully updated the specified App resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App'
+        '201':
+          description: Successfully created the specified App resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App'
+        '202':
+          description: >-
+            The App resource has been accepted for creation or
+            update. The App will be created or updated after it is
+            done configuring.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    delete:
+      tags:
+        - Apps
+      summary: Delete an App
+      description: >
+        Deletes the specified App resource.
+
+
+        You must delete all of an App's child resources before you
+        delete the App.
+      operationId: deleteApp
+      responses:
+        '202':
+          description: >
+            The App resource has been marked for deletion. The App
+            will be deleted after the underlying resources have
+            been deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App'
+        '204':
+          description: |
+            Successfully deleted the specified App resource.
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '409':
+          description: >
+            The request to delete the specified App resource
+            failed.
+
+            The App contains references to active objects and
+            cannot be deleted. Delete the child objects or remove
+            the references, then try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    parameters:
+      - name: environmentName
+        description: The name of the Environment that contains the App.
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/EnvironmentName'
+      - name: appName
+        description: The name of the App.
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/AppName'
+components:
+  schemas:
+    AppList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/App'
+    App:
+      type: object
+      description: An App is a collection of Components.
+      required:
+        - metadata
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          x-f5-experimental: true
+          type: object
+        currentStatus:
+          $ref: '#/components/schemas/AppCurrentStatus'
+    AppCurrentStatus:
+      type: object
+      properties:
+        state:
+          $ref: '#/components/schemas/ConfigState'
+        componentRefs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceRef'
+    EnvironmentName:
+      type: string
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    ConfigStateTally:
+      type: object
+      properties:
+        isConfigured:
+          type: boolean
+          description: The configuration operation is complete.
+        isConfiguring:
+          type: boolean
+          description: >-
+            The configuration of the resource, or of its
+            child(ren), is in process.
+        isError:
+          type: boolean
+          description: >-
+            An error occurred while configuring the resource or
+            its child(ren).
+        isDeleting:
+          type: boolean
+          description: >-
+            A delete operation is in progress for the resource or
+            its child(ren).
+        total:
+          type: integer
+          description: >-
+            The total number of resources to which the
+            configuration operation applies.
+        configured:
+          type: integer
+          description: >-
+            The number of resources that have a complete and valid
+            configuration.
+        configuring:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being configured.
+        error:
+          type: integer
+          description: >-
+            The number of resources that have encountered an error
+            during the configuration process.
+        deleting:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being deleted.
+    ConfigCondition:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The condition type.
+        message:
+          type: string
+          description: >-
+            A human-readable message that provides additional
+            information about the configuration operation.
+    ConfigState:
+      type: object
+      description: >
+        A representation of the resource's current configuration
+        state 
+
+        that comprises the status of the resource itself
+        (`selfConfigState`) and any child 
+
+        resources (`childrenConfigState`).
+
+
+        The conditions array provides additional information
+        during configuration changes.
+      properties:
+        selfConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        childrenConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigCondition'
+    NamedLinks:
+      allOf:
+        - $ref: '#/components/schemas/SelfLinks'
+        - type: object
+          description: >
+            Contains information about the object being referred
+            to.
+
+
+            These are generally details -- like the object name
+            and display name --
+
+            that are useful to a consumer of the API that performs
+            further
+
+            processing. 
+
+
+            This object is only present in responses.
+              
+          properties:
+            name:
+              type: string
+              example: production
+              description: |
+                The name of the linked resource.
+            displayName:
+              type: string
+              example: Production Environment
+              description: A user friendly resource name.
+    ResourceRef:
+      type: object
+      required:
+        - ref
+      properties:
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: |
+            A reference to another NGINX Controller resource.
+        links:
+          $ref: '#/components/schemas/NamedLinks'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    AppName:
+      type: string

@@ -1,0 +1,230 @@
+---
+openapi: "3.0.0"
+servers:
+- url: "https://api.enterprise.apigee.com/v1"
+info:
+  title: "Users API"
+  description: "Manage the users in your organization."
+  version: "1.0"
+security:
+- Basic: []
+- OAuth: []
+paths:
+  /users:
+    get:
+      tags:
+      - "Users"
+      summary: "List global users"
+      description: "Lists global users.\n\n**Notes**:\n* **Apigee Edge for Private\
+        \ Cloud only**. If you are using Apigee Edge for Public Cloud, contact <a\
+        \ href=\"https://cloud.google.com/apigee/support\">Apigee Support</a> for\
+        \ assistance.\n* **This API cannot be executed using the Try this API panel**.\n\
+        \nSee <a href=\"https://docs.apigee.com/api-platform/system-administration/about-global-users\"\
+        >About global users</a> for more on Edge users, user types, and user roles."
+      operationId: "listUsers"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+        "400":
+          description: "Bad request"
+    post:
+      tags:
+      - "Users"
+      summary: "Create user"
+      description: "Creates a global user.\n\n**Notes**:\n* **Apigee Edge for Private\
+        \ Cloud only**. If you are using Apigee Edge for Public Cloud, contact <a\
+        \ href=\"https://cloud.google.com/apigee/support\">Apigee Support</a> for\
+        \ assistance.\n* **This API cannot be executed using the Try this API panel**.\n\
+        \nAfter you create the user in an organization, you must assign the user to\
+        \ a role in an organization. Roles determine the access rights of the user\
+        \ on Edge. The user cannot sign in to the Edge UI, and does not appear in\
+        \ the list of users in the Edge UI, until you assign it to a role in an organization.\
+        \ See <a href=\"/docs/user-roles-api/1/routes/organizations/%7Borg_name%7D/userroles/%7Brole_name%7D/users/post\"\
+        >Add a user to a role</a>.\n\nSee <a href=\"https://docs.apigee.com/api-platform/system-administration/about-global-users\"\
+        >About global users</a> for more on Edge users, user types, and user roles."
+      operationId: "createUser"
+      parameters: []
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+              example:
+                firstName: "Alex"
+                lastName: "Hamilton"
+                password: "mypassword"
+                emailId: "ahamilton@example.com"
+        "400":
+          description: "Bad request"
+  /users/{user_email}:
+    put:
+      tags:
+      - "Users"
+      summary: "Update user"
+      description: "Updates a user.\n\n**Notes**:\n* **Apigee Edge for Private Cloud\
+        \ only**. If you are using Apigee Edge for Public Cloud, contact <a href=\"\
+        https://cloud.google.com/apigee/support\">Apigee Support</a> for assistance.\n\
+        * **This API cannot be executed using the Try this API panel**.\n\nWhen calling\
+        \ this API:\n\n* You must pass first name, last name, and email address to\
+        \ the call, even if you are not changing the values.\n* The password is the\
+        \ only optional property. Only specify password when you want to change the\
+        \ user's password.\n\nTo view the current information about a user, see Get\
+        \ user.\n\nSee <a href=\"https://docs.apigee.com/api-platform/system-administration/about-global-users\"\
+        >About global users</a> for more on Edge users, user types, and user roles."
+      operationId: "updateUser"
+      parameters:
+      - $ref: "#/components/parameters/user_email"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+              example:
+                firstName: "Alex"
+                lastName: "Hamilton"
+                password: "mypassword"
+                emailId: "ahamilton@example.com"
+        "400":
+          description: "Bad request"
+    get:
+      tags:
+      - "Users"
+      summary: "Get user"
+      description: "Gets user details.\n\n**Notes**:\n* **Apigee Edge for Private\
+        \ Cloud only**. If you are using Apigee Edge for Public Cloud, contact <a\
+        \ href=\"https://cloud.google.com/apigee/support\">Apigee Support</a> for\
+        \ assistance.\n* **This API cannot be executed using the Try this API panel**.\n\
+        \nSee <a href=\"https://docs.apigee.com/api-platform/system-administration/about-global-users\"\
+        >About global users</a> for more on Edge users, user types, and user roles."
+      operationId: "getUser"
+      parameters:
+      - $ref: "#/components/parameters/user_email"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+              example:
+                firstName: "Alex"
+                lastName: "Hamilton"
+                password: "mypassword"
+                emailId: "ahamilton@example.com"
+        "400":
+          description: "Bad request"
+    delete:
+      tags:
+      - "Users"
+      summary: "Delete User"
+      description: "Deletes a user.\n\n**Notes**:\n* **Apigee Edge for Private Cloud\
+        \ only**. If you are using Apigee Edge for Public Cloud, contact <a href=\"\
+        https://cloud.google.com/apigee/support\">Apigee Support</a> for assistance.\n\
+        * **This API cannot be executed using the Try this API panel**.\n\nSee <a\
+        \ href=\"https://docs.apigee.com/api-platform/system-administration/about-global-users\"\
+        >About global users</a> for more on Edge users, user types, and user roles."
+      operationId: "deleteUser"
+      parameters:
+      - $ref: "#/components/parameters/user_email"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+              example:
+                firstName: "Alex"
+                lastName: "Hamilton"
+                password: "mypassword"
+                emailId: "ahamilton@example.com"
+        "400":
+          description: "Bad request"
+  /users/{user_email}/status:
+    post:
+      tags:
+      - "Users"
+      summary: "Unlock a user"
+      description: "Unlocks a user.\n\n**Notes**:\n* **Apigee Edge for Private Cloud\
+        \ only**. If you are using Apigee Edge for Public Cloud, contact <a href=\"\
+        https://cloud.google.com/apigee/support\">Apigee Support</a> for assistance.\n\
+        * **This API cannot be executed using the Try this API panel**.\n\nA user’\
+        s account may be locked due to attributes set in the password policy. A user\
+        \ with the `sysadmin` Apigee role assigned can use this API to unlock the\
+        \ user’s account.\n\nSee <a href=\"https://docs.apigee.com/api-platform/system-administration/about-global-users\"\
+        >About global users</a> for more on Edge users, user types, and user roles."
+      operationId: "unlockUser"
+      parameters:
+      - $ref: "#/components/parameters/user_email"
+      - $ref: "#/components/parameters/action"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+components:
+  securitySchemes:
+    Basic:
+      type: "http"
+      scheme: "basic"
+      description: "Multi-factor authentication is not supported."
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)"
+  parameters:
+    org_name:
+      in: "path"
+      name: "org_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Organization name."
+    user_email:
+      in: "path"
+      name: "user_email"
+      required: true
+      schema:
+        type: "string"
+      description: "User email address."
+    action:
+      in: "query"
+      name: "action"
+      required: true
+      schema:
+        type: "string"
+      description: "Set to `unlock`."
+  schemas:
+    User:
+      description: "User details."
+      type: "object"
+      required:
+      - "firstName"
+      - "lastName"
+      - "password"
+      - "emailId"
+      properties:
+        firstName:
+          description: "First name of user."
+          type: "string"
+        lastName:
+          description: "Last name of user."
+          type: "string"
+        password:
+          type: "string"
+          description: "Password of user."
+        emailId:
+          description: "Email address of user."
+          type: "string"

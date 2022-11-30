@@ -1,0 +1,90 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Kusk
+  provider: Kusk
+  slug: kusk
+  rating: 1
+  license: Proprietary, Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2021-10
+  description: >
+    Develop, validate, deploy and monitor your APIs in a matter of minutes. The one-stop shop for building modern REST APIs based on Envoy Proxy running on your Kubernetes cluster.
+  platformCapabilities:
+    - Design
+    - Gateway
+    - Analytics
+    - Testing
+  gatewayCapabilities:
+    - Mediation
+    - Mocking
+    - OpenAPI Integration
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+  downstreamProtocols:
+    - HTTP/1.1
+  deliveryModels:
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Caching
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Service Discovery
+        - Throttling
+        - Traffic Optimization
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Request Size Limit
+        - Request Termination
+        - Request Validation
+        - Request Transformation
+        - Response Transformation
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - IP Access Rules
+        - JWT
+        - JWT Validation
+        - JWT authorizers
+        - JWT authorizers (Custom
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+    - category: Extensions
+      capabilities:
+        - Kubernetes
+        - Envoy Proxy
+        - Command Line Interface (CLI)
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://kusk.io/
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://kusk.io/
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/kusk.png     

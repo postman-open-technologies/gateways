@@ -1,0 +1,283 @@
+---
+openapi: "3.0.1"
+info:
+  title: "Logs API"
+  description: "View logs aggregated by Apigee API Monitoring. For more information,\
+    \ see <a href=\"https://docs.apigee.com/api-monitoring/logs-api\">View logs using\
+    \ the API</a>.\n"
+  version: "1.0"
+servers:
+- url: "https://apimonitoring.enterprise.apigee.com/"
+security:
+- OAuth: []
+paths:
+  /logs:
+    get:
+      summary: "Get log entries"
+      description: "Gets traffic metrics. \n\n\nBy default, the API returns the most\
+        \ recent 10 logs for the previous hour. Use the `from`, `to`, and `timeRange`\
+        \ query parameters to specify a different duration. The `from` and `to` query\
+        \ paramaters use an ISO formatted time range. The date format can be either:\n\
+        \n\n* `yyyy-mm-ddThh:mm:ssZ`\n* `yyyy-mm-ddThh:mm:ss+00:00`\n     \n\nThe\
+        \ `timeRange` query parameter value supports the following formats:\n\n* `-<value><unit>`\
+        \ specifes a time in the past (note the leading hyphen):\n   * `<value>` –\
+        \ an integer\n   * `<unit>` – a time unit of: `s`, `sec`, `second`, `m`, `min`,\
+        \ `minute`, `h`, `hr`, `hour`, `d`, `day`\n   \n   \nFor example:\n\n* `1h`\n\
+        * `10min`\n\n\nYou can specify either `from` or `timeRange` but not both.\n\
+        \n\nThis API also defines query paramaters that you can use to filter the\
+        \ results by API proxy, region, fault flow, and other options.\n  \n  \n**Note**:\
+        \ You can call this API at most **six times per minute**. \n\n\nFor more information\
+        \ and examples of this API, see\n[View logs using the API](https://docs.apigee.com/api-monitoring/logs-api).\n"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/proxy"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      - $ref: "#/components/parameters/timeRange"
+      - $ref: "#/components/parameters/select"
+      - $ref: "#/components/parameters/source"
+      - $ref: "#/components/parameters/limit"
+      - $ref: "#/components/parameters/region"
+      - $ref: "#/components/parameters/flow"
+      - $ref: "#/components/parameters/policy"
+      - $ref: "#/components/parameters/status"
+      - $ref: "#/components/parameters/faultcode"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                description: "Log entries."
+                items:
+                  $ref: "#/components/schemas/Log"
+        default:
+          description: "Unexpected error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /logs/apiproxies:
+    get:
+      summary: "Get proxies for virtual host and base path"
+      description: "Get the list of API proxies associated with a specific virtual\
+        \ host and base path.\n\n\n**Note**: You can call this API at most **six times\
+        \ per minute**.\n\n\nA virtual host on an Edge Router lets you specify a domain\
+        \ name, protocol such as HTTP/HTTPS, and port number. For example, you define\
+        \ a virtual host on an Edge Router with the following settings:\n\n\n```\n\
+        host alias = apis.acme.com\nport = 443\nTLS enabled\n```\n\n\nBased on these\
+        \ settings, a request to an API proxy associated with this virtual host uses\
+        \ the form:\n\n`https://apis.acme.com/proxy-base-path/resource-path`\n\n\n\
+        Where:\n\n\n* `proxy-base-path` is defined when you create an API proxy and\
+        \ is unique for each API proxy.\n* `resource-path` is the path to a resource\
+        \ accessible through the API proxy.\n\n\nFor more on virtual hosts, see <a\
+        \ href=\"https://docs.apigee.com/api-platform/fundamentals/virtual-hosts\"\
+        >About virtual hosts</a>. For more information and examples of this API, see\
+        \ <a href=\"https://docs.apigee.com/api-monitoring/logs-api\">View logs using\
+        \ the API</a>.\n"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/select"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                description: "List of API proxies"
+                items:
+                  type: "string"
+        default:
+          description: "Unexpected error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  securitySchemes:
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ To get a token, see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens"
+  parameters:
+    org:
+      name: "org"
+      in: "query"
+      description: "Organization name."
+      required: true
+      schema:
+        type: "string"
+    env:
+      name: "env"
+      in: "query"
+      description: "Filter events by the specified environment."
+      required: false
+      schema:
+        type: "string"
+    proxy:
+      name: "proxy"
+      in: "query"
+      description: "Filter metrics by the specified API proxy name. Specify multiple\
+        \ values as a comma-separated list."
+      schema:
+        type: "string"
+    from:
+      name: "from"
+      in: "query"
+      description: "Start of the time interval for which alerts should be fetched.\
+        \ Defaults to the current time minus one hour. Required for latency metrics.\n"
+      required: false
+      schema:
+        type: "string"
+        default: "-1h"
+    to:
+      name: "to"
+      in: "query"
+      description: "End of the time interval for which alerts should be fetched. Defaults\
+        \ to the\n  current time. See the description above about setting this parameter.\n"
+      required: false
+      schema:
+        type: "string"
+        default: "now"
+    timeRange:
+      name: "timeRange"
+      in: "query"
+      description: "Duration prior to the to time for which log entries are fetched.\
+        \ You can specify either from or timeRange but not both.\n"
+      required: false
+      schema:
+        type: "string"
+        default: "now"
+    select:
+      name: "select"
+      in: "query"
+      description: "Filter returned logs by HTTP status codes or API proxy URI. Supported\
+        \ HTTP status values are: `2xx`, `4xx`, `5xx`. Specify multiple values as\
+        \ a comma-separated list. The `status` query parameter lets you specify an\
+        \ explicit HTTP status codes in the form: `201`, `404`, `501`."
+      schema:
+        type: "string"
+    source:
+      name: "source"
+      in: "query"
+      description: "Source of errors for which logs should be returned. Supported\
+        \ values are: `proxy`, `target`, or `apigee`. By default, logs from all sources\
+        \ are returned."
+      required: false
+      schema:
+        type: "string"
+    limit:
+      name: "limit"
+      in: "query"
+      description: "Number of log entries that will be returned. The maximum value\
+        \ is 1000. Defaults to 10."
+      required: false
+      schema:
+        type: "string"
+    region:
+      name: "region"
+      in: "query"
+      description: "Filter events by the specified region."
+      required: false
+      schema:
+        type: "string"
+    flow:
+      name: "flow"
+      in: "query"
+      description: "Filter events by the specified fault flow."
+      required: false
+      schema:
+        type: "string"
+    policy:
+      name: "policy"
+      in: "query"
+      description: "Filter events by the specified fault policy."
+      required: false
+      schema:
+        type: "string"
+    status:
+      name: "status"
+      in: "query"
+      description: "Filter log entries by the specified HTTP status code. For example,\
+        \ `201`, `404`, or `501`. Specify multiple values as a comma-separated list.\
+        \ The `select` query parameter lets you specify a range of HTTP status codes\
+        \ in the form: `2xx`, `4xx`, `5xx`."
+      required: false
+      schema:
+        type: "string"
+    faultcode:
+      name: "faultcode"
+      in: "query"
+      description: "Filter log entries by the specified fault code."
+      required: false
+      schema:
+        type: "string"
+  schemas:
+    Log:
+      type: "object"
+      properties:
+        request:
+          type: "string"
+          description: "Request details.\n"
+        request_length:
+          type: "integer"
+          description: "Length of the request.\n"
+        request_message_id:
+          type: "string"
+          description: "Request message ID.\n"
+        virtual_host:
+          type: "string"
+          description: "Virtual host details.\n"
+        response_size:
+          type: "integer"
+          description: "Size of the response.\n"
+        response_time:
+          type: "number"
+          description: "Length of time for the response.  \n"
+        response_status:
+          type: "string"
+          description: "HTTP status of the response.\n"
+        timestamp:
+          type: "string"
+          description: "Response timestamp in ISO format.\n"
+        fault_code:
+          type: "string"
+          description: "Fault code returned.\n"
+        fault_flow:
+          type: "string"
+          description: "Fault flow.\n"
+        fault_policy:
+          type: "string"
+          description: "Fault policy.\n"
+        fault_proxy:
+          type: "string"
+          description: "API proxy associated with the fault.\n"
+        fault_source:
+          type: "string"
+          description: "Source of the fault, such as `target`.\n"
+      example:
+        request: "GET /v1/o/myorg/z HTTP/1.1"
+        request_length: 1349
+        request_message_id: "rrt-0623eb157b650315c-c-ne-7785-16029140-1"
+        virtual_host: "api.example.com"
+        response_size: 144
+        response_time: 0.551
+        response_status: "404"
+        timestamp: "2018-08-14T17:31:07Z"
+        fault_code: "messaging.adaptors.http.flow.ErrorResponseCode"
+        fault_flow: "-"
+        fault_policy: "null/null"
+        fault_proxy: "/organizations/myorg/environments/prod/apiproxies/myAPI/revisions/50"
+        fault_source: "target"
+    Error:
+      type: "object"
+      properties:
+        error:
+          type: "string"
+          description: "Error message"

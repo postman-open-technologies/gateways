@@ -1,0 +1,102 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Envoy
+  provider: Envoy
+  slug: envoy
+  rating: 2
+  license: Proprietary, Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    Originally built at Lyft, Envoy is a high performance C++ distributed proxy designed for single services and applications, as well as a communication bus and “universal data plane” designed for large microservice “service mesh” architectures. Built on the learnings of solutions such as NGINX, HAProxy, hardware load balancers, and cloud load balancers, Envoy runs alongside every application and abstracts the network by providing common features in a platform-agnostic manner.
+  platformCapabilities:
+    - Gateway
+  gatewayCapabilities:
+    - Mediation
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+  downstreamProtocols:
+    - HTTP/1.1
+  deliveryModels:
+    - Customer Managed (Cloud)
+    - Customer Managed (On-Premises)
+    - Hybrid
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Cache Eviction
+        - Cache Invalidation
+        - Cache Lookup
+        - Cache Population
+        - Cache Storage
+        - Cache Target Response
+        - Cache Validation
+        - Circuit Breaker
+        - Conditional Routing
+        - Content-Based Routing
+        - Load Balancer Routing
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Service Discovery
+        - Throttling
+        - Traffic Optimization      
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Cache Eviction
+        - Cache Lookup
+        - Cache Store
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - URL Rewriting
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - IP Access Rules
+        - JWT
+        - JWT Validation
+        - JWT authorizers
+        - Let's Encrypt
+        - Message Inspection
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+        - OpenID Connect
+    - category: Extensions
+      capabilities:
+        - HTTP Callout
+        - HTTP integrations
+        - Kubernetes Ingress      
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://gateway.envoyproxy.io/v0.2.0/
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://github.com/envoyproxy/gateway
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/envoy.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/envoy.png     

@@ -1,0 +1,302 @@
+---
+openapi: "3.0.0"
+servers:
+- url: "https://api.enterprise.apigee.com/v1"
+info:
+  title: "Debug Sessions API"
+  description: "Create debug sessions in Apigee Edge to record specified messages\
+    \ and associated pipeline processing metadata for debugging purposes."
+  version: "1.0"
+security:
+- Basic: []
+- OAuth: []
+paths:
+  /organizations/{org_name}/environments/{env_name}/apis/{api_name}/revisions/{revision_number}/debugsessions:
+    get:
+      tags:
+      - "Debug Sessions"
+      summary: "List debug sessions"
+      description: "Lists debug sessions that were created either by using the <a\
+        \ href=\"https://apidocs.apigee.com/docs/debug-sessions/1/routes/organizations/%7Borg_name%7D/environments/%7Benv_name%7D/apis/%7Bapi_name%7D/revisions/%7Brevision_number%7D/debugsessions/post\"\
+        >Create debug session API</a> or the <a href=\"https://docs.apigee.com/api-platform/debug/using-trace-tool-0\"\
+        >Trace tool</a> in the Edge UI."
+      operationId: "listDebugSessions"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/api_name"
+      - $ref: "#/components/parameters/revision_number"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+                  description: "Debug session name."
+        "400":
+          description: "Bad request"
+    post:
+      tags:
+      - "Debug Sessions"
+      summary: "Create a debug session"
+      description: "Creates a debug session.\n\nA debug session records detailed information\
+        \ on messages, flow processing, and policy execution during processing by\
+        \ an API proxy.\n\nThe data returned in the debug session is a single XML\
+        \ or JSON representation of all debug data for each message exchange. The\
+        \ debug data is the same as that used to generate the <a href=\"https://docs.apigee.com/api-platform/debug/using-trace-tool-0\"\
+        >Trace view</a> in the Edge UI.\n\nA debug session captures a maximum of 20\
+        \ messages or records for a maximum of 10 minutes (by default), whichever\
+        \ comes first.\n\nDebugging involves the following steps:\n\n1. Start a debug\
+        \ session by creating a debug session.\n2. Send a message for that deployed\
+        \ API proxy.\n3. Retrieve the debug data associated with the debug session.\
+        \ The data can be fetched  by issuing a `GET` call on the session.\n4. Close\
+        \ the debug session. (Closing the debug session discards all the associated\
+        \    data).\n\nWhen creating a debug session, you can set a filter that captures\
+        \ only API calls with specific query parameters and/or HTTP headers. Filtering\
+        \ is particularly useful for troubleshooting. \n\nFor example, if you wanted\
+        \ to capture only API calls with an `Accept: application/json` header, you'd\
+        \ create a debug session with that filter. Filtering API calls in a debug\
+        \ session is particularly useful for root-case analysis to target specific\
+        \ calls that may be causing problems.\n\nThe filter is set using by appending\
+        \ the filter details as a query parameter to the API call. The query parameters\
+        \ begin with either header_ or qparam_ to indicate a header or query parameter.\
+        \ For example:\n\n* **header_name=value**: Captures only calls that contain\
+        \ the specific header and value. Header name and value must be URL encoded.\
+        \ For example: `header_Accept=application%2Fjson`\n\n* **qparam_name=value**:\
+        \ Captures only calls that contain the specific query parameter and value.\
+        \ Query parameter name and value must be URL encoded. For example: `qparam_user=john%20doe`\n\
+        \nIf you use multiple headers and/or query parameters in the filter, all conditions\
+        \ must be met in order for API call to be captured. Here's how the previous\
+        \ two examples would be combined into a single filter:\n\n`header_Accept=application%2Fjson&qparam_user=john%20doe`\n\
+        \nThe filter query parameters are combined with the query parameters you set\
+        \ in the fields below."
+      operationId: "createDebugSession"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/api_name"
+      - $ref: "#/components/parameters/revision_number"
+      - $ref: "#/components/parameters/session"
+      - $ref: "#/components/parameters/timeout"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                type: "string"
+                description: "Debug session name."
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/environments/{env_name}/apis/{api_name}/revisions/{revision_number}/debugsessions/{session_name}:
+    delete:
+      tags:
+      - "Debug Sessions"
+      summary: "Delete debug session"
+      description: "Deletes a debug session."
+      operationId: "deleteDebugSession"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/api_name"
+      - $ref: "#/components/parameters/revision_number"
+      - $ref: "#/components/parameters/session_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "string"
+                description: "Debug session name."
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/environments/{env_name}/apis/{api_name}/revisions/{revision_number}/debugsessions/{session_name}/data:
+    get:
+      tags:
+      - "Debug Sessions"
+      summary: "Get debug session transaction IDs"
+      description: "Gets transaction IDs for a debug session that was created either\
+        \ by using the <a href=\"https://apidocs.apigee.com/docs/debug-sessions/1/routes/organizations/%7Borg_name%7D/environments/%7Benv_name%7D/apis/%7Bapi_name%7D/revisions/%7Brevision_number%7D/debugsessions/post\"\
+        >Create debug session API</a> or the <a href=\"https://docs.apigee.com/api-platform/debug/using-trace-tool-0\"\
+        >Trace tool</a> in the Edge UI.\n\nEach item in the returned list is the unique\
+        \ ID for a debug session transaction associated with a single request to the\
+        \ API proxy specified.\n\nUse the <a href=\"https://apidocs.apigee.com/docs/debug-sessions/1/routes/organizations/%7Borg_name%7D/environments/%7Benv_name%7D/apis/%7Bapi_name%7D/revisions/%7Brevision_number%7D/debugsessions/%7Bsession_name%7D/data/%7Btransaction_id%7D/get\"\
+        >Get debug session transaction data API</a> to retrieve the raw debug data\
+        \ for the transaction."
+      operationId: "getDebugSessionTransactionIDs"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/api_name"
+      - $ref: "#/components/parameters/revision_number"
+      - $ref: "#/components/parameters/session_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+                  description: "Debug session transaction IDs."
+        "400":
+          description: "Bad request"
+  ? /organizations/{org_name}/environments/{env_name}/apis/{api_name}/revisions/{revision_number}/debugsessions/{session_name}/data/{transaction_id}
+  : get:
+      tags:
+      - "Debug Sessions"
+      summary: "Get debug session transaction data"
+      description: "Gets debug session transaction data. To get a list of transaction\
+        \ IDs, see Get debug session transaction IDs. \n\nThe debug data returned\
+        \ by this APl is the same debug data that populates the Trace tool in the\
+        \ Edge management UI. For more information on the Trace tool, see <a href=\"\
+        https://docs.apigee.com/api-platform/debug/using-trace-tool-0\">Using the\
+        \ Trace tool</a>."
+      operationId: "getDebugSessionTransactionData"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/api_name"
+      - $ref: "#/components/parameters/revision_number"
+      - $ref: "#/components/parameters/session_name"
+      - $ref: "#/components/parameters/transaction_id"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DebugSession"
+              example:
+                completed: true
+                point:
+                - id: "Paused"
+                  results: []
+                - id: "Resumed"
+                  results: []
+                - id: "StateChange"
+                  results:
+                  - ActionResult: "DebugInfo"
+                    properties:
+                      property:
+                      - name: "To"
+                        value: "REQ_HEADERS_PARSED"
+                      - name: "From"
+                        value: "REQ_START"
+                    timestamp: "08-09-15 14:44:03:825"
+        "400":
+          description: "Bad request"
+components:
+  securitySchemes:
+    Basic:
+      type: "http"
+      scheme: "basic"
+      description: "Multi-factor authentication is not supported."
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)"
+  parameters:
+    org_name:
+      in: "path"
+      name: "org_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Organization name."
+    env_name:
+      in: "path"
+      name: "env_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Environment name."
+    api_name:
+      in: "path"
+      name: "api_name"
+      required: true
+      schema:
+        type: "string"
+      description: "API proxy name."
+    revision_number:
+      in: "path"
+      name: "revision_number"
+      required: true
+      schema:
+        type: "string"
+      description: "Revision number."
+    session_name:
+      in: "path"
+      name: "session_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Debug session name."
+    transaction_id:
+      in: "path"
+      name: "transaction_id"
+      required: true
+      schema:
+        type: "string"
+      description: "ID of the transaction."
+    session:
+      in: "query"
+      name: "session"
+      required: true
+      schema:
+        type: "string"
+      description: "Debug session name."
+    timeout:
+      in: "query"
+      name: "timeout"
+      required: false
+      schema:
+        type: "string"
+      description: "Time in seconds after which the particular session should be discarded.\
+        \ Defaults to 600 seconds."
+  schemas:
+    DebugSession:
+      description: "Debug sessions transaction details."
+      type: "object"
+      properties:
+        completed:
+          description: "Flag that specifies whether the transcation completed."
+          type: "boolean"
+        point:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              id:
+                type: "string"
+                description: "For example, `Paused` or `Resumed`."
+              results:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    ActionResult:
+                      type: "string"
+                      description: "Action information, such as `DebugInfo`."
+                    properties:
+                      type: "object"
+                      properties:
+                        property:
+                          type: "array"
+                          items:
+                            type: "object"
+                            properties:
+                              name:
+                                type: "string"
+                              value:
+                                type: "string"
+                    timestamp:
+                      type: "string"
+                      description: "Timestamp of the transaction."

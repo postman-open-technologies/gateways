@@ -1,0 +1,239 @@
+openapi: 3.0.0
+info:
+  title: Azure API Management - Certificates
+  description: Use these REST APIs for performing operations on Certificate entity in your
+    Azure API Management deployment. Certificates can be used to setup mutual
+    authentication with your Backend in API Management. For more information
+    refer to [How to secure backend using Mutual Auth
+    Certificate](https://docs.microsoft.com/en-us/azure/api-management/api-management-howto-mutual-certificates).
+  version: 2017-03-01
+security:
+  - apim_key: []
+paths:
+  /certificates:
+    get:
+      tags:
+        - Certificates
+      operationId: Certificate_List
+      description: Lists a collection of all certificates in the specified service instance.
+      parameters:
+        - name: $filter
+          in: query
+          required: false
+          description: >-
+            | Field          | Supported operators    | Supported
+            functions                         |
+
+            |----------------|------------------------|---------------------------------------------|
+
+            | id             | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | subject        | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | thumbprint     | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | expirationDate | ge, le, eq, ne, gt, lt | N/A                                         |
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/TopQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/SkipQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: Returns a collection of Certificate entity.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateCollection"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+      x-ms-pageable:
+        nextLinkName: nextLink
+      x-ms-odata: "#/components/schemas/CertificateContract"
+  "/certificates/{certificateId}":
+    get:
+      tags:
+        - Certificates
+      operationId: Certificate_Get
+      description: Gets the details of the certificate specified by its identifier.
+      parameters:
+        - $ref: "#/components/parameters/CertificateIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: The response body contains the specified Certificate entity.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateContract"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    put:
+      tags:
+        - Certificates
+      operationId: Certificate_CreateOrUpdate
+      description: Creates or updates the certificate being used for authentication with
+        the backend.
+      externalDocs:
+        description: How to secure back-end services using client certificate
+          authentication in Azure API Management
+        url: https://azure.microsoft.com/en-us/documentation/articles/api-management-howto-mutual-certificates/
+      parameters:
+        - $ref: "#/components/parameters/CertificateIdParameter"
+        - name: If-Match
+          in: header
+          required: false
+          description: The entity state (Etag) version of the certificate to update. A
+            value of "*" can be used for If-Match to unconditionally apply the
+            operation..
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CertificateCreateOrUpdateParameters"
+        description: Create or Update parameters.
+        required: true
+      responses:
+        "200":
+          description: The certificate details were successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateContract"
+        "201":
+          description: The new certificate was successfully added.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateContract"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    delete:
+      tags:
+        - Certificates
+      operationId: Certificate_Delete
+      description: Deletes specific certificate.
+      parameters:
+        - $ref: "#/components/parameters/CertificateIdParameter"
+        - name: If-Match
+          in: header
+          required: true
+          description: The entity state (Etag) version of the certificate to delete. A
+            value of "*" can be used for If-Match to unconditionally apply the
+            operation.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "204":
+          description: The certificate was successfully deleted.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+servers:
+  - url: "{apimBaseUrl}"
+    variables:
+      apimBaseUrl:
+        description: The management endpoint of the API Management service, for example
+          https://myapimservice.management.azure-api.net.
+        x-ms-skip-url-encoding: true
+        default: ""
+components:
+  parameters:
+    CertificateIdParameter:
+      name: certificateId
+      in: path
+      required: true
+      description: Identifier of the certificate entity. Must be unique in the current API
+        Management service instance.
+      x-ms-parameter-location: method
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 256
+        pattern: ^[^*#&+:<>?]+$
+  securitySchemes:
+    apim_key:
+      type: apiKey
+      name: Authorization
+      in: header
+  schemas:
+    CertificateCollection:
+      properties:
+        value:
+          type: array
+          items:
+            $ref: "#/components/schemas/CertificateContract"
+          description: Page values.
+        count:
+          type: integer
+          description: Total number of entities
+        nextLink:
+          type: string
+          description: Next page link if any.
+      description: Paged Certificates list representation.
+    CertificateContract:
+      properties:
+        id:
+          type: string
+          description: Identifier of the Certificate entity.
+      allOf:
+        - $ref: "#/components/schemas/CertificateContractProperties"
+      description: Certificate details.
+    CertificateContractProperties:
+      properties:
+        subject:
+          type: string
+          description: Subject attribute of the certificate.
+        thumbprint:
+          type: string
+          description: Thumbprint of the certificate.
+        expirationDate:
+          type: string
+          format: date-time
+          description: >
+            Expiration date of the certificate. The date conforms to the
+            following format: `yyyy-MM-ddTHH:mm:ssZ` as specified by the ISO
+            8601 standard.
+      required:
+        - subject
+        - thumbprint
+        - expirationDate
+      description: Properties of the Certificate contract.
+    CertificateCreateOrUpdateParameters:
+      properties:
+        data:
+          type: string
+          description: Base 64 encoded certificate using the application/x-pkcs12
+            representation.
+        password:
+          type: string
+          description: Password for the Certificate
+      required:
+        - data
+        - password
+      description: Parameters supplied to the CreateOrUpdate certificate operation.

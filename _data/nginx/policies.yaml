@@ -1,0 +1,623 @@
+openapi: 3.0.0
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+info:
+  description: >-
+    Use the Policies API to manage the policies used to secure
+    your App traffic.
+  version: v1
+  title: Policies API
+paths:
+  /security/policies:
+    x-f5-experimental: true
+    get:
+      x-f5-experimental: true
+      tags:
+        - Policies
+      summary: List all Policies
+      description: >-
+        Returns a list of Policy metadata objects for all of the
+        Policies.
+      operationId: listPolicies
+      responses:
+        '200':
+          description: Successfully retrieved a list of Policies.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyList'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      x-f5-experimental: true
+      tags:
+        - Policies
+      summary: Create a Policy
+      operationId: createPolicy
+      description: |
+        Creates a new Policy resource.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Policy'
+      responses:
+        '201':
+          description: Successfully created the specified Policy resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyStatus'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '409':
+          description: >-
+            The request failed due to a naming conflict with an
+            existing resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/security/policies/{policyName}':
+    get:
+      x-f5-experimental: true
+      tags:
+        - Policies
+      summary: Get a Policy
+      operationId: getPolicy
+      description: Returns information for a specific Policy resource.
+      responses:
+        '200':
+          description: Sucessfully retrieved the requested Policy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyStatus'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    put:
+      x-f5-experimental: true
+      tags:
+        - Policies
+      summary: Upsert a Policy
+      operationId: updatePolicy
+      description: >-
+        Creates a new Policy or updates an existing Policy
+        resource.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Policy'
+      responses:
+        '200':
+          description: Sucessfully updated the specified Policy resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyStatus'
+        '201':
+          description: Successfully created the requested Policy resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyStatus'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    delete:
+      x-f5-experimental: true
+      tags:
+        - Policies
+      summary: Delete a Policy
+      operationId: deletePolicy
+      description: Deletes the specified Policy resource.
+      responses:
+        '204':
+          description: >-
+            The specified Policy resource was successfully
+            deleted.
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '409':
+          description: >
+            The request to delete the specified Policy resource
+            failed.
+
+            The Policy is referenced by active objects and cannot
+            be deleted. Delete the referencing objects or remove
+            the references, then try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    parameters:
+      - name: policyName
+        description: The name of the Policy.
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ResourceName'
+components:
+  schemas:
+    ResourceName:
+      type: string
+      description: The name of a resource.
+      example: production
+    PolicyDesiredState:
+      type: object
+      description: The defired state of the policy
+      required:
+        - content
+      properties:
+        content:
+          type: object
+          $ref: '#/components/schemas/PolicyData'
+          example: >-
+            {"policy": {"name":
+            "/Common/NAPBlockingDefaultPolicy", "template":
+            {"name": "POLICY_TEMPLATE_NGINX_BASE"},
+            "applicationLanguage": "utf-8", "enforcementMode":
+            "blocking", "signatures": [], "bot-defense":
+            {"settings": {"isEnabled": false}}, "headers":
+            [{"name": "*", "type": "wildcard",
+            "decodeValueAsBase64": "disabled"}, {"name": "*-bin",
+            "type": "wildcard", "decodeValueAsBase64":
+            "required"},{"name": "Referer", "type": "explicit",
+            "decodeValueAsBase64": "disabled"}, {"name":
+            "Authorization", "type": "explicit",
+            "decodeValueAsBase64": "disabled"}, {"name":
+            "Transfer-Encoding", "type": "explicit",
+            "decodeValueAsBase64": "disabled"}], "cookies":
+            [{"name": "*", "type": "wildcard",
+            "decodeValueAsBase64": "disabled"}], "parameters":
+            [{"name": "*", "type": "wildcard",
+            "decodeValueAsBase64": "disabled"}]}}
+    PolicyList:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PolicyStatus'
+    PolicyStatus:
+      type: object
+      required:
+        - metadata
+        - desiredState
+        - currentStatus
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          $ref: '#/components/schemas/PolicyDesiredState'
+        currentStatus:
+          $ref: '#/components/schemas/PolicyCurrentStatus'
+    PolicyCurrentStatus:
+      type: object
+      description: Shows the current status of the policy.
+      required:
+        - state
+        - data
+      properties:
+        content:
+          type: object
+          $ref: '#/components/schemas/PolicyData'
+        state:
+          $ref: '#/components/schemas/ConfigState'
+    Policy:
+      type: object
+      description: Contains the policy to upload.
+      required:
+        - metadata
+        - desiredState
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          $ref: '#/components/schemas/PolicyDesiredState'
+    PolicyData:
+      type: object
+      description: Contains the policy to upload.
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    ConfigStateTally:
+      type: object
+      properties:
+        isConfigured:
+          type: boolean
+          description: The configuration operation is complete.
+        isConfiguring:
+          type: boolean
+          description: >-
+            The configuration of the resource, or of its
+            child(ren), is in process.
+        isError:
+          type: boolean
+          description: >-
+            An error occurred while configuring the resource or
+            its child(ren).
+        isDeleting:
+          type: boolean
+          description: >-
+            A delete operation is in progress for the resource or
+            its child(ren).
+        total:
+          type: integer
+          description: >-
+            The total number of resources to which the
+            configuration operation applies.
+        configured:
+          type: integer
+          description: >-
+            The number of resources that have a complete and valid
+            configuration.
+        configuring:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being configured.
+        error:
+          type: integer
+          description: >-
+            The number of resources that have encountered an error
+            during the configuration process.
+        deleting:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being deleted.
+    ConfigCondition:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The condition type.
+        message:
+          type: string
+          description: >-
+            A human-readable message that provides additional
+            information about the configuration operation.
+    ConfigState:
+      type: object
+      description: >
+        A representation of the resource's current configuration
+        state 
+
+        that comprises the status of the resource itself
+        (`selfConfigState`) and any child 
+
+        resources (`childrenConfigState`).
+
+
+        The conditions array provides additional information
+        during configuration changes.
+      properties:
+        selfConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        childrenConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigCondition'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'

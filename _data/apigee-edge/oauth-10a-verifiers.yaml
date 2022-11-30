@@ -1,0 +1,99 @@
+---
+openapi: "3.0.0"
+servers:
+- url: "https://api.enterprise.apigee.com/v1"
+info:
+  title: "OAuth 1.0a verifiers API"
+  description: "Manage OAuth verification codes. An OAuth 1.0 verifier is a verification\
+    \ code tied to the request token. Both the OAuth verifier and request token must\
+    \ be provided in exchange for an access token. "
+  version: "1.0"
+security:
+- Basic: []
+- OAuth: []
+paths:
+  /organizations/{org_name}/oauth1/verifiers:
+    get:
+      tags:
+      - "OAuth 1.0a"
+      summary: "List OAuth 1.0a verifier code"
+      description: "Lists OAuth 1.0a verifier codes and details for each verifier\
+        \ in an organization."
+      operationId: "listOAuth10RequestTokens"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/oauth1/verifiers/{verifier_code}:
+    delete:
+      tags:
+      - "OAuth 1.0a"
+      summary: "Delete OAuth 1.0a verifier code"
+      description: "Deletes an OAuth 1.0a verifier code."
+      operationId: "deleteAuth10RequestToken"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/verifier_code"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+    post:
+      tags:
+      - "OAuth 1.0a"
+      summary: "Approve or revoke OAuth 1.0a verifier code"
+      description: "Approve or revoke an OAuth 1.0a verfier code."
+      operationId: "ApproveRevokeUpdateOAuth10RequestTokes"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/verifier_code"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+    get:
+      tags:
+      - "OAuth 1.0a"
+      summary: "Get OAuth 1.0a verifier code"
+      description: "Gets details for an OAuth 1.0a verifier code"
+      operationId: "getOAuth10RequestToken"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/verifier_code"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+components:
+  securitySchemes:
+    Basic:
+      type: "http"
+      scheme: "basic"
+      description: "Multi-factor authentication is not supported."
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)"
+  parameters:
+    org_name:
+      in: "path"
+      name: "org_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Organization name."
+    verifier_code:
+      in: "path"
+      name: "verifier_code"
+      required: true
+      schema:
+        type: "string"
+      description: "Verifier code."

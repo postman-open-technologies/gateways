@@ -1,2 +1,2 @@
-# gateways
-This is a project to work with the gateway data -- temporary.
+# Gateways
+This is a temporary site for working with gateway data.

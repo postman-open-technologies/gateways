@@ -1,0 +1,90 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Boomi
+  provider: Boomi
+  slug: boomi
+  rating: 3
+  license: Proprietary
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    Boomi is a software company that specializes in integration platform as a service, API management, master data management and data preparation. Boomi was founded in Berwyn, Pennsylvania, and first launched its services in 2007.
+  platformCapabilities:
+    - Gateway
+    - Analytics
+    - Portal
+    - Catalog
+    - Dashboards
+  gatewayCapabilities:
+    - Mediation
+    - Traffic Management
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+    - FTP
+    - Database    
+  downstreamProtocols:
+    - HTTP/1.1
+  deliveryModels:
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Content-Based Routing
+        - Dynamic Routing
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Rate Limiting (Dynamic)
+        - Request Size Limiting
+        - Throttling
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - URL Rewriting
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - JWT Validation
+        - JWT authorizers
+        - JWT authorizers (Custom        
+        - IP Access Rules
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+        - OpenID Connect
+    - category: Extensions
+      capabilities:
+        - HTTP Callout
+        - HTTP integrations
+        - Integration Server services       
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://boomi.com/platform/api-management#/3f0574
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://boomi.com/platform/api-management#/3f0574
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/boomi.png     

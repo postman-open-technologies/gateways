@@ -1,0 +1,764 @@
+openapi: 3.0.0
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+info:
+  description: >-
+    Use the Nodes API to manage NGINX Controller control-plane
+    nodes.
+  version: v1
+  title: Nodes API
+paths:
+  /platform/nodes:
+    get:
+      tags:
+        - Nodes
+      summary: List all Nodes
+      operationId: getNodeList
+      description: >-
+        Gets information about the NGINX Controller control-plane
+        nodes.
+      responses:
+        '200':
+          description: Successfully retrieved the NGINX Controller nodes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NodeList'
+              example:
+                items:
+                  - currentStatus:
+                      hostname: host-1
+                      ip: 192.0.2.1
+                      state:
+                        conditions: []
+                        selfConfigState:
+                          configured: 1
+                          configuring: 0
+                          deleting: 0
+                          error: 0
+                          isConfigured: true
+                          isConfiguring: false
+                          isDeleting: false
+                          isError: false
+                          total: 1
+                    desiredState:
+                      hostname: host-1
+                      ip: 192.0.2.1
+                    metadata:
+                      createTime: '2020-09-30T14:14:46Z'
+                      kind: node
+                      name: host-1
+                  - currentStatus:
+                      hostname: host-2
+                      ip: 192.0.2.2
+                      state:
+                        conditions: []
+                        selfConfigState:
+                          configured: 1
+                          configuring: 0
+                          deleting: 0
+                          error: 0
+                          isConfigured: true
+                          isConfiguring: false
+                          isDeleting: false
+                          isError: false
+                          total: 1
+                    desiredState:
+                      hostname: host-2
+                      ip: 192.0.2.2
+                    metadata:
+                      createTime: '2020-09-30T14:19:13.755911Z'
+                      kind: node
+                      name: host-2
+                  - currentStatus:
+                      hostname: host-3
+                      ip: 192.0.2.3
+                      state:
+                        conditions: []
+                        selfConfigState:
+                          configured: 1
+                          configuring: 0
+                          deleting: 0
+                          error: 0
+                          isConfigured: true
+                          isConfiguring: false
+                          isDeleting: false
+                          isError: false
+                          total: 1
+                    desiredState:
+                      hostname: host-3
+                      ip: 192.0.2.3
+                    metadata:
+                      createTime: '2020-09-30T14:19:16.155299Z'
+                      kind: node
+                      name: host-3
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+        - Nodes
+      summary: Create a Node
+      operationId: addNode
+      description: >
+        Creates a new NGINX Controller control-plane node.
+
+
+        After a node has been created, you must install NGINX
+        Controller on the node to finish adding the node to the
+        cluster.
+
+        In the JSON response, look for the `install.sh` command
+        and join-key located under
+        `currentStatus.state.conditions.message`.
+
+        The `type` is `install`. Copy and run this command with
+        the join-key on the new node to finish the setup.
+
+
+        Note: (Optional) If you're adding a deleted node back to
+        the cluster, you must uninstall NGINX Controller from the
+        node before 
+
+        running the `install.sh` command with the new join-key. To
+        uninstall NGINX Controller, run the uninstall script on
+        the node: 
+
+        `/opt/nginx-controller/uninstall.sh`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Node'
+            example:
+              desiredState:
+                hostname: host-2
+                ip: 192.0.2.2
+              metadata:
+                name: host-2
+      responses:
+        '201':
+          description: Successfully created the NGINX Controller node.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Node'
+              example:
+                currentStatus:
+                  hostname: host-2
+                  ip: 192.0.2.2
+                  state:
+                    conditions:
+                      - message: >-
+                          install.sh --join-key
+                          eyJlbmRwb2ludCI6IjE5Mi4wLjIuMTo2NDQzIiwiY2FDZXJ0SGFzaCI6InNoYTI1Njp4IiwiZW5jcnlwdGlvblNlY3JldCI6IngiLCJ0b2tlbiI6IngiLCJjZXJ0aWZpY2F0ZUtleSI6IngifQo=
+                        type: install
+                    selfConfigState:
+                      configured: 0
+                      configuring: 1
+                      deleting: 0
+                      error: 0
+                      isConfigured: false
+                      isConfiguring: true
+                      isDeleting: false
+                      isError: false
+                      total: 1
+                desiredState:
+                  hostname: host-2
+                  ip: 192.0.2.2
+                metadata:
+                  createTime: '2020-10-01T10:03:39.228626Z'
+                  kind: node
+                  name: host-2
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '501':
+          $ref: '#/components/responses/NotImplemented'
+  '/platform/nodes/{nodeName}':
+    get:
+      tags:
+        - Nodes
+      summary: Get a Node
+      operationId: getNode
+      description: >-
+        Gets information about an NGINX Controller control-plane
+        node by name.
+      parameters:
+        - $ref: '#/components/parameters/nodeName'
+      responses:
+        '200':
+          description: >-
+            Successfully retrieved the specified NGINX Controller
+            node.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Node'
+              example:
+                currentStatus:
+                  hostname: host-2
+                  ip: 192.0.2.2
+                  state:
+                    conditions:
+                      - message: >-
+                          install.sh --join-key
+                          eyJlbmRwb2ludCI6IjE5Mi4wLjIuMTo2NDQzIiwiY2FDZXJ0SGFzaCI6InNoYTI1Njp4IiwiZW5jcnlwdGlvblNlY3JldCI6IngiLCJ0b2tlbiI6IngiLCJjZXJ0aWZpY2F0ZUtleSI6IngifQo=
+                        type: install
+                    selfConfigState:
+                      configured: 0
+                      configuring: 1
+                      deleting: 0
+                      error: 0
+                      isConfigured: false
+                      isConfiguring: true
+                      isDeleting: false
+                      isError: false
+                      total: 1
+                desiredState:
+                  hostname: host-2
+                  ip: 192.0.2.2
+                metadata:
+                  createTime: '2020-10-01T10:03:39.228626Z'
+                  kind: node
+                  name: host-2
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - Nodes
+      summary: Delete a Node
+      operationId: deleteNode
+      description: >
+        Deletes an NGINX Controller control-plane node by name.
+
+        The node's status is `isDeleting` while the workloads
+
+        are being drained from it. Once draining is complete the
+        node is deleted.
+
+
+        Note: (Optional) You must uninstall NGINX Controller from
+        the deleted node before you can add the node back to the
+        cluster. 
+
+        To uninstall NGINX Controller, run the uninstall script on
+        the node: `/opt/nginx-controller/uninstall.sh`.
+      parameters:
+        - $ref: '#/components/parameters/nodeName'
+      responses:
+        '202':
+          description: Successfully scheduled the node to be deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Node'
+              example:
+                currentStatus:
+                  hostname: host-2
+                  ip: 192.0.2.2
+                  state:
+                    conditions: []
+                    selfConfigState:
+                      configured: 1
+                      configuring: 0
+                      deleting: 1
+                      error: 0
+                      isConfigured: true
+                      isConfiguring: false
+                      isDeleting: true
+                      isError: false
+                      total: 1
+                desiredState:
+                  hostname: host-2
+                  ip: 192.0.2.2
+                metadata:
+                  createTime: '2020-10-01T10:03:39.228626Z'
+                  kind: node
+                  name: host-2
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '501':
+          $ref: '#/components/responses/NotImplemented'
+components:
+  parameters:
+    nodeName:
+      in: path
+      name: nodeName
+      description: The name of the node.
+      schema:
+        type: string
+      required: true
+  responses:
+    BadRequest:
+      description: >-
+        Bad input parameter, or possibly a bad URI. Check the
+        input for typos and try again.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+    Unauthorized:
+      description: User authentication is invalid or missing.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+    Forbidden:
+      description: The request failed due to insufficient privileges.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+    NotFound:
+      description: The specified Node resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            message: 'Error getting node: node not found.'
+            code: 9001
+    Conflict:
+      description: >-
+        The request failed due to a conflict with an existing Node
+        resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+    InternalServerError:
+      description: >-
+        The request cannot be processed because of an internal
+        server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+    NotImplemented:
+      description: >-
+        The request method is not supported by the server in the
+        current configuration and cannot be handled.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+  schemas:
+    NodeList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Node'
+    Node:
+      type: object
+      required:
+        - metadata
+        - desiredState
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        currentStatus:
+          allOf:
+            - properties:
+                state:
+                  $ref: '#/components/schemas/ConfigState'
+            - $ref: '#/components/schemas/NodeDef'
+        desiredState:
+          $ref: '#/components/schemas/NodeDef'
+    NodeDef:
+      type: object
+      properties:
+        hostname:
+          type: string
+          format: hostname
+          description: >-
+            The hostname for the NGINX Controller control-plane
+            node. When adding a node, you must provide a hostname
+            or an IP address, or you can specify both. The
+            hostname must be the real hostname, which you can look
+            up by running the `hostname` command.
+        ip:
+          type: string
+          format: ipv4
+          example: 192.0.2.0
+          description: >-
+            The IP address for the NGINX Controller control-plane
+            node. When adding a node, you must provide an IP
+            address or a hostname, or you can specify both.
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          not:
+            type: string
+            enum:
+              - .
+              - ..
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+            - cannot be only `.` or `..`
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    ConfigStateTally:
+      type: object
+      properties:
+        isConfigured:
+          type: boolean
+          description: The configuration operation is complete.
+        isConfiguring:
+          type: boolean
+          description: >-
+            The configuration of the resource, or of its
+            child(ren), is in process.
+        isError:
+          type: boolean
+          description: >-
+            An error occurred while configuring the resource or
+            its child(ren).
+        isDeleting:
+          type: boolean
+          description: >-
+            A delete operation is in progress for the resource or
+            its child(ren).
+        total:
+          type: integer
+          description: >-
+            The total number of resources to which the
+            configuration operation applies.
+        configured:
+          type: integer
+          description: >-
+            The number of resources that have a complete and valid
+            configuration.
+        configuring:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being configured.
+        error:
+          type: integer
+          description: >-
+            The number of resources that have encountered an error
+            during the configuration process.
+        deleting:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being deleted.
+    ConfigCondition:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The condition type.
+        message:
+          type: string
+          description: >-
+            A human-readable message that provides additional
+            information about the configuration operation.
+    ConfigState:
+      type: object
+      description: >
+        A representation of the resource's current configuration
+        state 
+
+        that comprises the status of the resource itself
+        (`selfConfigState`) and any child 
+
+        resources (`childrenConfigState`).
+
+
+        The conditions array provides additional information
+        during configuration changes.
+      properties:
+        selfConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        childrenConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigCondition'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'

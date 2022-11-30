@@ -1,0 +1,525 @@
+openapi: 3.0.0
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+info:
+  description: >-
+    Use the Events API to retrieve information about system
+    Events.
+  version: v1
+  title: Events API
+paths:
+  /analytics/events:
+    get:
+      tags:
+        - Events
+      summary: Get Events
+      operationId: queryEvents
+      description: Returns a list of system Events.
+      parameters:
+        - name: startTime
+          in: query
+          description: >
+            Indicates the start of the time window to include
+            Events from (inclusive).
+
+
+            - Must be provided if `endTime` was specified.
+
+            - If you do not set 'startTime`, the most recent 100
+            Events will be returned.
+
+            - `startTime` and `endTime` can be formatted as Event
+            IDs (UUID format). If you use this format for any
+            boundary, the validity of that boundary (for example,
+            if endTime is greater than startTime) will not be
+            checked.
+          schema:
+            $ref: '#/components/schemas/Time'
+        - name: endTime
+          in: query
+          description: >
+            Indicates the end of the time window to include Events
+            from (non-inclusive).
+
+
+            - Must be greater than `startTime`.
+
+            - Must be provided if `startTime` was specified.
+          schema:
+            $ref: '#/components/schemas/Time'
+        - name: filter
+          in: query
+          description: >
+            Filters results based on dimension values.
+
+
+            Consists of one or more predicates in the form 
+            `<dimension><operator><dimension value>` where:
+
+            - `<dimension>` is the name of the dimension,
+
+            - `<operator>` is one of the supported operators (`=`,
+            `!=`, `<`, `<=`, `>=` `>`, `in` or `not`)
+
+            - `<dimension value>` is the value of the dimension(s)
+            that you want to filter on,
+
+            - `<dimension> and <dimension value>` are case
+            sensitive.
+
+
+            For example: 'count > 100'
+
+
+            Predicates can be combined into logical expressions
+            using `OR`, `AND`, and `(` `)`.
+
+            For matching values, wildcard (`*`) use is supported.
+
+
+            Wrapping predicates in single quotes is recommended to
+            ensure that the full query string is processed
+            correctly.
+          schema:
+            type: string
+            example: >-
+              category IN ('agent','controller') AND level='debug'
+              AND count > 100
+          allowReserved: true
+        - name: orderBy
+          in: query
+          description: >
+            Indicates how the results will be ordered.
+
+
+            Consists of at most three comma-separated clauses in
+            the form `<dimension><single space><sort order>` or
+            `<dimension>` where:
+
+            - `<dimension>` is the name of the dimension.
+
+            - `<sort order>` is the order by which the specified
+            dimension will be sorted. Valid sort order is either
+            "ASC" for ascending order, or "DESC" for descending
+            order. If no sort order is provided, the default one
+            ("ASC") will be used.
+
+
+            Note that if no orderBy is provided, the default
+            combination of descending "timestamp" and ascending
+            "id" will be used regardless. If you provide different
+            order for "timestamp" or "id" in orderBy, the default
+            one will be overwritten.
+          schema:
+            type: string
+            example: 'name ASC,timestamp DESC'
+        - name: page
+          in: query
+          description: page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+            example: 1
+        - name: pageToken
+          in: query
+          description: >
+            Transactional token used for pagination.
+
+
+            The token ensures consistency of the query results
+            across requests for various pages of data. It provides
+            a snapshot of the database contents from the time at
+            which the query was received.
+
+
+            If `pageToken` is not provided with a page request, a
+            token is automatically generated and will be returned
+            in the response metadata. You should include the token
+            in subsequent requests for pages in the query results.
+
+
+            Sending a query without a `pageToken` refreshes the
+            query results.
+          schema:
+            type: string
+            example: '1573653786'
+        - name: pageSize
+          in: query
+          description: >
+            Defines the number of returned items per page.
+
+
+            - The maximum value is 100. If value is greater, it is
+            automatically set down to 100.
+
+            - If `pageSize`=0, pagination is disabled and all
+            Events will be returned in response.
+
+            - The response size is limited to 10,000 results. If
+            the number of results exceeds 10,000 a warning is
+            returned.
+          schema:
+            type: integer
+            default: 100
+            example: 10
+        - name: includeTotal
+          in: query
+          description: >
+            Defines if the Metadata should include the total count
+            of events.
+          schema:
+            type: boolean
+            default: false
+            example: true
+      responses:
+        '200':
+          description: Successfully returned the requested Events.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventQueryResult'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/analytics/events/{id}':
+    get:
+      tags:
+        - Events
+      summary: Get an Event
+      operationId: queryEventsById
+      description: Returns the specified Event.
+      parameters:
+        - name: id
+          in: path
+          description: Identifies the Event that you want to retrieve.
+          required: true
+          schema:
+            type: string
+            example: 00112233-4455-6677-8899-aabbccddeeff
+      responses:
+        '200':
+          description: Successfully retrieved the requested Event.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+components:
+  schemas:
+    Time:
+      description: >
+        Indicates a point in time.
+
+
+        You can provide time using ISO 8601 format or as an
+        offset. An offset is a string that starts with `+` or `-`,
+        followed by a number and a unit of time (`y`, `M`, `w`,
+        `d`, `h`, `m` or `s`).
+
+        Examples: "2019-08-07T09:57:36.088757764Z", "now-3h"
+      type: string
+      example: '2019-08-07T09:57:36.088757764Z'
+    EventQueryResult:
+      type: object
+      properties:
+        Metadata:
+          $ref: '#/components/schemas/Metadata'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+    Event:
+      type: object
+      description: An Event is a system message.
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: '2019-08-07T09:57:36.088757764Z'
+        id:
+          type: string
+          format: uuid
+          example: 00112233-4455-6677-8899-aabbccddeeff
+        message:
+          type: string
+          example: >-
+            nginx stub_status detected,
+            https://127.0.0.1:443/basic_status
+        count:
+          type: integer
+          example: 99
+        category:
+          type: string
+        level:
+          type: string
+          enum:
+            - DEBUG
+            - INFO
+            - WARNING
+            - ERROR
+            - CRITICAL
+          example: INFO
+        hostname:
+          type: string
+          example: d0784771a503
+        alias:
+          type: string
+          example: my_system
+        status:
+          type: string
+          example: success
+        error:
+          type: string
+        local_id:
+          type: string
+          example: >-
+            d23c85484ee760ee5f4619c0434e1968b5290964487541da0889964eb783613c
+        root_uuid:
+          type: string
+          example: 759e842f6b9f51a7803f57da1e9f5ae8
+        tags:
+          type: array
+          items:
+            type: string
+          example: '["tag1", "tag2"]'
+        instance:
+          type: string
+          example: '2'
+        location:
+          type: string
+          example: unspecified
+        correlationId:
+          type: string
+          example: e5f355e4de82edd0afcd74ef6c1ee6aa
+        http.request_endpoint:
+          type: string
+          example: /services/environments/dev/apps/app/components/25
+        http.request_method:
+          type: string
+          example: POST
+        user:
+          type: string
+          example: admin@nginx.test
+        environment:
+          type: string
+          example: dev-environment
+        app:
+          type: string
+          example: finance-app
+        component:
+          type: string
+          example: secure-component
+        gateway:
+          type: string
+          example: dev-gateway
+        request_outcome:
+          type: string
+          enum:
+            - REJECTED
+            - PASSED
+          example: REJECTED
+        request_outcome_reason:
+          type: string
+          enum:
+            - SECURITY_WAF_OK
+            - SECURITY_WAF_VIOLATION
+            - SECURITY_WAF_FLAGGED
+            - SECURITY_WAF_BYPASS
+            - SECURITY_NGINX_VIOLATION
+          example: SECURITY_WAF_FLAGGED
+        http.response_code:
+          type: integer
+          example: 200
+        http.hostname:
+          type: string
+          example: itay-108-117.f5net.com
+        http.remote_addr:
+          type: string
+          example: 127.0.0.1
+        http.remote_port:
+          type: integer
+          example: 4000
+        http.server_addr:
+          type: string
+          example: 0.0.0.0
+        http.server_port:
+          type: integer
+          example: 80
+        http.request:
+          type: string
+          example: >-
+            GET /test.exe HTTP/1.1\r\nUser-Agent:
+            curl/7.29.0\r\nHost: localhost\r\nAccept: */*\r\n
+        waf.support_id:
+          type: string
+          example: '161339000577578694'
+        waf.signature_ids:
+          type: string
+          example: '200001475,200000098'
+        waf.policy:
+          type: string
+          example: /Common/policy1
+        waf.attack_types:
+          type: string
+          example: >-
+            Non-browser Client,Abuse of Functionality,Cross Site
+            Scripting (XSS)
+        waf.violation_rating:
+          type: string
+          enum:
+            - RISK_COULD_NOT_BE_DETERMINED
+            - POSSIBLE_ATTACK
+            - MOST_LIKELY_ATTACK
+          example: MOST_LIKELY_ATTACK
+        waf.signature_names:
+          type: string
+          example: >-
+            XSS script tag end (Parameter) (2),XSS script tag
+            (Parameter)
+        waf.is_truncated:
+          type: string
+          example: 'true'
+        waf.signature_cves:
+          type: string
+          example: 'CVE-2017-8759,CVE-2015-1641'
+        waf.sub_violations:
+          type: string
+          example: >-
+            HTTP protocol compliance failed:Host header contains
+            IP address
+        waf.violations:
+          type: string
+          example: >-
+            HTTP protocol compliance failed,Illegal meta character
+            in value,Attack signature detected
+        waf.x_forwarded_for_header_value:
+          type: string
+          example: 87.233.120.158
+        waf.bot_anomalies:
+          type: string
+          example: Search Engine Verification Failed
+        waf.bot_category:
+          type: string
+          example: Search Engine
+        waf.bot_client_class:
+          type: string
+          example: Malicious Bot
+        waf.bot_signature_name:
+          type: string
+          example: Google
+        waf.enforced_bot_anomalies:
+          type: string
+          example: Search Engine Verification Failed
+        action_type:
+          type: string
+          example: login
+        action_outcome:
+          type: string
+          example: success
+        auth_provider.name:
+          type: string
+          example: local
+        auth_provider.type:
+          type: string
+          example: BASIC
+        resource_name:
+          type: string
+          example: datadog-forwarder
+        big_ip_address:
+          type: string
+          example: 'https://87.233.120.158'
+        workload_health_state:
+          type: string
+          example: unhealthy
+    Metadata:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/MetadataPagination'
+    MetadataPagination:
+      type: object
+      required:
+        - pageToken
+      properties:
+        pageToken:
+          type: string
+          example: '1594048781'
+        links:
+          $ref: '#/components/schemas/PaginationLinks'
+        total:
+          type: integer
+          example: 3600
+    PaginationLinks:
+      type: object
+      properties:
+        next:
+          $ref: '#/components/schemas/SelfLinks'
+        prev:
+          $ref: '#/components/schemas/SelfLinks'
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: 'Invalid filter param key: ''server'''
+          description: >
+            Support oriented and human readable error message in
+            English.
+
+            The message explains the error condition and may offer
+            a solution.
+        code:
+          type: integer
+          example: 0
+          description: >
+            Support oriented numerical error code in English.
+
+            Note that this is not the HTTP code representing the
+            error.
+
+            The message should explain the error.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          description: |
+            An internal error detail returned from the server.
+    SelfLinks:
+      type: object
+      description: |
+        The SelfLinks object includes links to the resource.
+
+        The object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/analytics/events?pageToken=1594048781&page=2
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.

@@ -1,0 +1,707 @@
+openapi: 3.0.0
+info:
+  version: v1
+  title: Groups API
+  description: >-
+    Use the Groups API to manage NGINX Controller authentication
+    groups.
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+paths:
+  /platform/auth/groups:
+    get:
+      tags:
+        - Groups
+      summary: List Authentication Groups
+      description: >
+        Returns an unfiltered list of all of the authentication
+        groups.
+
+
+        An authentication group (or "AuthN Group") is a collection
+        of Roles. All AuthN Groups are globally unique. You can
+        assign AuthN Groups to external authentication provider
+        properties (such as AD Groups).
+      operationId: getGroups
+      responses:
+        '200':
+          description: >
+            Successfully retrieved a list of all authentication
+            groups.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupListResponse'
+              example:
+                items:
+                  - currentStatus:
+                      roles:
+                        - ref: /platform/roles/admin
+                          links:
+                            rel: /api/v1/platform/roles/admin
+                            name: admin
+                            displayName: Admin Role
+                    desiredState:
+                      roles:
+                        - ref: /platform/roles/user
+                    metadata:
+                      createTime: '2020-02-24T21:29:59.866708Z'
+                      kind: group
+                      name: us-group-1
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/Internal'
+    post:
+      tags:
+        - Groups
+      summary: Add an Authentication Group
+      description: Creates a new authentication group.
+      operationId: createGroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Group'
+            example:
+              desiredState:
+                roles:
+                  - ref: /platform/roles/user
+                  - ref: /platform/roles/custom-1
+              metadata:
+                kind: group
+                name: group-1
+      responses:
+        '201':
+          description: >
+            Successfully created the requested authentication
+            group.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+              example:
+                currentStatus:
+                  roles:
+                    - ref: /platform/roles/user
+                      links:
+                        rel: /api/v1/platform/roles/user
+                        name: user
+                        displayName: User Role
+                    - ref: /platform/roles/custom-1
+                      links:
+                        rel: /api/v1/platform/roles/custom-1
+                        name: custom-1
+                        displayName: First Custom Role
+                desiredState:
+                  roles:
+                    - ref: /platform/roles/user
+                    - ref: /platform/roles/custom-1
+                metadata:
+                  createTime: '2020-02-24T22:55:51.729272Z'
+                  kind: group
+                  name: group-1
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/Internal'
+  '/platform/auth/groups/{groupName}':
+    get:
+      tags:
+        - Groups
+      summary: Get an Authentication Group
+      description: >
+        Returns information about a specific Authentication Group
+        resource.
+      operationId: getGroupByName
+      parameters:
+        - $ref: '#/components/parameters/groupName'
+      responses:
+        '200':
+          description: >
+            Successfully retrieved the requested Authentication
+            Group resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+              example:
+                currentStatus:
+                  roles:
+                    - ref: /platform/roles/user
+                      links:
+                        rel: /api/v1/platform/roles/user
+                        name: user
+                        displayName: User Role
+                    - ref: /platform/roles/custom-1
+                      links:
+                        rel: /api/v1/platform/roles/custom-1
+                        name: custom-1
+                        displayName: First Custom Role
+                desiredState:
+                  roles:
+                    - ref: /platform/roles/user
+                    - ref: /platform/roles/custom-1
+                metadata:
+                  createTime: '2020-02-24T22:38:33.842929Z'
+                  kind: group
+                  name: group-1
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Internal'
+    put:
+      tags:
+        - Groups
+      summary: Upsert an Authentication Group
+      description: >
+        Creates a new Authentication Group resource or updates an
+        existing Authentication Group.
+      operationId: upsertGroup
+      parameters:
+        - $ref: '#/components/parameters/groupName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Group'
+            example:
+              desiredState:
+                roles:
+                  - ref: /platform/roles/user
+                  - ref: /platform/roles/custom-1
+              metadata:
+                kind: group
+                name: group-1
+      responses:
+        '200':
+          description: |
+            Successfully updated the specified group.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+              example:
+                currentStatus:
+                  roles:
+                    - ref: /platform/roles/user
+                      links:
+                        rel: /api/v1/platform/roles/user
+                        name: user
+                        displayName: User Role
+                    - ref: /platform/roles/custom-1
+                      links:
+                        rel: /api/v1/platform/roles/custom-1
+                        name: custom-1
+                        displayName: First Custom Role
+                desiredState:
+                  roles:
+                    - ref: /platform/roles/user
+                    - ref: /platform/roles/custom-1
+                metadata:
+                  createTime: '2020-02-24T22:38:33.842929Z'
+                  kind: group
+                  name: group-1
+                  updateTime: '2020-02-24T22:53:14.340686Z'
+        '201':
+          description: |
+            Successfully created the specified group.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+              example:
+                currentStatus:
+                  roles:
+                    - ref: /platform/roles/user
+                      links:
+                        rel: /api/v1/platform/roles/user
+                        name: user
+                        displayName: User Role
+                    - ref: /platform/roles/custom-1
+                      links:
+                        rel: /api/v1/platform/roles/custom-1
+                        name: custom-1
+                        displayName: First Custom Role
+                desiredState:
+                  roles:
+                    - ref: /platform/roles/user
+                    - ref: /platform/roles/custom-1
+                metadata:
+                  createTime: '2020-02-24T22:38:33.842929Z'
+                  kind: group
+                  name: group-1
+                  updateTime: '2020-02-24T22:53:14.340686Z'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/Internal'
+    delete:
+      tags:
+        - Groups
+      summary: Delete an Authentication Group
+      description: Deletes a specific authentication group.
+      operationId: deleteGroup
+      parameters:
+        - $ref: '#/components/parameters/groupName'
+      responses:
+        '204':
+          description: >-
+            Succesfully deleted the authentication group. No
+            content was returned.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/Internal'
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: session
+  parameters:
+    groupName:
+      in: path
+      name: groupName
+      schema:
+        type: string
+      required: true
+      description: |
+        The name of the group.
+  responses:
+    BadRequest:
+      description: >
+        Bad input parameter, or possibly a bad URI. Check the
+        input for typos and try again.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 3801
+            message: >-
+              Error parsing group from the request payload: bad
+              request. Check that the request is well-formed, then
+              try resending the request.
+    Unauthorized:
+      description: |
+        User authentication is invalid or missing.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 401
+            message: authentication needed
+    Forbidden:
+      description: |
+        The request failed due to insufficient privileges.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 403
+            message: unauthorized
+    Internal:
+      description: >
+        The request cannot be processed because of an internal
+        server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 3811
+            message: >-
+              Error upserting group: an internal error occurred
+              while processing your request. Try resending the
+              request.
+    NotFound:
+      description: |
+        The specified authentication group was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 8920
+            message: 'Error getting or deleting group: group not found.'
+    Conflict:
+      description: >
+        The request failed due to a conflict with an existing
+        Authentication Group or Authentication Provider resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 8919
+            message: 'Error creating group: group already exists.'
+  schemas:
+    GroupListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+          description: |
+            Contains list of authentication groups.
+    Group:
+      type: object
+      required:
+        - metadata
+        - desiredState
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          $ref: '#/components/schemas/GroupDef'
+        currentStatus:
+          $ref: '#/components/schemas/GroupDef'
+    GroupDef:
+      type: object
+      required:
+        - roles
+      description: >
+        An authentication group (or "AuthN Group") is a collection
+        of Roles. All AuthN Groups are globally unique. You can
+        assign AuthN Groups to external authentication provider
+        properties (such as an AD Group).
+      properties:
+        roles:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ResourceRef'
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          not:
+            type: string
+            enum:
+              - .
+              - ..
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+            - cannot be only `.` or `..`
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    NamedLinks:
+      allOf:
+        - $ref: '#/components/schemas/SelfLinks'
+        - type: object
+          description: >
+            Contains information about the object being referred
+            to.
+
+
+            These are generally details -- like the object name
+            and display name --
+
+            that are useful to a consumer of the API that performs
+            further
+
+            processing. 
+
+
+            This object is only present in responses.
+              
+          properties:
+            name:
+              type: string
+              example: production
+              description: |
+                The name of the linked resource.
+            displayName:
+              type: string
+              example: Production Environment
+              description: A user friendly resource name.
+    ResourceRef:
+      type: object
+      required:
+        - ref
+      properties:
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: |
+            A reference to another NGINX Controller resource.
+        links:
+          $ref: '#/components/schemas/NamedLinks'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'

@@ -1,0 +1,543 @@
+---
+openapi: "3.0.0"
+servers:
+- url: "https://api.enterprise.apigee.com/v1"
+info:
+  title: "Data masks API"
+  description: "Filter data from trace sessions. \n\nApigee Edge enables developers\
+    \ to capture message content to enable runtime debugging of APIs calls. In many\
+    \ cases, API traffic contains sensitive data, such as credit cards or personally\
+    \ identifiable health information (PHI) that needs to filtered out of the captured\
+    \ message content. Mask configurations enable you to specify data that will be\
+    \ filtered out of trace sessions. Masking configurations can be set globally (at\
+    \ the organization-level) or locally (at the API proxy level)."
+  version: "1.0"
+security:
+- Basic: []
+- OAuth: []
+paths:
+  /organizations/{org_name}/apis/{api_name}/maskconfigs:
+    get:
+      tags:
+      - "Mask Config"
+      summary: "List data masks defined for an API proxy"
+      description: "Lists data masks defined for an API Proxy."
+      operationId: "listDataMasks"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/api_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+                  description: "Data masks."
+        "400":
+          description: "bad input parameter"
+    post:
+      tags:
+      - "Mask Config"
+      summary: "Create data mask for an API proxy"
+      description: "Creates a data mask for an API proxy.\n\nYou can capture message\
+        \ content to assist in runtime debugging of APIs calls. In many cases, API\
+        \ traffic contains sensitive data, such as credit cards or personally identifiable\
+        \ health information (PHI) that needs to filtered out of the captured message\
+        \ content.\n\nData masks enable you to specify data that will be filtered\
+        \ out of trace sessions. Data masking is only enabled when a trace session\
+        \ (also called a *debug* session) is enabled for an API proxy. If no trace\
+        \ session are enabled on an API proxy, then the data will not be masked.\n\
+        \nMask configurations enable you to identify sensitive data in the following\
+        \ sources:\n\n* **XML payloads**: Using `XPath`, identify XML elements to\
+        \ be filtered from request or response message payloads.\n* **JSON payloads**:\
+        \ Using `JSONPath`, identify JSON properties to be filtered from request or\
+        \ response message payloads.\n* **Flow variables**: Specify a list of variables\
+        \ that should be masked in debug output.\n\nTo understand the structure of\
+        \ a data mask and examples of calling the API, see <a href=\"https://docs.apigee.com/api-platform/security/data-masking#maskingsensitivedata\"\
+        >Data masking and hiding</a>."
+      operationId: "createDataMaskAPIProxy"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/api_name"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataMask"
+              example:
+                namespaces:
+                - _prefix: "myco"
+                  __text: "http://example.com"
+                xPathsRequest: "-'/myco:Greeting/myco:User'"
+                xPathsResponse: "-'/myco:Greeting/myco:User'"
+                jSONPathsRequest: "-'$.store.book[*].author'"
+                JSONPathsResponse: "-'$.store.book[*].author'"
+                XPathsFault: "-'/myco:Greeting/myco:User'"
+                jSONPathsFault: "-'$.store.book[*].author'"
+                variables:
+                - "request.header.user-agent"
+                - "request.formparam.password"
+                name: "default"
+        "400":
+          description: "Bad request"
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/DataMaskXML"
+            example:
+              MaskDataConfiguration:
+                Namespaces:
+                  Namespace:
+                    _prefix: "myco"
+                    __text: "http://example.com"
+                XPathsRequest:
+                  XPathRequest: "/myco:Greeting/myco:User"
+                XPathsResponse:
+                  XPathResponse: "/myco:Greeting/myco:User"
+                JSONPathsRequest:
+                  JSONPathRequest: "$.store.book[*].author"
+                JSONPathsResponse:
+                  JSONPathResponse: "$.store.book[*].author"
+                XPathsFault:
+                  XPathFault: "/myco:Greeting/myco:User"
+                JSONPathsFault:
+                  JSONPathFault: "$.store.book[*].author"
+                Variables:
+                  Variable:
+                  - "request.header.user-agent"
+                  - "request.formparam.password"
+                _name: "default"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DataMask"
+            example:
+              namespaces:
+              - _prefix: "myco"
+                __text: "http://example.com"
+              xPathsRequest: "-'/myco:Greeting/myco:User'"
+              xPathsResponse: "-'/myco:Greeting/myco:User'"
+              jSONPathsRequest: "-'$.store.book[*].author'"
+              JSONPathsResponse: "-'$.store.book[*].author'"
+              XPathsFault: "-'/myco:Greeting/myco:User'"
+              jSONPathsFault: "-'$.store.book[*].author'"
+              variables:
+              - "request.header.user-agent"
+              - "request.formparam.password"
+              name: "default"
+  /organizations/{org_name}/apis/{api_name}/maskconfigs/{maskconfig_name}:
+    get:
+      tags:
+      - "Mask Config"
+      summary: "Get data mask defined for an API proxy"
+      description: "Gets the details for a data mask defined for an API proxy."
+      operationId: "GetDataMaskDetailsAPIProxy"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/api_name"
+      - $ref: "#/components/parameters/maskconfig_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataMask"
+              example:
+                namespaces:
+                - _prefix: "myco"
+                  __text: "http://example.com"
+                xPathsRequest: "-'/myco:Greeting/myco:User'"
+                xPathsResponse: "-'/myco:Greeting/myco:User'"
+                jSONPathsRequest: "-'$.store.book[*].author'"
+                JSONPathsResponse: "-'$.store.book[*].author'"
+                XPathsFault: "-'/myco:Greeting/myco:User'"
+                jSONPathsFault: "-'$.store.book[*].author'"
+                variables:
+                - "request.header.user-agent"
+                - "request.formparam.password"
+                name: "default"
+        "400":
+          description: "bad input parameter"
+    delete:
+      tags:
+      - "Mask Config"
+      summary: "Delete data mask defined for an API proxy"
+      description: "Deletes a data mask defined for an API Proxy."
+      operationId: "DeleteDataMaskAPIProxy"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/api_name"
+      - $ref: "#/components/parameters/maskconfig_name"
+      responses:
+        "204":
+          description: "No Content"
+        "400":
+          description: "bad input parameter"
+  /organizations/{org_name}/maskconfigs:
+    get:
+      tags:
+      - "Mask Config"
+      summary: "List data masks defined for an organization"
+      description: "Lists data masks defined for an organization."
+      operationId: "ListDataMarkOrg"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+                  description: "Data masks."
+        "400":
+          description: "bad input parameter"
+    post:
+      tags:
+      - "Mask Config"
+      summary: "Create data mask for an organization"
+      description: "Creates a data mask for an organization.\n\nYou can capture message\
+        \ content to assist in runtime debugging of APIs calls. In many cases, API\
+        \ traffic contains sensitive data, such as credit cards or personally identifiable\
+        \ health information (PHI) that needs to filtered out of the captured message\
+        \ content.\n\nData masks enable you to specify data that will be filtered\
+        \ out of trace sessions. Data masking is only enabled when a trace session\
+        \ (also called a *debug* session) is enabled for an API proxy. If no trace\
+        \ session are enabled on an API proxy, then the data will not be masked.\n\
+        \nMask configurations enable you to identify sensitive data in the following\
+        \ sources:\n\n* **XML payloads**: Using `XPath`, identify XML elements to\
+        \ be filtered from request or response message payloads.\n* **JSON payloads**:\
+        \ Using `JSONPath`, identify JSON properties to be filtered from request or\
+        \ response message payloads.\n* **Flow variables**: Specify a list of variables\
+        \ that should be masked in debug output.\n\nTo understand the structure of\
+        \ a data mask and examples of calling the API, see <a href=\"https://docs.apigee.com/api-platform/security/data-masking#maskingsensitivedata\"\
+        >Data masking and hiding</a>."
+      operationId: "createDataMaskOrg"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataMask"
+              example:
+                namespaces:
+                - _prefix: "myco"
+                  __text: "http://example.com"
+                xPathsRequest: "-'/myco:Greeting/myco:User'"
+                xPathsResponse: "-'/myco:Greeting/myco:User'"
+                jSONPathsRequest: "-'$.store.book[*].author'"
+                JSONPathsResponse: "-'$.store.book[*].author'"
+                XPathsFault: "-'/myco:Greeting/myco:User'"
+                jSONPathsFault: "-'$.store.book[*].author'"
+                variables:
+                - "request.header.user-agent"
+                - "request.formparam.password"
+                name: "default"
+        "400":
+          description: "Bad request"
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/DataMaskXML"
+            example:
+              MaskDataConfiguration:
+                Namespaces:
+                  Namespace:
+                    _prefix: "myco"
+                    __text: "http://example.com"
+                XPathsRequest:
+                  XPathRequest: "/myco:Greeting/myco:User"
+                XPathsResponse:
+                  XPathResponse: "/myco:Greeting/myco:User"
+                JSONPathsRequest:
+                  JSONPathRequest: "$.store.book[*].author"
+                JSONPathsResponse:
+                  JSONPathResponse: "$.store.book[*].author"
+                XPathsFault:
+                  XPathFault: "/myco:Greeting/myco:User"
+                JSONPathsFault:
+                  JSONPathFault: "$.store.book[*].author"
+                Variables:
+                  Variable:
+                  - "request.header.user-agent"
+                  - "request.formparam.password"
+                _name: "default"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DataMask"
+            example:
+              namespaces:
+              - _prefix: "myco"
+                __text: "http://example.com"
+              xPathsRequest: "-'/myco:Greeting/myco:User'"
+              xPathsResponse: "-'/myco:Greeting/myco:User'"
+              jSONPathsRequest: "-'$.store.book[*].author'"
+              JSONPathsResponse: "-'$.store.book[*].author'"
+              XPathsFault: "-'/myco:Greeting/myco:User'"
+              jSONPathsFault: "-'$.store.book[*].author'"
+              variables:
+              - "request.header.user-agent"
+              - "request.formparam.password"
+              name: "default"
+  /organizations/{org_name}/maskconfigs/{maskconfig_name}:
+    get:
+      tags:
+      - "Mask Config"
+      summary: "Get data mask defined for an organization"
+      description: "Gets the details for a data mask defined for an organization."
+      operationId: "getDataMaskOrg"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/maskconfig_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataMask"
+              example:
+                namespaces:
+                - _prefix: "myco"
+                  __text: "http://example.com"
+                xPathsRequest: "-'/myco:Greeting/myco:User'"
+                xPathsResponse: "-'/myco:Greeting/myco:User'"
+                jSONPathsRequest: "-'$.store.book[*].author'"
+                JSONPathsResponse: "-'$.store.book[*].author'"
+                XPathsFault: "-'/myco:Greeting/myco:User'"
+                jSONPathsFault: "-'$.store.book[*].author'"
+                variables:
+                - "request.header.user-agent"
+                - "request.formparam.password"
+                name: "default"
+        "400":
+          description: "bad input parameter"
+    delete:
+      tags:
+      - "Mask Config"
+      summary: "Delete data mask defined for an organization"
+      description: "Deletes a data mask defined for an organization."
+      operationId: "deleteDataMaskOrg"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/maskconfig_name"
+      responses:
+        "204":
+          description: "No Content"
+        "400":
+          description: "bad input parameter"
+components:
+  securitySchemes:
+    Basic:
+      type: "http"
+      scheme: "basic"
+      description: "Multi-factor authentication is not supported."
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)"
+  parameters:
+    org_name:
+      in: "path"
+      name: "org_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of organization."
+    api_name:
+      in: "path"
+      name: "api_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of API proxy."
+    maskconfig_name:
+      in: "path"
+      name: "maskconfig_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of data mask."
+  schemas:
+    DataMask:
+      type: "object"
+      description: "Data mask configuraiton."
+      properties:
+        jSONPathsFault:
+          type: "array"
+          description: "List of JSON expressions that will be evaluated against JSON\
+            \ payloads (if any) in the error flow (which executes if a fault is thrown\
+            \ at any point in the flow). Any JSONPaths that successfully resolve will\
+            \ result in the value of the JSON property being masked."
+          items:
+            type: "string"
+        jSONPathsRequest:
+          type: "array"
+          description: "List of JSONPath expressions that will be evaluated against\
+            \ JSON payloads (if any) in the request path. Any JSONPaths that successfully\
+            \ resolve will result in the value of the JSON property being masked."
+          items:
+            type: "string"
+        jSONPathsResponse:
+          type: "array"
+          description: "List of JSONPath expressions that will be evaluated against\
+            \ JSON payloads (if any) in the request path. Any JSONPaths that successfully\
+            \ resolve will result in the value of the JSON property being masked."
+          items:
+            type: "string"
+        name:
+          type: "string"
+          description: "Name of the data mask."
+        namespaces:
+          type: "array"
+          description: "Namespace. Only required if an XPATH definition defines a\
+            \ namespace in the XML payload. For example: `myco=\"http://example.com`"
+          items:
+            type: "object"
+            properties:
+              prefix:
+                type: "string"
+                description: "Prefix value, if defined."
+              text:
+                type: "string"
+                description: "Namespace value."
+        variables:
+          type: "array"
+          description: "List of variables (either pre-defined or custom) with values\
+            \ that will be masked. For a list of default variables, see <a href=\"\
+            https://docs.apigee.com/api-platform/reference/variables-reference\">Variables\
+            \ reference</a>.\n    \n    \n**Note**: When you specify the `request.content`,\
+            \ `response.content`, or `message.content` flow variables, the request/response\
+            \ body is also masked."
+          items:
+            type: "string"
+        xPathsFault:
+          type: "array"
+          description: "List of XPath expressions that will be evaluated against XML\
+            \ payloads (if any) in the error flow (which executes if a fault is thrown\
+            \ at any point in the flow). Any XPaths that successfully resolve will\
+            \ result in the value of the XML element being masked."
+          items:
+            type: "string"
+        xPathsRequest:
+          type: "array"
+          description: "List of XPath expressions that will be evaluated against XML\
+            \ payloads (if any) in the request path. Any XPaths that successfully\
+            \ resolve will result in the value of the XML element being masked."
+          items:
+            type: "string"
+        xPathsResponse:
+          type: "array"
+          description: "List of XPath expressions that will be evaluated against XML\
+            \ payloads (if any) in the response path. Any XPaths that successfully\
+            \ resolve will result in the value of the XML element being masked."
+          items:
+            type: "string"
+    DataMaskXML:
+      type: "object"
+      description: "Data mask configuraiton."
+      properties:
+        MaskDataConfiguration:
+          type: "object"
+          properties:
+            Namespaces:
+              type: "object"
+              description: "List of namespaces. Only required if an XPATH definition\
+                \ defines a namespace in the XML payload. For example: `myco=\"http://example.com`\
+                \ properties:\n  Namespace:\n    type: object\n    description: Namespace\
+                \ details.\n    properties:\n      _prefix:\n        type: string\n\
+                \        description: Prefix value, if defined.\n      __text:  \n\
+                \        type: string\n        description: Namespace value.\n  _name:\
+                \ \n    type: string\n    description: Name of the data mask."
+            XPathsRequest:
+              type: "object"
+              description: "List of XPath expressions that will be evaluated against\
+                \ XML payloads (if any) in the request path. Any XPaths that successfully\
+                \ resolve will result in the value of the XML element being masked."
+              properties:
+                XPathsRequest:
+                  type: "string"
+                  description: "XPath expression that will be evaluated against XML\
+                    \ payloads (if any) in the request path."
+            XPathsResponse:
+              type: "object"
+              description: "List of XPath expressions that will be evaluated against\
+                \ XML payloads (if any) in the response path. Any XPaths that successfully\
+                \ resolve will result in the value of the XML element being masked."
+              properties:
+                XPathsResponse:
+                  type: "string"
+                  description: "XPath expression that will be evaluated against XML\
+                    \ payloads (if any) in the response path."
+            JSONPathsRequest:
+              type: "object"
+              description: "List of JSONPath expressions that will be evaluated against\
+                \ JSON payloads (if any) in the request path. Any JSONPaths that successfully\
+                \ resolve will result in the value of the JSON property being masked."
+              properties:
+                JSONPathsRequest:
+                  type: "string"
+                  description: "JSONPath expression that will be evaluated against\
+                    \ JSON payloads (if any) in the request path."
+            JSONPathsResponse:
+              type: "object"
+              description: "List of JSONPath expressions that will be evaluated against\
+                \ JSON payloads (if any) in the request path. Any JSONPaths that successfully\
+                \ resolve will result in the value of the JSON property being masked."
+              properties:
+                JSONPathsResponse:
+                  type: "string"
+                  description: "JSONPath expression that will be evaluated against\
+                    \ JSON payloads (if any) in the request path."
+            XPathsFault:
+              type: "object"
+              description: "List of XPath expressions that will be evaluated against\
+                \ XML payloads (if any) in the error flow (which executes if a fault\
+                \ is thrown at any point in the flow). Any XPaths that successfully\
+                \ resolve will result in the value of the XML element being masked."
+              properties:
+                XPathsFault:
+                  type: "string"
+                  description: "XPath expression that will be evaluated against XML\
+                    \ payloads (if any) in the error flow (which executes if a fault\
+                    \ is thrown at any point in the flow)."
+            JSONPathsFault:
+              type: "object"
+              description: "List of JSON expressions that will be evaluated against\
+                \ JSON payloads (if any) in the error flow (which executes if a fault\
+                \ is thrown at any point in the flow). Any JSONPaths that successfully\
+                \ resolve will result in the value of the JSON property being masked."
+              properties:
+                JSONPathsFault:
+                  type: "string"
+                  description: "JSON expressions that will be evaluated against JSON\
+                    \ payloads (if any) in the error flow (which executes if a fault\
+                    \ is thrown at any point in the flow)."
+            Variables:
+              type: "object"
+              description: "List of variables (either pre-defined or custom) with\
+                \ values that will be masked. For a list of default variables, see\
+                \ <a href=\"https://docs.apigee.com/api-platform/reference/variables-reference\"\
+                >Variables reference</a>.\n\n**Note**: When you specify the `request.content`,\
+                \ `response.content`, or `message.content` flow variables, the request/response\
+                \ body is also masked."
+              properties:
+                Variable:
+                  type: "array"
+                  description: "Variable details."
+                  items:
+                    type: "string"

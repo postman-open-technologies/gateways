@@ -1,0 +1,141 @@
+---
+openapi: "3.0.0"
+servers:
+- url: "https://api.enterprise.apigee.com/v1"
+info:
+  title: "LDAP Resources API"
+  description: "Manage LDAP resources. See <a href=\"https://docs.apigee.com/api-platform/reference/policies/ldap-policy\"\
+    >LDAP Policy</a>. Supported by **Apigee Edge for Private Cloud only**. "
+  version: "1.0"
+security:
+- Basic: []
+- OAuth: []
+paths:
+  /organizations/{org_name}/environments/{env_name}/ldapresources:
+    get:
+      tags:
+      - "LDAP"
+      summary: "List LDAP resources"
+      description: "Lists all LDAP resources associated with an <a href=\"https://docs.apigee.com/api-platform/reference/policies/ldap-policy\"\
+        >LDAP policy</a>. For more information, see <a href=\"https://docs.apigee.com/private-cloud/latest/managing-ldap-resources\"\
+        >Managing LDAP resources</a>.\n\n**Notes**:\n* **Apigee Edge for Private Cloud\
+        \ only**. \n* **This API cannot be executed using the Try this API panel**."
+      operationId: "listLDAPResources"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+    post:
+      tags:
+      - "LDAP"
+      summary: "Create LDAP resource"
+      description: "Creates an LDAP resource. For more information, see <a href=\"\
+        https://docs.apigee.com/private-cloud/latest/managing-ldap-resources\">Managing\
+        \ LDAP resources</a>.\n\n**Notes**:\n* **Apigee Edge for Private Cloud only**.\n\
+        * **This API cannot be executed using the Try this API panel**."
+      operationId: "createLDAPResource"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/environments/{env_name}/ldapresources/{ldap_name}:
+    get:
+      tags:
+      - "LDAP"
+      summary: "Get LDAP resource"
+      description: "Gets an LDAP resource associated with an <a href=\"https://docs.apigee.com/api-platform/reference/policies/ldap-policy\"\
+        >LDAP policy</a>. For more information, see <a href=\"https://docs.apigee.com/private-cloud/latest/managing-ldap-resources\"\
+        >Managing LDAP resources</a>.\n\n**Notes**:\n* **Apigee Edge for Private Cloud\
+        \ only**. \n* **This API cannot be executed using the Try this API panel**."
+      operationId: "getLDAPResource"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/ldap_name"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+    delete:
+      tags:
+      - "LDAP"
+      summary: "Delete LDAP resource"
+      description: "Deletes an LDAP resource associated with an <a href=\"https://docs.apigee.com/api-platform/reference/policies/ldap-policy\"\
+        >LDAP policy</a>. For more information, see <a href=\"https://docs.apigee.com/private-cloud/latest/managing-ldap-resources\"\
+        >Managing LDAP resources</a>.\n\n**Notes**:\n* **Apigee Edge for Private Cloud\
+        \ only**. \n* **This API cannot be executed using the Try this API panel**."
+      operationId: "deleteLDAPResource"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/ldap_name"
+      responses:
+        "204":
+          description: "No Content"
+        "400":
+          description: "Bad request"
+    post:
+      tags:
+      - "LDAP"
+      summary: "Update LDAP resource"
+      description: "Updates an LDAP resource associated with an <a href=\"https://docs.apigee.com/api-platform/reference/policies/ldap-policy\"\
+        >LDAP policy</a>.\n\nYou must specify the complete description of the LDAP\
+        \ resource in the request body, not just the elements that you want to change.\
+        \ You can get the current LDAP resource properties, as described in <a href=\"\
+        https://docs-edgeapis.apigee.io/docs/ldap-resources/1/routes/organizations/%7Borg_name%7D/environments/%7Benv_name%7D/ldapresources/%7Bldap_name%7D/get\"\
+        >Get LDAP resource</a>.\n\n\n For more information, see <a href=\"https://docs.apigee.com/private-cloud/latest/managing-ldap-resources\"\
+        >Managing LDAP resources</a>.\n\n\n**Notes**:\n* **Apigee Edge for Private\
+        \ Cloud only**. \n* **This API cannot be executed using the Try this API panel**."
+      operationId: "updateLDAPResources"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/ldap_name"
+      responses:
+        "201":
+          description: "Created"
+        "400":
+          description: "Bad request"
+components:
+  securitySchemes:
+    Basic:
+      type: "http"
+      scheme: "basic"
+      description: "Multi-factor authentication is not supported."
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)"
+  parameters:
+    org_name:
+      in: "path"
+      name: "org_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Organization name."
+    env_name:
+      in: "path"
+      name: "env_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Environment name."
+    ldap_name:
+      in: "path"
+      name: "ldap_name"
+      required: true
+      schema:
+        type: "string"
+      description: "LDAP resource name."

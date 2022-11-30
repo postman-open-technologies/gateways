@@ -1,0 +1,110 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Tibco
+  provider: Tibco
+  slug: tibco
+  rating: 2
+  license: Proprietary
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    Employ a wide range of policies to gain control over how, when, and from where your user community can access your APIs. The API Management Control Center lets you fully control your APIs. The traffic manager polices your servers to safeguard them against unauthorized access and overloading. The gateway is available across on-premises and cloud environments, allowing for a single view of all gateways.
+  platformCapabilities:
+    - Gateway
+    - Analytics
+    - Portal
+    - Documentation
+    - Monetization
+    - Performance
+    - SDK
+  gatewayCapabilities:
+    - Mediation
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+  downstreamProtocols:
+    - HTTP/1.1
+  deliveryModels:
+    - Customer Managed (Cloud)
+    - Customer Managed (On-Premises)
+    - Hybrid
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Cache Eviction
+        - Cache Invalidation
+        - Cache Lookup
+        - Cache Population
+        - Cache Storage
+        - Cache Target Response
+        - Cache Validation
+        - Concurrent Rate Limit
+        - Concurrent Rate Limiting
+        - Conditional Routing
+        - Content-Based Routing
+        - Load Balancer Routing
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Throttling
+        - Traffic Optimization
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - IP Access Rules
+        - JWS
+        - JWT Validation
+        - JWT authorizers
+        - Message Inspection
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+        - OpenID Connect
+    - category: Extensions
+      capabilities:
+        - HTTP Callout
+        - HTTP integrations
+        - Serverless
+        - Containers
+        - Docker
+        - Kubernetes
+        - Amazon Web Services
+        - Azure
+        - Google
+
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://www.tibco.com/products/api-management/gateway
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://www.tibco.com/products/api-management/gateway
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/tibco.png     

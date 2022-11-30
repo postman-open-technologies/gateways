@@ -1,0 +1,142 @@
+---
+class:
+  - gateway
+
+properties:
+  name: APISIX
+  provider: APISIX
+  slug: apisix
+  rating: 2
+  license: Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    Apache APISIX provides rich traffic management features like Load Balancing, Dynamic Upstream, Canary Release, Circuit Breaking, Authentication, Observability, etc.
+  platformCapabilities:
+    - Gateway
+    - Dashboards
+    - Analytics
+  gatewayCapabilities:
+    - Mediation
+    - OpenAPI Integration
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - Go
+    - Java
+    - JavaScript
+    - Python
+    - Lua
+    - WASM
+  upstreamProtocols:
+    - HTTP/1.1
+    - RPC
+    - WebSockets
+    - gRPC
+    - RPC
+    - TCP
+    - UDP
+    - MQTT
+  downstreamProtocols:
+    - HTTP/1.1
+    - RPC
+    - WebSockets
+    - gRPC
+    - RPC
+    - TCP
+    - UDP
+    - MQTT
+  deliveryModels:
+    - Customer Managed (On-Premises)
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Cache Eviction
+        - Cache Invalidation
+        - Cache Lookup
+        - Cache Population
+        - Cache Storage
+        - Cache Target Response
+        - Cache Validation
+        - Canary Release
+        - Circuit Breaker
+        - Conditional Routing
+        - Content-Based Routing
+        - Dynamic Routing
+        - Ingress Controller
+        - Traffic Split
+        - Proxy Mirror        
+        - Load Balancer Routing
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Rate Limiting (Dynamic)
+        - Request Size Limiting
+        - Service Discovery
+        - Throttling
+        - Traffic Optimization
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Context Persistence
+        - Custom Data Storage
+        - Custom Exception Handling
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - URL Rewriting
+    - category: Security
+      capabilities:
+        - ACL (Access Control List)
+        - API Key
+        - API Key Authentication
+        - Access Control Lists
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - IP Access Rules
+        - JWT Validation
+        - JWT authorizers
+        - JWT authorizers (Custom
+        - Kerberos
+        - LDAP
+        - LDAP Authentication
+        - Lambda authorizers
+        - Let's Encrypt
+        - Managed Identity Authentication
+        - Message Inspection
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+        - Okta
+        - OpenID Connect
+        - PingFederate OAuth2.0 Token
+        - SAML Assertion
+        - SLA Management
+        - WAF
+        - WSS Username
+        - XML Threat Protection
+        - XSS Protection
+    - category: Extensions
+      capabilities:
+        - Kubernetes
+        - Containers
+
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://apisix.apache.org/
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://apisix.apache.org/
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/apisix.png     

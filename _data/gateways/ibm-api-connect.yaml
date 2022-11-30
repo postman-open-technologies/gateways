@@ -1,0 +1,84 @@
+---
+class:
+  - gateway
+
+properties:
+  name: IBM API Connect
+  provider: IBM API Connect
+  slug: ibm-api-connect
+  rating: 2
+  license: Proprietary, Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2021-10
+  description: >
+    IBM® API Connect® is a secure API management solution that utilizes an intuitive experience to help consistently create, manage, secure, socialize and monetize APIs, helping power digital transformation on premises and across clouds. This means you and your customers can power digital apps and spur innovation in real time. IBM API Connect is also available with other capabilities as part of IBM Cloud Pak® for Integration, which can help you automate application modernization and API management as part of your journey to cloud.
+  platformCapabilities:
+    - Design
+    - Gateway
+    - Analytics
+    - Portal
+    - Documentation
+    - Monetization
+  gatewayCapabilities:
+    - Mediation
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+  downstreamProtocols:
+    - HTTP/1.1
+  deliveryModels:
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Content-Based Routing
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Service Discovery
+        - Throttling
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - URL Rewriting
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - IP Access Rules
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+    - category: Extensions
+      capabilities:
+        - HTTP Callout
+        - HTTP integrations       
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://www.ibm.com/in-en/cloud/api-connect
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://www.ibm.com/in-en/cloud/api-connect
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/ibm-api-connect.png     

@@ -1,0 +1,630 @@
+---
+openapi: "3.0.0"
+servers:
+- url: "https://api.enterprise.apigee.com/v1"
+info:
+  title: "Audits API"
+  description: "View audit logs that provide access to the actions (create, update,\
+    \ delete) executed on entities managed by Apigee Edge."
+  version: "1.0"
+security:
+- Basic: []
+- OAuth: []
+paths:
+  /audits/organizations/{org_name}:
+    get:
+      tags:
+      - "Audit"
+      summary: "List audit entries for an organization"
+      description: "Lists audit entries for management operations for an organization.\n\
+        \nFor API proxy revisions, deploy and undeploy actions are recorded as `CREATE`\
+        \ operations. You can distinguish between them by examining the requestUri\
+        \ element in the output.\n\nFor every call made to the API, Apigee Edge logs\
+        \ an audit record. This API enables you to obtain a record of all API calls\
+        \ made against entities in an organization. The audit logs provide access\
+        \ to the actions (create, read, update, delete) executed on organizations.\n\
+        \nIf there are no audit entries, this API returns an empty array.\n\nIf you\
+        \ omit the `timeline`, `startTime`, and `endTime` query parameters, the default\
+        \ is to use `timeline=today`."
+      operationId: "listAudits"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/expand"
+      - $ref: "#/components/parameters/timeline"
+      - $ref: "#/components/parameters/startTime"
+      - $ref: "#/components/parameters/endTime"
+      - $ref: "#/components/parameters/rows"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audits"
+              example:
+                auditRecord:
+                - operation: "UPDATE"
+                  request: "ahamilton@example.com"
+                  requestUri: "/v1/organizations/myorg/userroles/orgadmin/users"
+                  responseCode: 200
+                  timeStamp: 1602682379741
+                  user: "admin@example.com"
+                - operation: "CREATE"
+                  request: "''myorg''"
+                  requestUri: "/v1/organizations/myorg/apiproducts/myproduct"
+                  responseCode: 201
+                  timeStamp: 1602682379741
+                  user: "admin@example.com"
+        "400":
+          description: "Bad request"
+  /audits/organizations/{org_name}/apiproducts:
+    get:
+      tags:
+      - "Audit"
+      summary: "List audit entries for all API products in an organization"
+      description: "Lists audit entries for management operations for all API products\
+        \ in an organization.\n\nFor every call made to the API, Apigee Edge logs\
+        \ an audit record. This API enables you to obtain a record of all API calls\
+        \ made against API products in an organization. The audit logs provide access\
+        \ to the actions (create, read, update, delete) executed on organizations.\n\
+        \nIf there are no audit entries, or if the entity does not exist, this API\
+        \ returns an empty array.\n\nIf you omit the `timeline`, `startTime`, and\
+        \ `endTime` query parameters, the default is to use `timeline=today`."
+      operationId: "listAuditsAPIProducts"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/expand"
+      - $ref: "#/components/parameters/timeline"
+      - $ref: "#/components/parameters/startTime"
+      - $ref: "#/components/parameters/endTime"
+      - $ref: "#/components/parameters/rows"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audits"
+              example:
+                auditRecord:
+                - operation: "CREATE"
+                  request: "''myorg''"
+                  requestUri: "/v1/organizations/myorg/apiproducts/myproduct"
+                  responseCode: 201
+                  timeStamp: 1602682379741
+                  user: "admin@example.com"
+        "400":
+          description: "Bad request"
+  /audits/organizations/{org_name}/apiproducts/{apiproduct_name}:
+    get:
+      tags:
+      - "Audit"
+      summary: "List audit entries for an API product"
+      description: "Lists audit entries for management operations for an API product\
+        \ in an organization.\n\nFor every call made to the API, Apigee Edge logs\
+        \ an audit record. This API enables you to obtain a record of all API calls\
+        \ made against the specified API product in an organization. The audit logs\
+        \ provide access to the actions (create, read, update, delete) executed on\
+        \ organizations.\n\nIf there are no audit entries, or if the entity does not\
+        \ exist, this API returns an empty array.\n\nIf you omit the `timeline`, `startTime`,\
+        \ and `endTime` query parameters, the default is to use `timeline=today`."
+      operationId: "listAuditsAPIProduct'"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/apiproduct_name"
+      - $ref: "#/components/parameters/expand"
+      - $ref: "#/components/parameters/timeline"
+      - $ref: "#/components/parameters/startTime"
+      - $ref: "#/components/parameters/endTime"
+      - $ref: "#/components/parameters/rows"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audits"
+              example:
+                auditRecord:
+                - operation: "CREATE"
+                  request: "''myorg''"
+                  requestUri: "/v1/organizations/myorg/apiproducts/myproduct"
+                  responseCode: 201
+                  timeStamp: 1602682379741
+                  user: "admin@example.com"
+        "400":
+          description: "Bad request"
+  /audits/organizations/{org_name}/apis:
+    get:
+      tags:
+      - "Audit"
+      summary: "List audit entries for all API proxies"
+      description: "Lists audit entries for management operations for all API proxies\
+        \ in an organization.\n\nFor every call made to the API, Apigee Edge logs\
+        \ an audit record. This API enables you to obtain a record of all API calls\
+        \ made against API proxies in an organization. The audit logs provide access\
+        \ to the actions (create, read, update, delete) executed on organizations.\n\
+        \nIf there are no audit entries, or if the entity does not exist, this API\
+        \ returns an empty array.\n\nIf you omit the `timeline`, `startTime`, and\
+        \ `endTime` query parameters, the default is to use `timeline=today`."
+      operationId: "listAuditsAPIProxies"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/expand"
+      - $ref: "#/components/parameters/timeline"
+      - $ref: "#/components/parameters/startTime"
+      - $ref: "#/components/parameters/endTime"
+      - $ref: "#/components/parameters/rows"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audits"
+              example:
+                auditRecord:
+                - operation: "CREATE"
+                  request: "''myorg''"
+                  requestUri: "/v1/organizations/myorg/apis/myapi?action=import"
+                  responseCode: 201
+                  timeStamp: 1602682379741
+                  user: "admin@example.com"
+        "400":
+          description: "Bad request"
+  /audits/organizations/{org_name}/apis/{api_name}:
+    get:
+      tags:
+      - "Audit"
+      summary: "List audit entries for an API proxy"
+      description: "Lists audit entries for management operations for an API proxy\
+        \ in an organization\n\nFor API proxy revisions, deploy and undeploy actions\
+        \ are recorded as CREATE operations. You can distinguish between them by examining\
+        \ the requestUri element in the output.\n\nFor every call made to the API,\
+        \ Apigee Edge logs an audit record. This API enables you to obtain a record\
+        \ of all API calls made against the specified API proxy in an organization.\
+        \ The audit logs provide access to the actions (create, read, update, delete)\
+        \ executed on organizations.\n\nIf there are no audit entries, or if the entity\
+        \ does not exist, this API returns an empty array.\n\nIf you omit the `timeline`,\
+        \ `startTime`, and `endTime` query parameters, the default is to use `timeline=today`."
+      operationId: "listAuditsAPIProxy"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/api_name"
+      - $ref: "#/components/parameters/expand"
+      - $ref: "#/components/parameters/timeline"
+      - $ref: "#/components/parameters/startTime"
+      - $ref: "#/components/parameters/endTime"
+      - $ref: "#/components/parameters/rows"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audits"
+              example:
+                auditRecord:
+                - operation: "CREATE"
+                  request: "''myorg''"
+                  requestUri: "/v1/organizations/myorg/apis/myapi?action=import"
+                  responseCode: 201
+                  timeStamp: 1602682379741
+                  user: "admin@example.com"
+        "400":
+          description: "Bad request"
+  /audits/organizations/{org_name}/developers:
+    get:
+      tags:
+      - "Audit"
+      summary: "List audit entries for all developers in an organization"
+      description: "Lists audit entries for management operations for all developers\
+        \ in an organization.\n\nFor every call made to the API, Apigee Edge logs\
+        \ an audit record. This API enables you to obtain a record of all API calls\
+        \ made against developers in an organization. The audit logs provide access\
+        \ to the actions (create, read, update, delete) executed on organizations.\n\
+        \nIf there are no audit entries, or if the entity does not exist, this API\
+        \ returns an empty array.\n\nIf you omit the `timeline`, `startTime`, and\
+        \ `endTime` query parameters, the default is to use `timeline=today`."
+      operationId: "listAuditsDevelopers"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/expand"
+      - $ref: "#/components/parameters/timeline"
+      - $ref: "#/components/parameters/startTime"
+      - $ref: "#/components/parameters/endTime"
+      - $ref: "#/components/parameters/rows"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audits"
+              example:
+                auditRecord:
+                - operation: "CREATE"
+                  request: "''r7zxB0C8n0OJdoUdbT0u6hD1eKOvC5m8''"
+                  requestUri: "/v1/organizations/myorg/developers/ahamilton@example.com/apps/myapp/keys/r7zxB0C8n0OJdoUdbT0u6hD1eKOvC5m8?action=approve"
+                  responseCode: "204"
+                  timeStamp: 1601665880689
+                  user: "admin@example.com"
+        "400":
+          description: "Bad request"
+  /audits/organizations/{org_name}/developers/{developer_email}:
+    get:
+      tags:
+      - "Audit"
+      summary: "List audit entries for a developer"
+      description: "Lists audit entries for management operations for a developer\
+        \ in an organization.\n\nFor every call made to the API, Apigee Edge logs\
+        \ an audit record. This API enables you to obtain a record of all API calls\
+        \ made against the specified developer in an organization. The audit logs\
+        \ provide access to the actions (create, read, update, delete) executed on\
+        \ organizations.\n\nIf there are no audit entries, or if the entity does not\
+        \ exist, this API returns an empty array.\n\nIf you omit the `timeline`, `startTime`,\
+        \ and `endTime` query parameters, the default is to use `timeline=today`."
+      operationId: "listAuditsDeveloper"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/developer_email"
+      - $ref: "#/components/parameters/expand"
+      - $ref: "#/components/parameters/timeline"
+      - $ref: "#/components/parameters/startTime"
+      - $ref: "#/components/parameters/endTime"
+      - $ref: "#/components/parameters/rows"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audits"
+              example:
+                auditRecord:
+                - operation: "CREATE"
+                  request: "''r7zxB0C8n0OJdoUdbT0u6hD1eKOvC5m8''"
+                  requestUri: "/v1/organizations/myorg/developers/ahamilton@example.com/apps/testapp/keys/r7zxB0C8n0OJdoUdbT0u6hD1eKOvC5m8?action=approve"
+                  responseCode: "204"
+                  timeStamp: 1601665880689
+                  user: "admin@example.com"
+        "400":
+          description: "Bad request"
+  /audits/organizations/{org_name}/developers/{developer_email}/apps:
+    get:
+      tags:
+      - "Audit"
+      summary: "List audit entries for all developer apps"
+      description: "Lists audit entries for management operations for all developer\
+        \ apps in an organization.\n\nFor every call made to the API, Apigee Edge\
+        \ logs an audit record. This API enables you to obtain a record of all API\
+        \ calls made against developer apps in an organization. The audit logs provide\
+        \ access to the actions (create, read, update, delete) executed on organizations.\n\
+        \nIf there are no audit entries, or if the entity does not exist, this API\
+        \ returns an empty array.\n\nIf you omit the `timeline`, `startTime`, and\
+        \ `endTime` query parameters, the default is to use `timeline=today`."
+      operationId: "listAuditsDeveloperApps"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/developer_email"
+      - $ref: "#/components/parameters/expand"
+      - $ref: "#/components/parameters/timeline"
+      - $ref: "#/components/parameters/startTime"
+      - $ref: "#/components/parameters/endTime"
+      - $ref: "#/components/parameters/rows"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audits"
+              example:
+                auditRecord:
+                - operation: "UPDATE"
+                  request: "''r7zxB0C8n0OJdoUdbT0u6hD1eKOvC5m8''"
+                  requestUri: "/v1/organizations/docs/developers/4707ceee-4cc7-47c9-a180-f4932bd7f2c2/apps/myapp/keys/uconqa19Mi1TAJlCKGHAP3kmpht4nKPr"
+                  responseCode: 200
+                  timeStamp: 1602682379741
+                  user: "admin@example.com"
+        "400":
+          description: "Bad request"
+  /audits/organizations/{org_name}/developers/{developer_email}/apps/{app_name}:
+    get:
+      tags:
+      - "Audit"
+      summary: "List audit entries for a developer app"
+      description: "Lists audit entries for management operations for an app in an\
+        \ organization.\n\nFor every call made to the API, Apigee Edge logs an audit\
+        \ record. This API enables you to obtain a record of all API calls made against\
+        \ the specified app in an organization. The audit logs provide access to the\
+        \ actions (create, read, update, delete) executed on organizations.\n\nIf\
+        \ there are no audit entries, or if the entity does not exist, this API returns\
+        \ an empty array.\n\nIf you omit the `timeline`, `startTime`, and `endTime`\
+        \ query parameters, the default is to use `timeline=today`."
+      operationId: "listAuditsDeveloperApp"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/developer_email"
+      - $ref: "#/components/parameters/app_name"
+      - $ref: "#/components/parameters/expand"
+      - $ref: "#/components/parameters/timeline"
+      - $ref: "#/components/parameters/startTime"
+      - $ref: "#/components/parameters/endTime"
+      - $ref: "#/components/parameters/rows"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audits"
+              example:
+                auditRecord:
+                - operation: "UPDATE"
+                  request: "''r7zxB0C8n0OJdoUdbT0u6hD1eKOvC5m8''"
+                  requestUri: "/v1/organizations/docs/developers/4707ceee-4cc7-47c9-a180-f4932bd7f2c2/apps/myapp/keys/uconqa19Mi1TAJlCKGHAP3kmpht4nKPr"
+                  responseCode: 200
+                  timeStamp: 1602682379741
+                  user: "admin@example.com"
+        "400":
+          description: "Bad request"
+  /audits/organizations/{org_name}/sharedflows:
+    get:
+      tags:
+      - "Audit"
+      summary: "List audit entries for all shared flows"
+      description: "Lists audit entries for management operations for all shared flows\
+        \ in an organization.\n\nFor every call made to the API, Apigee Edge logs\
+        \ an audit record. This API enables you to obtain a record of all API calls\
+        \ made against shared flows in an organization. The audit logs provide access\
+        \ to the actions (create, read, update, delete) executed on organizations.\n\
+        \nIf there are no audit entries, or if the entity does not exist, this API\
+        \ returns an empty array.\n\nIf you omit the `timeline`, `startTime`, and\
+        \ `endTime` query parameters, the default is to use `timeline=today`.\n\n\
+        For more about shared flows, see <a href=\"https://docs.apigee.com/api-platform/fundamentals/shared-flows\"\
+        >Reusable shared flows</a>. For information about listing audit entires for\
+        \ a specific shared flow, see <a href=\"https://docs-edgeapis.apigee.io/docs/audits/1/routes/audits/organizations/%7Borg_name%7D/sharedflows/%7Bsharedflow_name%7D/get\"\
+        >List audit entries for a shared flow</a>."
+      operationId: "listAuditsDeveloperApps"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/expand"
+      - $ref: "#/components/parameters/timeline"
+      - $ref: "#/components/parameters/startTime"
+      - $ref: "#/components/parameters/endTime"
+      - $ref: "#/components/parameters/rows"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audits"
+              example:
+                auditRecord:
+                - operation: "UPDATE"
+                  request: "''r7zxB0C8n0OJdoUdbT0u6hD1eKOvC5m8''"
+                  requestUri: "/v1/organizations/docs/developers/4707ceee-4cc7-47c9-a180-f4932bd7f2c2/apps/myapp/keys/uconqa19Mi1TAJlCKGHAP3kmpht4nKPr"
+                  responseCode: 200
+                  timeStamp: 1602682379741
+                  user: "admin@example.com"
+        "400":
+          description: "Bad request"
+  /audits/organizations/{org_name}/sharedflows/{sharedflow_name}:
+    get:
+      tags:
+      - "Audit"
+      summary: "List audit entries for a shared flow"
+      description: "Lists audit entries for management operations for a shared flow\
+        \ in an organization.\n\nFor every call made to the API, Apigee Edge logs\
+        \ an audit record. This API enables you to obtain a record of all API calls\
+        \ made against the specified app in an organization. The audit logs provide\
+        \ access to the actions (create, read, update, delete) executed on organizations.\n\
+        \nIf there are no audit entries, or if the entity does not exist, this API\
+        \ returns an empty array.\n\nIf you omit the `timeline`, `startTime`, and\
+        \ `endTime` query parameters, the default is to use `timeline=today`.\n\n\
+        For more about shared flows, see <a href=\"https://docs.apigee.com/api-platform/fundamentals/shared-flows\"\
+        >Reusable shared flows</a>."
+      operationId: "listAuditsDeveloperApp"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/sharedflow_name"
+      - $ref: "#/components/parameters/expand"
+      - $ref: "#/components/parameters/timeline"
+      - $ref: "#/components/parameters/startTime"
+      - $ref: "#/components/parameters/endTime"
+      - $ref: "#/components/parameters/rows"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audits"
+              example:
+                auditRecord:
+                - operation: "UPDATE"
+                  request: "''r7zxB0C8n0OJdoUdbT0u6hD1eKOvC5m8''"
+                  requestUri: "/v1/organizations/docs/developers/4707ceee-4cc7-47c9-a180-f4932bd7f2c2/apps/myapp/keys/uconqa19Mi1TAJlCKGHAP3kmpht4nKPr"
+                  responseCode: 200
+                  timeStamp: 1602682379741
+                  user: "admin@example.com"
+        "400":
+          description: "Bad request"
+  /audits/users/{user_email}:
+    get:
+      tags:
+      - "Audit"
+      summary: "List audit entries for a user"
+      description: "Lists audit entries for management operations for a user.\n\n\
+        For every call made to the API, Apigee Edge logs an audit record. This API\
+        \ enables you to obtain a record of all API calls made against the specified\
+        \ user. The audit logs provide access to the actions (create, read, update,\
+        \ delete) executed on the user.\n\nIf there are no audit entries, or if the\
+        \ entity does not exist, this API returns an empty array.\n\nIf you omit the\
+        \ `timeline`, `startTime`, and `endTime` query parameters, the default is\
+        \ to use `timeline=today`.\n\n**Notes**:\n* **Apigee Edge for Private Cloud\
+        \ only**. If you are using Apigee Edge for Public Cloud, contact <a href=\"\
+        https://cloud.google.com/apigee/support\">Apigee Support</a> for assistance.\n\
+        * **This API cannot be executed using the Try this API panel**."
+      operationId: "ListAuditsUser"
+      parameters:
+      - $ref: "#/components/parameters/user_email"
+      - $ref: "#/components/parameters/expand"
+      - $ref: "#/components/parameters/timeline"
+      - $ref: "#/components/parameters/startTime"
+      - $ref: "#/components/parameters/endTime"
+      - $ref: "#/components/parameters/rows"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Audits"
+              example:
+                auditRecord:
+                - operation: "UPDATE"
+                  request: "ahamilton@example.com"
+                  requestUri: "/v1/organizations/docs/userroles/orgadmin/users"
+                  responseCode: 200
+                  timeStamp: 1602682379741
+                  user: "admin@example.com"
+        "400":
+          description: "Bad request"
+components:
+  securitySchemes:
+    Basic:
+      type: "http"
+      scheme: "basic"
+      description: "Multi-factor authentication is not supported."
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%"
+  parameters:
+    org_name:
+      in: "path"
+      name: "org_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Organization name."
+    apiproduct_name:
+      in: "path"
+      name: "apiproduct_name"
+      required: true
+      schema:
+        type: "string"
+      description: "API product name."
+    api_name:
+      in: "path"
+      name: "api_name"
+      required: true
+      schema:
+        type: "string"
+      description: "API proxy name."
+    developer_email:
+      in: "path"
+      name: "developer_email"
+      required: true
+      schema:
+        type: "string"
+      description: "Email address of developer."
+    app_name:
+      in: "path"
+      name: "app_name"
+      required: true
+      schema:
+        type: "string"
+      description: "App name."
+    user_email:
+      in: "path"
+      name: "user_email"
+      required: true
+      schema:
+        type: "string"
+      description: "Email address of user."
+    sharedflow_name:
+      in: "path"
+      name: "sharedflow_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Shared flow name."
+    expand:
+      in: "query"
+      name: "expand"
+      required: false
+      schema:
+        type: "string"
+      description: "Flag that specifies whether or not to expand the audit entry.\
+        \ Set to `true` to expand the audit entry. Defaults to `true`."
+    timeline:
+      in: "query"
+      name: "timeline"
+      required: false
+      schema:
+        type: "string"
+      description: "Filters results by the specified time interval. Valid values are\
+        \ `today`, `week`, or `month`. If you specify `timeline`, don't specify `startTime`\
+        \ or `endTime`. If you omit the `timeline`, `startTime`, and `endTime` query\
+        \ parameters, the default is `timeline=today`."
+    startTime:
+      in: "query"
+      name: "startTime"
+      required: false
+      schema:
+        type: "string"
+      description: "End date/time from up to which audit entries should be returned\
+        \ in milliseconds since epoch. (Add \"000\" to the end of normal epoch time\
+        \ to get milliseconds.) Specify `startTime` by itself or with `endTime` to\
+        \ specify a range. Don't specify with `timeline`."
+    endTime:
+      in: "query"
+      name: "endTime"
+      required: false
+      schema:
+        type: "string"
+      description: "Start date/time from which audit entries should be returned in\
+        \ milliseconds since epoch. (Add \"000\" to the end of normal epoch time to\
+        \ get milliseconds.) Specify `endTime` by itself or with `startTime` to specify\
+        \ a range. Don't specify with `timeline`."
+    rows:
+      in: "query"
+      name: "rows"
+      required: false
+      schema:
+        type: "string"
+      description: "Limit on the total number of audit entries to be returned when\
+        \ you specify either `startTime` or `endTime`."
+  schemas:
+    Audits:
+      type: "array"
+      description: "Audit entries."
+      items:
+        $ref: "#/components/schemas/Audit"
+    Audit:
+      description: "Audit entry details."
+      type: "object"
+      properties:
+        operation:
+          description: "Operation performed, such as `CREATE`, `UPDATE`, or `DELETE`."
+          type: "string"
+        request:
+          description: "Request entity."
+          type: "string"
+        requestUri:
+          type: "string"
+          description: "URL of the request."
+        responseCode:
+          description: "Status code of the response, such as `200`."
+          type: "string"
+        timestamp:
+          description: "Timestamp for the log in seconds since epoch."
+          type: "string"
+        user:
+          description: "Email address of user assoicated with the log."
+          type: "string"

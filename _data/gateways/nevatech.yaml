@@ -1,0 +1,93 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Nevatech
+  provider: Nevatech
+  slug: nevatech
+  rating: 2
+  license: Proprietary
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    Nevatech Sentinet is a powerful, flexible, lightweight and scalable API Management and API Governance software platform that will comprehensively address all your API Management needs. Think of any API Management feature or deployment model - and you will find it covered by Sentinet with unprecedented ease of use and completeness of capabilities.
+  platformCapabilities:
+    - Gateway
+    - Analytics
+    - Portal
+    - Documentation
+    - Monetization
+    - Monitoring
+    - Testing
+    - Catalog
+  gatewayCapabilities:
+    - Mediation
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+    - SOAP
+  downstreamProtocols:
+    - HTTP/1.1
+    - SOAP
+  deliveryModels:
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Service Discovery
+        - Throttling
+        - Traffic Optimization
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - IP Access Rules
+        - JWT
+        - JWT Validation
+        - JWT authorizers
+        - JWT authorizers (Custom
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+        - OpenID Connect
+    - category: Extensions
+      capabilities:
+        - HTTP Callout
+        - HTTP integrations
+        - Azure         
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://nevatech.com/how-it-works/api-gateway
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://nevatech.com/how-it-works/api-gateway
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/nevatech.png     

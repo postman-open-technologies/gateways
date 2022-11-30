@@ -1,0 +1,113 @@
+---
+layout: default
+title: Policies
+---
+
+<div class="container" style="padding-top: 70px;">
+	<div class="row align-top">
+		<div class="col-10" style="padding-left: 35px;">
+			<h1>Traffic Management</h1>
+			{% assign gateways = site.data.gateways | sort %}					  
+			{% assign capabilities = '' %}	
+			{% for gateway in gateways %}			
+				<!--<p><strong>{{ gateway[1].properties.name }}</strong></p>-->				
+				{% for policy in gateway[1].properties.policies %}
+					<!-- {{ policy }}<br> -->
+					{% if policy.category == 'Traffic Management' %}		
+						{% for capability in policy.capabilities %}
+							{% if capabilities contains capability %}						
+							{% else %}	
+								{% assign capabilities = capabilities | append: ',' | append: capability %}	
+							{% endif %}	
+						{% endfor %}
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+
+			{% assign capabilities = capabilities | split: "," | sort %}
+			{% for capability in capabilities %}
+				{% if capability != '' %}
+					- {{ capability }}<br>
+				{% endif %}		
+			{% endfor %}
+
+			<h1>Mediation</h1>
+			{% assign gateways = site.data.gateways | sort %}					  
+			{% assign capabilities = '' %}	
+			{% for gateway in gateways %}			
+				<!--<p><strong>{{ gateway[1].properties.name }}</strong></p>-->					
+				{% for policy in gateway[1].properties.policies %}
+					<!-- {{ policy }}<br> -->
+					{% if policy.category == 'Mediation' %}		
+						{% for capability in policy.capabilities %}
+							{% if capabilities contains capability %}						
+							{% else %}	
+								{% assign capabilities = capabilities | append: ',' | append: capability %}	
+							{% endif %}	
+						{% endfor %}
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+
+			{% assign capabilities = capabilities | split: "," | sort %}
+			{% for capability in capabilities %}
+				{% if capability != '' %}
+					- {{ capability }}<br>
+				{% endif %}		
+			{% endfor %}	
+			
+			<h1>Security</h1>
+			{% assign gateways = site.data.gateways | sort %}					  
+			{% assign capabilities = '' %}	
+			{% for gateway in gateways %}			
+				<!--<p><strong>{{ gateway[1].properties.name }}</strong></p>-->					
+				{% for policy in gateway[1].properties.policies %}
+					<!-- {{ policy }}<br> -->
+					{% if policy.category == 'Security' %}		
+						{% for capability in policy.capabilities %}
+							{% if capabilities contains capability %}						
+							{% else %}	
+								{% assign capabilities = capabilities | append: ',' | append: capability %}	
+							{% endif %}	
+						{% endfor %}
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+
+			{% assign capabilities = capabilities | split: "," | sort %}
+			{% for capability in capabilities %}
+				{% if capability != '' %}
+					- {{ capability }}<br>
+				{% endif %}		
+			{% endfor %}	
+			
+			<h1>Extensions</h1>
+			{% assign gateways = site.data.gateways | sort %}					  
+			{% assign capabilities = '' %}	
+			{% for gateway in gateways %}			
+				<!--<p><strong>{{ gateway[1].properties.name }}</strong></p>-->					
+				{% for policy in gateway[1].properties.policies %}
+					<!-- {{ policy }}<br> -->
+					{% if policy.category == 'Extensions' %}		
+						{% for capability in policy.capabilities %}
+							{% if capabilities contains capability %}						
+							{% else %}	
+								{% assign capabilities = capabilities | append: ',' | append: capability %}	
+							{% endif %}	
+						{% endfor %}
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+
+			{% assign capabilities = capabilities | split: "," | sort %}
+			{% for capability in capabilities %}
+				{% if capability != '' %}
+					- {{ capability }}<br>
+				{% endif %}		
+			{% endfor %}			
+		</div>
+	</div>
+	<div class="col-2"></div>	
+</div>
+
+

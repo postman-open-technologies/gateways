@@ -1,0 +1,697 @@
+---
+openapi: "3.0.1"
+info:
+  title: "Extensions API"
+  description: "Add, update, and configure extensions in your Apigee organization.\
+    \ \n\nExtensions enable you to integrate external resources into your API proxies.\
+    \ For example, you could integrate Google Cloud Platform services such as Google\
+    \ Cloud Storage. At run time, an API proxy uses the extension to exchange requests\
+    \ and responses with the external resource.\n\nNote that you must authenticate\
+    \ with this API using an OAuth token; basic authentication is not supported. For\
+    \ more about retrieving a token, see <a href=\"https://docs.apigee.com/api-platform/system-administration/using-gettoken\"\
+    >Using get_token</a>."
+  version: "1.0"
+servers:
+- url: "https://api.enterprise.apigee.com/"
+security:
+- OAuth: []
+paths:
+  /v1/organizations/{org}/environments/{env}/extensions:
+    get:
+      tags:
+      - "Extensions"
+      summary: "Get a collection of extensions"
+      description: "Gets a collection of extensions. \nYou can divide the collection\
+        \ into pages of a particular size with the `size` parameter. Navigate the\
+        \ pages by following links in the `next` and `previous` properties.\n\n**Notes**:\
+        \ \n\n* You must be an organization administrator to call this API.\n* **This\
+        \ API cannot be executed using the Try this API panel**."
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/size"
+      - $ref: "#/components/parameters/name"
+      - $ref: "#/components/parameters/nameLike"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtensionCollectionResponse"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      tags:
+      - "Extensions"
+      summary: "Creates a new extension"
+      description: "Creates a new extension by configuring an instance of an installed\
+        \ extension and adding it to the specified organization. After you create\
+        \ the extension, use the Update an extension to deploy it.\n\n**Notes**: \n\
+        \n* You must be an organization administrator to call this API.\n* **This\
+        \ API cannot be executed using the Try this API panel**.\n\nThis API requires\
+        \ that you pass the package name and version number of the extension. Use\
+        \ the Get public extension packages API to get all available packages and\
+        \ versions."
+      operationId: "createExtension"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Extension"
+        required: true
+      responses:
+        "201":
+          description: "Created"
+          headers:
+            Etag:
+              description: "Etag implemented according to RFC 5789"
+              schema:
+                type: "string"
+            Location:
+              description: "Location of created resource. as per https://tools.ietf.org/html/rfc7231#section-7.1.2"
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtensionResponse"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      tags:
+      - "Extensions"
+      summary: "Delete all extensions in an environment"
+      description: "Deletes all extensions in an environment.\n**Note**: **This API\
+        \ cannot be executed using the Try this API panel**."
+      operationId: "deleteAllExtensionsOrg"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /v1/organizations/{org}/environments/{env}/extensions/{id}:
+    get:
+      tags:
+      - "Extensions"
+      summary: "Get an extension"
+      description: "Gets an extension. \n\n**Note**: **This API cannot be executed\
+        \ using the Try this API panel**.\n\nWhen you get a collection of extensions,\
+        \ each item in the collection includes a `self` property  with a URL pointing\
+        \ to the item, including its ID. Pass that ID value in this request."
+      operationId: "getExtension"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: "OK"
+          headers:
+            Etag:
+              description: "Etag implemented according to RFC 5789"
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtensionResponse"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      tags:
+      - "Extensions"
+      summary: "Deletes an extension"
+      description: "Deletes an extension. \n\n**Note**: **This API cannot be executed\
+        \ using the Try this API panel**.\n\nWhen you retrieve a list of extensions,\
+        \ each extension in the collection includes a `self` property with a URL to\
+        \ the extension, including its ID. Use that ID value in this request."
+      operationId: "deleteExtension"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/id"
+      responses:
+        "200":
+          description: "OK"
+          content: {}
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      tags:
+      - "Extensions"
+      summary: "Updates an extension"
+      description: "Updates an extension. \n\n**Note**: **This API cannot be executed\
+        \ using the Try this API panel**.\n\nWhen you retrieve a list of extensions,\
+        \ each extension in the collection includes a self property with a URL to\
+        \ the extension, including its ID. Use the ID value in that URL to complete\
+        \ the URL here.\n\nTo deploy the an extension, specify `{state:\"DEPLOYED\"\
+        }` in the body. The state property can take the following values:\n\n* `DEPLOYED`\n\
+        * `UNDEPLOYED`\n\nWhen you set state `UNDEPLOYED`, you cannot update `name`,\
+        \ `packageName`, `version`, or `configuration`. You can only specify `description`,\
+        \ `credentials`, and `state`.\n\nEach extension type defines the properties\
+        \ that you can set in the configuration object. For more on each extension\
+        \ type, see <a href=\"https://docs.apigee.com/api-platform/reference/extensions/reference-overview-extensions\"\
+        >Extensions reference overview</a>. For example, when the cponfiguration object\
+        \ for the <a href=\"https://docs.apigee.com/api-platform/reference/extensions/google-stackdriver-logging/google-stackdriver-logging-extension-137\"\
+        >Google Stackdriver Logging Extension</a> is: `{\"projectId\": \"gcp_project_name\"\
+        }`\n\n**Note**: You must be an organization administrator to call this API."
+      operationId: "updateExtension"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/id"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Extension"
+        required: false
+      responses:
+        "200":
+          description: "OK"
+          headers:
+            Etag:
+              description: "Etag implemented according to RFC 5789"
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtensionOutput"
+      x-codegen-request-body-name: "extension"
+  /v1/organizations/{org}/environments/{env}/extensions/{id}/logs:
+    get:
+      tags:
+      - "Extensions"
+      summary: "Get the logs of a deployed extension"
+      description: "Gets the logs of a deployed extension. When you get a collection,\
+        \ each item in the collection includes a `self` property with a URL to the\
+        \ item, including its ID.\n\n**Note**: **This API cannot be executed using\
+        \ the Try this API panel**."
+      operationId: "getLogsExtension"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/id"
+      - $ref: "#/components/parameters/size"
+      - $ref: "#/components/parameters/token"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtensionLogsResponse"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /extensionpackages:
+    get:
+      tags:
+      - "Extensions"
+      summary: "Get public extension packages"
+      description: "Gets public extension packages using the query parameters to search\
+        \ for specific values. To get a list of all extension packages, don't specify\
+        \ any search values. When you get a collection, each item in the collection\
+        \ includes a `self` property with a URL to the item, including its ID. You\
+        \ can use that ID to retrieve details for a specific extension.\n\n**Note**:\
+        \ **This API cannot be executed using the Try this API panel**."
+      operationId: "getPublicExtensionPackages"
+      parameters:
+      - $ref: "#/components/parameters/nameq"
+      - $ref: "#/components/parameters/description"
+      - $ref: "#/components/parameters/keywords"
+      - $ref: "#/components/parameters/size"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtensionPackagesResponse"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /extensionpackages/{name}/{version}:
+    get:
+      tags:
+      - "Extensions"
+      summary: "Get the permalink for the specified extension package"
+      description: "Gets the permalink for the specified extension package.\n\n**Note**:\
+        \ **This API cannot be executed using the Try this API panel**."
+      operationId: "getPermalinkExtension"
+      parameters:
+      - $ref: "#/components/parameters/name"
+      - $ref: "#/components/parameters/version"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtensionPackageOutput"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  securitySchemes:
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ To get a token, see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens"
+  parameters:
+    org:
+      name: "org"
+      in: "path"
+      description: "Organization name."
+      required: true
+      schema:
+        type: "string"
+    env:
+      name: "env"
+      in: "path"
+      description: "Environment name."
+      required: true
+      schema:
+        type: "string"
+    id:
+      name: "id"
+      in: "path"
+      description: "Unique identifier for the extension. To get the extension ID,\
+        \ see xxx. The ID is the last part of the `self` property of each extension."
+      required: true
+      schema:
+        type: "string"
+    name:
+      name: "name"
+      in: "path"
+      description: "Extension package name."
+      required: true
+      schema:
+        type: "string"
+    version:
+      name: "version"
+      in: "path"
+      description: "Extension package version."
+      required: true
+      schema:
+        type: "string"
+    size:
+      name: "size"
+      in: "query"
+      description: "Number of entries to include in a page."
+      required: false
+      schema:
+        type: "integer"
+        default: 25
+    nameq:
+      name: "name"
+      in: "query"
+      description: "Exact name of an extension to query for."
+      required: false
+      schema:
+        type: "string"
+    nameLike:
+      name: "nameLike"
+      in: "query"
+      required: false
+      description: "Name prefix to filter extensions by."
+      schema:
+        type: "string"
+    token:
+      name: "token"
+      in: "query"
+      description: "Next page token retrieved from the response of previous logs request."
+      schema:
+        type: "string"
+    description:
+      name: "description"
+      in: "query"
+      description: "Value to search for in extension descriptions."
+      schema:
+        type: "string"
+    keywords:
+      name: "keywords"
+      in: "query"
+      description: "A comma-separated list of keywords to search for in extension\
+        \ keyword properties."
+      schema:
+        type: "string"
+  schemas:
+    ExtensionCollectionResponse:
+      allOf:
+      - $ref: "#/components/schemas/APIResponse"
+      - $ref: "#/components/schemas/CollectionResponse"
+      - required:
+        - "contents"
+        type: "object"
+        properties:
+          contents:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/ExtensionResponse"
+    ExtensionPackagesCollectionResponse:
+      allOf:
+      - $ref: "#/components/schemas/APIResponse"
+      - $ref: "#/components/schemas/CollectionResponse"
+      - required:
+        - "contents"
+        type: "object"
+        properties:
+          contents:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/ExtensionPackage"
+    ExtensionResponse:
+      allOf:
+      - $ref: "#/components/schemas/ExtensionOutput"
+    ExtensionPackageOutput:
+      allOf:
+      - $ref: "#/components/schemas/APIResponse"
+      - $ref: "#/components/schemas/ExtensionPackage"
+    ExtensionOutput:
+      allOf:
+      - $ref: "#/components/schemas/Extension"
+      - $ref: "#/components/schemas/APIResponse"
+      - type: "object"
+        properties:
+          etag:
+            type: "string"
+            description: "TODO"
+          created:
+            type: "string"
+            description: "Timestamp indicating when this item was created on the system."
+          updated:
+            type: "string"
+            description: "Timestamp indicating when this item was last updated on\
+              \ the system."
+          createdBy:
+            type: "string"
+            description: "Username for the user who created this item on the system."
+          updatedBy:
+            type: "string"
+            description: "Username for the user who last updated this item on the\
+              \ system."
+          credentialsCheckSum:
+            type: "string"
+            description: "A checksum representing the credentials given to an extension\
+              \ for authenticating with the extension\\'s external resource."
+          regions:
+            type: "array"
+            description: "A list of regions the Extension is deployed to."
+            items:
+              type: "string"
+    ExtensionLogsResponse:
+      allOf:
+      - $ref: "#/components/schemas/APIResponse"
+      - $ref: "#/components/schemas/CollectionResponse"
+      - type: "object"
+        properties:
+          contents:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/ExtensionLogEntry"
+    ExtensionPackagesResponse:
+      allOf:
+      - $ref: "#/components/schemas/APIResponse"
+      - $ref: "#/components/schemas/CollectionResponse"
+      - type: "object"
+        properties:
+          contents:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/ExtensionPackage"
+    Extension:
+      required:
+      - "name"
+      - "packageName"
+      - "version"
+      type: "object"
+      properties:
+        name:
+          type: "string"
+          description: "Name of the extension."
+        description:
+          type: "string"
+          description: "Description of the extension."
+        packageName:
+          type: "string"
+          description: "Name of the extension package that this extension is configured\
+            \ from."
+        version:
+          type: "string"
+          description: "Version number for this extension."
+        configuration:
+          type: "object"
+          properties: {}
+          description: "JSON describing configuration properties and values for this\
+            \ extension."
+        credentials:
+          type: "string"
+          description: "base64 encoded string containing the credentials to be used\
+            \ by the deployed extension. Input only."
+        state:
+          type: "string"
+          description: "The extension's deployment state on the system."
+          default: "UNDEPLOYED"
+          enum:
+          - "DEPLOYED"
+          - "UNDEPLOYED"
+          - "DEPLOYING"
+          - "UNDEPLOYING"
+          - "ERROR"
+        tenant:
+          type: "string"
+          description: "Tenant name."
+    ExtensionLogEntry:
+      required:
+      - "textPayload"
+      - "timestamp"
+      type: "object"
+      properties:
+        textPayload:
+          type: "string"
+          description: "The log message."
+        timestamp:
+          type: "string"
+          description: "The log entry\\'s timestamp."
+    ExtensionPackage:
+      required:
+      - "actions"
+      - "license"
+      - "packageName"
+      - "publishDate"
+      - "version"
+      type: "object"
+      properties:
+        actions:
+          type: "array"
+          description: "An array of objects describing actions this extension supports,\
+            \ including each action's main path, along with input and output properties\
+            \ (if any)."
+          items:
+            type: "object"
+            properties: {}
+        author:
+          type: "object"
+          description: "Authors."
+          properties:
+            name:
+              description: "Name of author."
+              type: "string"
+        bugs:
+          type: "object"
+          description: "Authors."
+          properties:
+            url:
+              description: "Name of author."
+              type: "string"
+        configuration:
+          type: "object"
+          description: "Configuration details."
+          properties:
+            display_name:
+              description: "Display name for the extension package."
+              type: "string"
+            name:
+              description: "Name of the extension package."
+              type: "string"
+            type:
+              description: "Type."
+              type: "string"
+            validators:
+              type: "array"
+              description: "An array of validators for this extension package."
+              items:
+                type: "string"
+        contributors:
+          type: "object"
+          description: "Contributors."
+          properties:
+            name:
+              description: "Name of author."
+              type: "string"
+        description:
+          type: "string"
+          description: "A brief description of what the extension does."
+        display_name:
+          type: "string"
+          description: "Display name for the extension package."
+        dist:
+          type: "object"
+          properties:
+            sha512sum:
+              type: "string"
+              description: "Checksum for validating the distribution."
+            tarball:
+              type: "string"
+              description: "URL of the extension package distribution file."
+          description: "URL of the extension package distribution file, along with\
+            \ a checksum for validating the distribution."
+        engines:
+          type: "object"
+          properties:
+            node:
+              type: "string"
+              description: "Node type."
+          description: "Node types."
+        homepage:
+          type: "string"
+          description: "Home page of the extension package."
+        icon:
+          type: "string"
+          description: "URL to the icon."
+        keywords:
+          type: "array"
+          description: "An array of keywords to use when searching for this extension\
+            \ package."
+          items:
+            type: "string"
+        kind:
+          type: "string"
+          description: "Set to `extensionpackage`."
+        license:
+          type: "string"
+          description: "The open source license under which this extension\\'s source\
+            \ code is protected, such as `Apache-2.0`."
+        name:
+          type: "string"
+          description: "Name of the extension package."
+        packageName:
+          type: "string"
+          description: "Name of this extension."
+        released:
+          type: "string"
+          description: "Date and time the extension package was released."
+        repository:
+          type: "object"
+          description: "Configuration details."
+          properties:
+            type:
+              description: "Type of repository."
+              type: "string"
+            url:
+              type: "string"
+              description: "URL of the repository."
+        scripts:
+          type: "object"
+          description: "Configuration details."
+          properties:
+            test:
+              description: "Test script."
+              type: "string"
+            main:
+              type: "string"
+              description: "Main script."
+        spec_version:
+          type: "string"
+          description: "Version of the associated OpenAPI Specification."
+        version:
+          type: "string"
+          description: "Version of this extension package."
+    APIResponse:
+      required:
+      - "kind"
+      - "self"
+      type: "object"
+      properties:
+        self:
+          type: "string"
+          description: "URL for specifying this collection item in API requests."
+        kind:
+          type: "string"
+          description: "The kind of item this is, such as extension, extensionpackage,\
+            \ or page (as for a collection of extensions)."
+    CollectionResponse:
+      type: "object"
+      properties:
+        pageOf:
+          type: "string"
+          description: "A link to the resource the page represents"
+        totalPages:
+          type: "integer"
+          description: "Total number of pages returned."
+        total:
+          type: "integer"
+          description: "Total number of items returned."
+        next:
+          type: "string"
+          description: "A link to the next page in the collection, if applicable.\
+            \ For logs, this is just a token to be included on a subsequent request."
+        previous:
+          type: "string"
+          description: "A link to the previous page in the collection, if applicable."
+        first:
+          type: "string"
+          description: "A link to the first page in the collection."
+    ErrorResponse:
+      required:
+      - "messageID"
+      - "messageText"
+      type: "object"
+      properties:
+        messageID:
+          type: "string"
+          description: "Unique ID of the message."
+        messageText:
+          type: "string"
+          description: "The message text."
+        documentation:
+          type: "string"
+          description: "Further information to use in resolving the error."

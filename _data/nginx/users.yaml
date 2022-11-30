@@ -1,0 +1,894 @@
+openapi: 3.0.0
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+info:
+  title: Users API
+  description: Use the Users API to manage NGINX Controller User accounts.
+  version: v1
+paths:
+  /platform/users:
+    get:
+      tags:
+        - Users
+      summary: List all Users
+      operationId: listUsers
+      description: Returns an unfiltered list of all User resources.
+      responses:
+        '200':
+          description: Successfully retrieved a list of User resources.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserListResponse'
+              example:
+                items:
+                  - metadata:
+                      name: john.doe@nginx.com
+                      kind: user
+                      createTime: '2019-07-29T09:12:33.001Z'
+                      displayName: John Doe
+                      description: NGINX controller user with prod env role
+                    desiredState:
+                      firstName: John
+                      lastName: Doe
+                      email: john.doe@nginx.com
+                      password: '********'
+                      roles:
+                        - ref: /platform/roles/prod
+                    currentStatus:
+                      account: '1'
+                      id: 123
+                      firstName: John
+                      lastName: Doe
+                      lastLogin: 1570132969
+                      email: john.doe@nginx.com
+                      authn: amplify
+                      password: '********'
+                      roles:
+                        - ref: /platform/roles/prod
+                          links:
+                            rel: /api/v1/platform/roles/prod
+                            name: prod
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+        - Users
+      summary: Create a User
+      operationId: addUser
+      description: Creates a new User resource.
+      requestBody:
+        description: Defines the details to use for the new User resource.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            example:
+              metadata:
+                name: john.doe@nginx.com
+                displayName: John Doe
+                description: NGINX controller user with prod env role
+              desiredState:
+                firstName: John
+                lastName: Doe
+                email: john.doe@nginx.com
+                password: passwd123
+                roles:
+                  - ref: /platform/roles/prod
+                groups:
+                  - ref: /platform/groups/guest
+      responses:
+        '201':
+          description: Successfully created the requested User resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              example:
+                metadata:
+                  name: john.doe@nginx.com
+                  kind: user
+                  createTime: '2019-07-29T09:12:33.001Z'
+                  displayName: John Doe
+                  description: NGINX controller user with prod env role
+                desiredState:
+                  firstName: John
+                  lastName: Doe
+                  email: john.doe@nginx.com
+                  password: '********'
+                  roles:
+                    - ref: /platform/roles/prod
+                  groups:
+                    - ref: /platform/groups/guest
+                currentStatus:
+                  account: '1'
+                  id: 123
+                  firstName: John
+                  lastName: Doe
+                  lastLogin: 1570132969
+                  email: john.doe@nginx.com
+                  authn: amplify
+                  password: '********'
+                  roles:
+                    - ref: /platform/roles/prod
+                      links:
+                        rel: /api/v1/platform/roles/prod
+                        name: prod
+                  groups:
+                    - links:
+                        rel: /api/v1/platform/auth/groups/guest
+                        name: guest
+                      ref: /platform/groups/guest
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  '/platform/users/{userName}':
+    get:
+      tags:
+        - Users
+      summary: Get a User
+      operationId: getUser
+      description: Gets information for an existing User resource.
+      parameters:
+        - $ref: '#/components/parameters/userName'
+      responses:
+        '200':
+          description: Successfully retrieved the requested User resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              example:
+                metadata:
+                  name: john.doe@nginx.com
+                  kind: user
+                  createTime: '2019-07-29T09:12:33.001Z'
+                  displayName: John Doe
+                  description: NGINX controller user with prod env role
+                desiredState:
+                  firstName: John
+                  lastName: Doe
+                  email: john.doe@nginx.com
+                  password: '********'
+                  roles:
+                    - ref: /platform/roles/prod
+                currentStatus:
+                  account: '1'
+                  id: 123
+                  firstName: John
+                  lastName: Doe
+                  lastLogin: 1570132969
+                  email: john.doe@nginx.com
+                  authn: amplify
+                  password: '********'
+                  roles:
+                    - ref: /platform/roles/prod
+                      links:
+                        rel: /api/v1/platform/roles/prod
+                        name: prod
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags:
+        - Users
+      summary: Update a User
+      operationId: updateUser
+      description: Updates an existing User resource.
+      parameters:
+        - $ref: '#/components/parameters/userName'
+      requestBody:
+        description: >-
+          Defines the updates to make to the specified User
+          resource.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+            example:
+              metadata:
+                name: john.doe@nginx.com
+                displayName: Jane Doe
+                description: NGINX controller user with prod env role
+              desiredState:
+                firstName: Jane
+                lastName: Doe
+                password: NewPassWd1234
+                verifyPassword: OldPassWd1234
+                roles:
+                  - ref: /platform/roles/new
+      responses:
+        '200':
+          description: Successfully updated the specified User resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateUser'
+              example:
+                metadata:
+                  name: john.doe@nginx.com
+                  kind: user
+                  createTime: '2019-07-29T09:12:33.001Z'
+                  displayName: Jane Doe
+                  description: NGINX controller user with prod env role
+                desiredState:
+                  firstName: Jane
+                  lastName: Doe
+                  password: '********'
+                  roles:
+                    - ref: /platform/roles/new
+                currentStatus:
+                  account: '1'
+                  id: 123
+                  firstName: Jane
+                  lastName: Doe
+                  lastLogin: 1570132969
+                  email: john.doe@nginx.com
+                  authn: amplify
+                  password: '********'
+                  roles:
+                    - ref: /platform/roles/new
+                      links:
+                        rel: /api/v1/platform/roles/new
+                        name: new
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - Users
+      summary: Delete a User
+      operationId: deleteUser
+      description: Deletes a User resource.
+      parameters:
+        - $ref: '#/components/parameters/userName'
+      responses:
+        '204':
+          description: >-
+            Successfully deleted the user. No content was
+            returned.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: session
+  parameters:
+    userName:
+      in: path
+      name: userName
+      schema:
+        type: string
+        format: email
+      required: true
+      description: |
+        The name for the User resource.
+  responses:
+    BadRequest:
+      description: >
+        Bad input parameter, or possibly a bad URI. Check the
+        input for typos and try again.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            message: >-
+              Error parsing the user to create from the request
+              payload.
+            code: 3457
+    Unauthorized:
+      description: |
+        User authentication is invalid or missing.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            message: No session cookie found in the request header.
+            code: 3463
+    Forbidden:
+      description: |
+        The request failed due to insufficient privileges.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            message: user is not authorized
+            code: 1235
+    InternalServerError:
+      description: >
+        The request cannot be processed because of an internal
+        server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            message: Error getting users from the database.
+            code: 3464
+    NotFound:
+      description: |
+        The specified User resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            message: 'Error getting user: user not found.'
+            code: 3472
+    Conflict:
+      description: >
+        The request failed due to a conflict with an existing User
+        resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            message: 'Error creating user: user already exists.'
+            code: 3469
+  schemas:
+    UpdateUser:
+      type: object
+      required:
+        - metadata
+        - desiredState
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          $ref: '#/components/schemas/UpdateUserDef'
+        currentStatus:
+          $ref: '#/components/schemas/UserDef'
+      example:
+        metadata:
+          name: john.doe@nginx.com
+          kind: user
+          createTime: '2019-07-29T09:12:33.001Z'
+          displayName: Jane Doe
+          description: >-
+            NGINX Controller user with a production environment
+            role.
+        desiredState:
+          firstName: Jane
+          lastName: Doe
+          password: NewPassWd1234
+          verifyPassword: OldPassWd1234
+          roles:
+            - ref: /platform/roles/new
+        currentStatus:
+          account: '1'
+          id: 123
+          firstName: Jane
+          lastName: Doe
+          lastLogin: 1570132969
+          email: john.doe@nginx.com
+          authn: amplify
+          password: '********'
+          roles:
+            - ref: /platform/roles/prod
+              links:
+                rel: /api/v1/platform/roles/prod
+                name: prod
+    UpdateUserDef:
+      type: object
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 64
+          example: Jane
+          description: Given name.
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 64
+          example: Doe
+          description: Surname.
+        password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 64
+          description: >
+            The user's password must meet the following
+            requirements:
+
+              - Length must be between 8 and 64 characters
+              - Must contain at least 1 letter
+              - Must contain at least 1 number
+              - Must be different from the old password
+              - Dictionary words, mangled dictionary words, or systematic passwords like '1234567a' are not allowed
+              
+        verifyPassword:
+          type: string
+          format: password
+          description: >-
+            The user's current password. Users must verify their
+            current password to make updates to their user
+            profiles. The current password does not need to be
+            verified when an admin user updates other users'
+            profiles.
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceRef'
+      example:
+        firstName: Jane
+        lastName: Doe
+        password: NewPassWd1234
+        verifyPassword: OldPassWd1234
+        roles:
+          - ref: /platform/roles/new
+    UserListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          description: List of User resources.
+      example:
+        items:
+          - metadata:
+              name: john.doe@nginx.com
+              kind: user
+              createTime: '2019-07-29T09:12:33.001Z'
+              displayName: John Doe
+              description: >-
+                NGINX Controller user with production environment
+                role
+            desiredState:
+              firstName: John
+              lastName: Doe
+              email: john.doe@nginx.com
+              password: '********'
+              roles:
+                - ref: /platform/roles/prod
+            currentStatus:
+              account: '1'
+              id: 123
+              firstName: John
+              lastName: Doe
+              lastLogin: 1570132969
+              email: john.doe@nginx.com
+              authn: amplify
+              password: '********'
+              roles:
+                - ref: /platform/roles/prod
+                  links:
+                    rel: /api/v1/platform/roles/prod
+                    name: prod
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          not:
+            type: string
+            enum:
+              - .
+              - ..
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+            - cannot be only `.` or `..`
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    NamedLinks:
+      allOf:
+        - $ref: '#/components/schemas/SelfLinks'
+        - type: object
+          description: >
+            Contains information about the object being referred
+            to.
+
+
+            These are generally details -- like the object name
+            and display name --
+
+            that are useful to a consumer of the API that performs
+            further
+
+            processing. 
+
+
+            This object is only present in responses.
+              
+          properties:
+            name:
+              type: string
+              example: production
+              description: |
+                The name of the linked resource.
+            displayName:
+              type: string
+              example: Production Environment
+              description: A user friendly resource name.
+    ResourceRef:
+      type: object
+      required:
+        - ref
+      properties:
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: |
+            A reference to another NGINX Controller resource.
+        links:
+          $ref: '#/components/schemas/NamedLinks'
+    UserDef:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+        - password
+      properties:
+        account:
+          type: string
+          minLength: 1
+          maxLength: 64
+          example: 1
+          deprecated: true
+          description: The account number of the tentant.
+        id:
+          type: integer
+          example: 123
+          description: Account ID
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 64
+          example: John
+          description: Given name.
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 64
+          example: Doe
+          description: Surname.
+        lastLogin:
+          type: integer
+          example: 1570132969
+          description: Unix time (seconds since Epoch) of last login.
+        email:
+          type: string
+          example: john.doe@nginx.com
+          description: >-
+            An email address that serves as the account's
+            username. This must match the resource's metadata.name
+            property.
+          format: email
+        authn:
+          type: string
+          enum:
+            - amplify
+        password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 64
+          description: |
+            Passwords must meet the following requirements:
+
+              - length must be between 8 and 64 characters
+              - must contain at least 1 letter
+              - must contain at least 1 number
+              - must be different from the old password
+
+              Dictionary words, mangled dictionary words, or systematic passwords like '1234567a' are not allowed.
+        apiKey:
+          type: string
+          example: 761ab961448865d86ef71c67fd74432b
+          deprecated: true
+          description: User api key.
+        isEnabled:
+          type: boolean
+          description: Indicates if the account is enabled.
+          default: false
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceRef'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceRef'
+    User:
+      type: object
+      required:
+        - metadata
+        - desiredState
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          $ref: '#/components/schemas/UserDef'
+        currentStatus:
+          $ref: '#/components/schemas/UserDef'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'

@@ -1,0 +1,207 @@
+---
+openapi: "3.0.0"
+servers:
+- url: "https://api.enterprise.apigee.com/v1"
+info:
+  title: "References API"
+  description: "When configuring a virtual host to support TLS, you can specify a\
+    \ keystore or truststore by using a reference. A reference is a variable that\
+    \ contains the name of the keystore or truststore, rather than specifying the\
+    \ keystore or truststore name directly. Apigee strongly recommends that you use\
+    \ references to keystores and truststores in a virtual host and do not use names\
+    \ directly."
+  version: "1.0"
+security:
+- Basic: []
+- OAuth: []
+paths:
+  /organizations/{org_name}/environments/{env_name}/references:
+    get:
+      tags:
+      - "References"
+      summary: "List references"
+      description: "List all references in an environment."
+      operationId: "listReferences"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+              example:
+              - "MyReference"
+              - "AnotherReference"
+        "400":
+          description: "Bad request"
+    post:
+      tags:
+      - "References"
+      summary: "Create reference"
+      description: "Creates a reference.\nFor example, when creating a reference to\
+        \ a keystore, set `resourceType` to `KeyStore` and `refers` to the name of\
+        \ the keystore. "
+      operationId: "createReference"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reference"
+              example:
+                name: "MyReference"
+                refers: "MyKeystore"
+                resourceType: "KeyStore"
+        "400":
+          description: "Bad request"
+      requestBody:
+        description: "Resource details."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Reference"
+            example:
+              name: "MyReference"
+              refers: "MyKeystore"
+              resourceType: "KeyStore"
+  /organizations/{org_name}/environments/{env_name}/references/{ref_name}:
+    delete:
+      tags:
+      - "References"
+      summary: "Delete reference"
+      description: "Deletes a reference."
+      operationId: "deleteReference"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/ref_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reference"
+              example:
+                name: "MyReference"
+                refers: "MyKeystore"
+                resourceType: "KeyStore"
+        "400":
+          description: "Bad request"
+    put:
+      tags:
+      - "References"
+      summary: "Update reference"
+      description: "Updates a reference."
+      operationId: "updateReference"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/ref_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reference"
+              example:
+                name: "MyReference"
+                refers: "MyKeystore"
+                resourceType: "KeyStore"
+        "400":
+          description: "Bad request"
+      requestBody:
+        description: "Resource details."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Reference"
+            example:
+              name: "MyReference"
+              refers: "MyKeystore"
+              resourceType: "KeyStore"
+    get:
+      tags:
+      - "References"
+      summary: "Get reference"
+      description: "Gets reference details."
+      operationId: "getReference"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/ref_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reference"
+              example:
+                name: "MyReference"
+                refers: "MyKeystore"
+                resourceType: "KeyStore"
+        "400":
+          description: "Bad request"
+components:
+  securitySchemes:
+    Basic:
+      type: "http"
+      scheme: "basic"
+      description: "Multi-factor authentication is not supported."
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)"
+  parameters:
+    org_name:
+      in: "path"
+      name: "org_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Organization name."
+    env_name:
+      in: "path"
+      name: "env_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Environment name."
+    ref_name:
+      in: "path"
+      name: "ref_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Reference name."
+  schemas:
+    Reference:
+      description: "Organization details."
+      type: "object"
+      required:
+      - "name"
+      - "refers"
+      - "resourceType"
+      properties:
+        name:
+          description: "Name of the reference."
+          type: "string"
+        refers:
+          description: "Name of the keystore or truststore being referenced."
+          type: "string"
+        resourceType:
+          description: "Set to `KeyStore` or `TrustStore`."
+          type: "string"

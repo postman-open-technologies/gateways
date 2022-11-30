@@ -1,0 +1,137 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Easegress
+  provider: Easegress
+  slug: easegress
+  rating: 1
+  license: Proprietary, Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    Easegress is a Cloud Native traffic orchestration system designed for High Availability -  Built-in Raft consensus & leader election provides 99.99% availability. Traffic Orchestration -  Simple orchestration of various filters for each traffic pipeline. High Performance -  Lightweight and essential features speed up the performance. Observability -  There are many meaningful statistics periodically in a readable way. Extensibility -  It's easy to develop your own filter or controller with high-level programming language. Integration -  The simple interfaces make it easy to integrate with other systems, such as Kubernetes, Ingress, EaseMesh sidecar, Workflow, etc.
+  platformCapabilities:
+    - Gateway
+    - Analytics
+    - Monitoring
+  gatewayCapabilities:
+    - Custom Code Execution
+    - Mediation
+    - Protocol Transformation
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+    - HTTP/2
+    - HTTP/2.0
+    - HTTP/3(QUIC)
+    - MQTT
+    - WebSockets
+  downstreamProtocols:
+    - HTTP/1.1
+    - HTTP/2
+    - HTTP/2.0
+    - HTTP/3(QUIC)
+    - MQTT
+    - WebSockets
+  deliveryModels:
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Cache Eviction
+        - Cache Invalidation
+        - Cache Lookup
+        - Cache Population
+        - Cache Storage
+        - Cache Target Response
+        - Cache Validation
+        - Canary Release
+        - Compression
+        - Circuit Breaker
+        - Conditional Routing
+        - Content-Based Routing
+        - Distributed Tracing
+        - Dynamic Routing
+        - Load Balancer Routing
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Rate Limiting (Dynamic)
+        - Request Size Limiting
+        - Service Discovery
+        - Throttling
+        - Traffic Optimization
+    - category: Mediation
+      capabilities:
+        - Aggregation
+        - Adaption
+        - CORS
+        - Cache Eviction
+        - Cache Lookup
+        - Cache Store
+        - Custom Exception Handling
+        - Hot-Update
+        - Ingress Control
+        - JSON Validation
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - Routing Rules
+        - Retries
+        - URL Rewriting
+        - XML to JSON
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - IP Access Rules
+        - JWT
+        - JWT Validation
+        - JWT authorizers
+        - Let's Encrypt
+        - Message Inspection
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+        - Okta
+        - OpenID Connect
+        - Signatures
+        - SAML Assertion
+    - category: Extensions
+      capabilities:
+        - HTTP Callout
+        - HTTP integrations
+        - Plugins
+        - Side-Car  
+        - Knative FaaS  
+        - Consul
+        - Etcd
+        - Nacos          
+
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://megaease.com/easegress/
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://megaease.com/easegress/
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/easegress.png     

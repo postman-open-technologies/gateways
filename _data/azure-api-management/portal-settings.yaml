@@ -1,0 +1,314 @@
+openapi: 3.0.0
+info:
+  title: Azure API Management - Portal Settings
+  description: Use these REST APIs for performing operations on PortalSettings entity
+    associated with your Azure API Management deployment. Using this entity you
+    can manage settings for a Developer Portal.
+  version: 2017-03-01
+security:
+  - apim_key: []
+paths:
+  /portalsettings/signin:
+    get:
+      tags:
+        - SignInSettings
+      operationId: SignInSettings_Get
+      description: Get Sign-In settings.
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: Sign-In settings.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalSigninSettings"
+    patch:
+      tags:
+        - SignInSettings
+      operationId: SignInSettings_Update
+      description: Update Sign-In settings.
+      parameters:
+        - name: If-Match
+          in: header
+          required: true
+          description: The entity state (Etag) version of the property to update. A value
+            of "*" can be used for If-Match to unconditionally apply the
+            operation.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortalSigninSettings"
+        description: Update Sign-In settings.
+        required: true
+      responses:
+        "204":
+          description: Sign-In settings was updated successfully.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    put:
+      tags:
+        - SignInSettings
+      operationId: SignInSettings_CreateOrUpdate
+      description: Create or Update Sign-In settings.
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortalSigninSettings"
+        description: Create or update parameters.
+        required: true
+      responses:
+        "204":
+          description: Sign-In settings was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalSigninSettings"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  /portalsettings/signup:
+    get:
+      tags:
+        - SignUpSettings
+      operationId: SignUpSettings_Get
+      description: Get Sign-Up settings.
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: Sign-Up settings.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalSignupSettings"
+    patch:
+      tags:
+        - SignUpSettings
+      operationId: SignUpSettings_Update
+      description: Update Sign-Up settings.
+      parameters:
+        - name: If-Match
+          in: header
+          required: true
+          description: The entity state (Etag) version of the property to update. A value
+            of "*" can be used for If-Match to unconditionally apply the
+            operation.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortalSignupSettings"
+        description: Update Sign-Up settings.
+        required: true
+      responses:
+        "204":
+          description: Sign-Up settings was updated successfully.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    put:
+      tags:
+        - SignUpSettings
+      operationId: SignUpSettings_CreateOrUpdate
+      description: Create or Update Sign-Up settings.
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortalSignupSettings"
+        description: Create or update parameters.
+        required: true
+      responses:
+        "204":
+          description: Sign-Up settings was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalSignupSettings"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  /portalsettings/delegation:
+    get:
+      tags:
+        - DelegationSettings
+      operationId: DelegationSettings_Get
+      description: Get Delegation settings.
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: Delegation settings.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalDelegationSettings"
+    patch:
+      tags:
+        - DelegationSettings
+      operationId: DelegationSettings_Update
+      description: Update Delegation settings.
+      parameters:
+        - name: If-Match
+          in: header
+          required: true
+          description: The entity state (Etag) version of the property to update. A value
+            of "*" can be used for If-Match to unconditionally apply the
+            operation.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortalDelegationSettings"
+        description: Update Delegation settings.
+        required: true
+      responses:
+        "204":
+          description: Delegation settings was updated successfully.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    put:
+      tags:
+        - DelegationSettings
+      operationId: DelegationSettings_CreateOrUpdate
+      description: Create or Update Delegation settings.
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortalDelegationSettings"
+        description: Create or update parameters.
+        required: true
+      responses:
+        "204":
+          description: Delegation settings was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalDelegationSettings"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+servers:
+  - url: "{apimBaseUrl}"
+    variables:
+      apimBaseUrl:
+        description: The management endpoint of the API Management service, for example
+          https://myapimservice.management.azure-api.net.
+        x-ms-skip-url-encoding: true
+        default: ""
+components:
+  securitySchemes:
+    apim_key:
+      type: apiKey
+      name: Authorization
+      in: header
+  schemas:
+    PortalSigninSettings:
+      properties:
+        enabled:
+          type: boolean
+          description: Redirect Anonymous users to the Sign-In page.
+      description: Sign-In settings for the Developer Portal.
+    PortalSignupSettings:
+      properties:
+        enabled:
+          type: boolean
+          description: Allow users to sign up on a developer portal.
+        termsOfService:
+          $ref: "#/components/schemas/TermsOfServiceProperties"
+      description: Sign-up settings contract properties.
+    TermsOfServiceProperties:
+      properties:
+        text:
+          type: string
+          description: A terms of service text.
+        enabled:
+          type: boolean
+          description: Display terms of service during a sign-up process.
+        consentRequired:
+          type: boolean
+          description: Ask user for consent to the terms of service.
+      description: Terms of service contract properties.
+    PortalDelegationSettings:
+      properties:
+        url:
+          type: string
+          description: A delegation Url.
+        validationKey:
+          type: string
+          description: A base64-encoded validation key to validate, that a request is
+            coming from Azure API Management.
+        subscriptions:
+          $ref: "#/components/schemas/SubscriptionsDelegationSettingsProperties"
+        userRegistration:
+          $ref: "#/components/schemas/RegistrationDelegationSettingsProperties"
+      description: Delegation settings for a developer portal.
+    SubscriptionsDelegationSettingsProperties:
+      properties:
+        enabled:
+          type: boolean
+          description: Enable or disable delegation for subscriptions.
+      description: Subscriptions delegation settings properties.
+    RegistrationDelegationSettingsProperties:
+      properties:
+        enabled:
+          type: boolean
+          description: Enable or disable delegation for user registration.
+      description: User registration delegation settings properties.

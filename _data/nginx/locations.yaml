@@ -1,0 +1,857 @@
+openapi: 3.0.0
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+info:
+  title: Locations API
+  description: >-
+    Use the Locations API to manage the deployment locations for
+    NGINX Controller.
+  version: v1
+paths:
+  /infrastructure/locations:
+    get:
+      tags:
+        - Locations
+      summary: List all Locations
+      description: Returns a list of all Locations.
+      operationId: listLocations
+      responses:
+        '200':
+          description: >-
+            Successfully retrieved a list of all of the configured
+            Locations.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListLocationResponse'
+              example:
+                value:
+                  items:
+                    - currentStatus:
+                        type: OTHER_LOCATION
+                      desiredState:
+                        type: OTHER_LOCATION
+                      metadata:
+                        createTime: '2020-05-13T09:29:49.464273Z'
+                        description: >-
+                          Location for instances where location
+                          has not been specified
+                        displayName: Unspecified (default)
+                        kind: location
+                        links:
+                          rel: >-
+                            /api/v1/infrastructure/locations/unspecified
+                        name: unspecified
+                        tags:
+                          - default
+                        uid: 802ef1f8-9105-474a-b9a7-599837efd6b4
+                        updateTime: '2020-05-13T09:29:49.464273Z'
+                    - currentStatus:
+                        type: OTHER_LOCATION
+                      desiredState:
+                        type: OTHER_LOCATION
+                      metadata:
+                        createTime: '2020-05-13T16:58:17.058124Z'
+                        description: Other Location for managing instances
+                        displayName: OtherLocation-1
+                        kind: location
+                        links:
+                          rel: >-
+                            /api/v1/infrastructure/locations/my-other-location
+                        name: my-other-location
+                        tags:
+                          - dev
+                          - prod
+                        uid: 97d06b70-0d00-4863-b86d-40ab29efefdc
+                        updateTime: '2020-05-13T16:58:17.058124Z'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+        - Locations
+      summary: Create a Location
+      description: Creates a new Location resource.
+      operationId: addLocation
+      requestBody:
+        description: Defines the Location resource to be added.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Location'
+            examples:
+              OTHER_LOCATION:
+                $ref: '#/components/examples/OtherLocationRequest'
+              AWS_LOCATION:
+                $ref: '#/components/examples/AWSLocationRequest'
+              AZURE_LOCATION:
+                $ref: '#/components/examples/AzureLocationRequest'
+      responses:
+        '201':
+          description: Successfully created the requested Location.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLocationResponse'
+              examples:
+                OTHER_LOCATION:
+                  $ref: '#/components/examples/OtherLocationResponse'
+                AWS_LOCATION:
+                  $ref: '#/components/examples/AWSLocationResponse'
+                AZURE_LOCATION:
+                  $ref: '#/components/examples/AzureLocationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '405':
+          $ref: '#/components/responses/NotAllowed'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  '/infrastructure/locations/{locationName}':
+    get:
+      tags:
+        - Locations
+      summary: Get a Location
+      description: Returns information about a specified Location resource.
+      operationId: getLocation
+      parameters:
+        - $ref: '#/components/parameters/LocationName'
+      responses:
+        '200':
+          description: >-
+            Successfully retrieved the requested Location
+            resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLocationResponse'
+              examples:
+                OTHER_LOCATION:
+                  $ref: '#/components/examples/OtherLocationResponse'
+                AWS_LOCATION:
+                  $ref: '#/components/examples/AWSLocationResponse'
+                AZURE_LOCATION:
+                  $ref: '#/components/examples/AzureLocationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+        - Locations
+      summary: Upsert a Location
+      description: >-
+        Creates a new Location resource or updates an existing
+        Location resource.
+      operationId: upsertLocation
+      parameters:
+        - $ref: '#/components/parameters/LocationName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Location'
+            examples:
+              OTHER_LOCATION:
+                $ref: '#/components/examples/OtherLocationRequest'
+              AWS_LOCATION:
+                $ref: '#/components/examples/AWSLocationRequest'
+              AZURE_LOCATION:
+                $ref: '#/components/examples/AzureLocationRequest'
+        required: true
+      responses:
+        '200':
+          description: >-
+            Successfully received the request to update the
+            specified Location resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLocationResponse'
+              examples:
+                OTHER_LOCATION:
+                  $ref: '#/components/examples/OtherLocationResponse'
+                AWS_LOCATION:
+                  $ref: '#/components/examples/AWSLocationResponse'
+                AZURE_LOCATION:
+                  $ref: '#/components/examples/AzureLocationResponse'
+        '201':
+          description: Successfully updated the specified Location resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLocationResponse'
+              examples:
+                OTHER_LOCATION:
+                  $ref: '#/components/examples/OtherLocationResponse'
+                AWS_LOCATION:
+                  $ref: '#/components/examples/AWSLocationResponse'
+                AZURE_LOCATION:
+                  $ref: '#/components/examples/AzureLocationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '405':
+          $ref: '#/components/responses/NotAllowed'
+    delete:
+      tags:
+        - Locations
+      summary: Delete a Location
+      description: Deletes the specified Location resource.
+      operationId: deleteLocation
+      parameters:
+        - $ref: '#/components/parameters/LocationName'
+      responses:
+        '204':
+          description: Successfully deleted the specified Location resource.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '405':
+          $ref: '#/components/responses/NotAllowed'
+        '409':
+          $ref: '#/components/responses/Conflict'
+components:
+  parameters:
+    LocationName:
+      name: locationName
+      in: path
+      description: The name of the Location.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+  schemas:
+    Location:
+      required:
+        - metadata
+        - desiredState
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          $ref: '#/components/schemas/LocationState'
+        currentStatus:
+          $ref: '#/components/schemas/LocationState'
+    GetLocationResponse:
+      allOf:
+        - $ref: '#/components/schemas/Location'
+    ListLocationResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
+    LocationState:
+      oneOf:
+        - $ref: '#/components/schemas/OtherLocation'
+        - $ref: '#/components/schemas/AWSLocation'
+        - $ref: '#/components/schemas/AzureLocation'
+      discriminator:
+        propertyName: type
+        mapping:
+          OTHER_LOCATION: '#/components/schemas/OtherLocation'
+          AWS_LOCATION: '#/components/schemas/AWSLocation'
+          AZURE_LOCATION: '#/components/schemas/AzureLocation'
+    AWSLocation:
+      type: object
+      required:
+        - vpcID
+        - region
+        - integrationRef
+        - type
+      properties:
+        type:
+          type: string
+          description: >
+            The location type. Select the environment where you
+            want to create the location. 
+
+            To create a location that’s specific to the AWS cloud
+            environment, select AWS_LOCATION.
+          enum:
+            - AWS_LOCATION
+        region:
+          description: |
+            The AWS region.
+          type: string
+        vpcID:
+          type: string
+          description: >
+            The vpcID of the AWS Virtual Private Cloud (VPC) where
+            new Instances created under this location should
+            reside.
+
+            The VPC must be in the specified AWS region.
+        integrationRef:
+          $ref: '#/components/schemas/ResourceRef'
+    AzureLocation:
+      x-f5-experimental: true
+      type: object
+      required:
+        - type
+        - region
+        - resourceGroup
+        - subscriptionID
+        - integrationRef
+      properties:
+        type:
+          type: string
+          description: The location type.
+          enum:
+            - AZURE_LOCATION
+        region:
+          description: The Azure region.
+          type: string
+        resourceGroup:
+          type: string
+          description: The name of the resourceGroup.
+        subscriptionID:
+          type: string
+          description: >-
+            The unique alphanumeric string that identifies the
+            Azure subscription.
+        integrationRef:
+          description: Integration ref.
+          $ref: '#/components/schemas/ResourceRef'
+    OtherLocation:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: >
+            The location type. Select the environment where you
+            want to create the location. 
+
+            To create a location that’s not specific to any cloud
+            environment, select OTHER_LOCATION.
+          enum:
+            - OTHER_LOCATION
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    NamedLinks:
+      allOf:
+        - $ref: '#/components/schemas/SelfLinks'
+        - type: object
+          description: >
+            Contains information about the object being referred
+            to.
+
+
+            These are generally details -- like the object name
+            and display name --
+
+            that are useful to a consumer of the API that performs
+            further
+
+            processing. 
+
+
+            This object is only present in responses.
+              
+          properties:
+            name:
+              type: string
+              example: production
+              description: |
+                The name of the linked resource.
+            displayName:
+              type: string
+              example: Production Environment
+              description: A user friendly resource name.
+    ResourceRef:
+      type: object
+      required:
+        - ref
+      properties:
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: |
+            A reference to another NGINX Controller resource.
+        links:
+          $ref: '#/components/schemas/NamedLinks'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+  responses:
+    BadRequest:
+      description: >
+        Bad input parameter, or possibly a bad URI. Check the
+        input for typos and try again.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 120305
+            message: >-
+              Error creating the location: could not parse the
+              request payload. Check the format of the request,
+              then try again.
+    Unauthorized:
+      description: |
+        User authentication is invalid or missing.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 401
+            message: authentication needed
+    NotFound:
+      description: |
+        The specified location resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 120303
+            message: >-
+              Error getting the location: the specified location
+              does not exist. Check the location name, then try
+              again.
+    NotAllowed:
+      description: The request is not allowed on the specified resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 120322
+            message: >-
+              Error deleting the location: the name 'unspecified'
+              is reserved. Specify a different name for the
+              location, then try again.
+    Conflict:
+      description: >
+        The request failed due to a conflict with an existing
+        location resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 120308
+            message: >-
+              Error adding the location: the location already
+              exists. Use a unique name for the location, then try
+              again.
+  examples:
+    OtherLocationRequest:
+      value:
+        metadata:
+          name: my-other-location
+          description: Other Location for managing instances
+          displayName: OtherLocation-1
+          tags:
+            - dev
+            - prod
+        desiredState:
+          type: OTHER_LOCATION
+    AWSLocationRequest:
+      value:
+        metadata:
+          name: my-aws-location
+          description: AWS Location for us-east-1
+          displayName: us-east-1-location
+          tags:
+            - dev
+            - prod
+        desiredState:
+          type: AWS_LOCATION
+          vpcID: vpc-1234
+          region: us-east-1
+          integrationRef:
+            ref: /api/v1/platform/integrations/my-aws-integration
+    AzureLocationRequest:
+      value:
+        metadata:
+          name: my-azure-location
+          description: Azure Location for West US 2
+          displayName: westus2-location
+          tags:
+            - dev
+            - prod
+        desiredState:
+          type: AZURE_LOCATION
+          resourceGroup: myResourceGroup
+          subscriptionID: mySubscriptionID
+          region: westus2
+          integrationRef:
+            ref: /api/v1/platform/integrations/my-azure-integration
+    OtherLocationResponse:
+      value:
+        currentStatus:
+          type: OTHER_LOCATION
+        desiredState:
+          type: OTHER_LOCATION
+        metadata:
+          createTime: '2020-05-13T16:58:17.058124Z'
+          description: Other Location for managing instances
+          displayName: OtherLocation-1
+          kind: location
+          links:
+            rel: /api/v1/infrastructure/locations/my-other-location
+          name: my-other-location
+          tags:
+            - dev
+            - prod
+          uid: 97d06b70-0d00-4863-b86d-40ab29efefdc
+          updateTime: '2020-05-13T16:58:17.058124Z'
+    AWSLocationResponse:
+      value:
+        currentStatus:
+          integrationRef:
+            ref: /api/v1/platform/integrations/my-aws-integration
+          region: us-east-1
+          type: AWS_LOCATION
+          vpcID: vpc-1234
+        desiredState:
+          integrationRef:
+            ref: /api/v1/platform/integrations/my-aws-integration
+          region: us-east-1
+          type: AWS_LOCATION
+          vpcID: vpc-1234
+        metadata:
+          createTime: '2020-05-13T16:57:02.931198Z'
+          description: AWS Location for us-east-1
+          displayName: us-east-1-location
+          kind: location
+          links:
+            rel: /api/v1/infrastructure/locations/my-aws-location
+          name: my-aws-location
+          tags:
+            - dev
+            - prod
+          uid: 62f72025-59a1-4c11-8cca-798b5e12efb8
+          updateTime: '2020-05-13T16:57:02.931198Z'
+    AzureLocationResponse:
+      value:
+        currentStatus:
+          integrationRef:
+            ref: /api/v1/platform/integrations/my-azure-integration
+          type: AZURE_LOCATION
+          subscriptionID: mySubscriptionID
+          region: westus2
+        desiredState:
+          integrationRef:
+            ref: /api/v1/platform/integrations/my-azure-integration
+          type: AZURE_LOCATION
+          subscriptionID: mySubscriptionID
+          region: westus2
+        metadata:
+          createTime: '2020-05-13T16:57:02.931198Z'
+          description: Azure Location for West US 2
+          displayName: westus2-location
+          kind: location
+          links:
+            rel: /api/v1/infrastructure/locations/my-azure-location
+          name: my-azure-location
+          tags:
+            - dev
+            - prod
+          uid: 62f72025-59a1-4c11-8cca-798b5e12efb8
+          updateTime: '2020-05-13T16:57:02.931198Z'
+    ListLocationResponse:
+      value:
+        items:
+          - currentStatus:
+              type: OTHER_LOCATION
+            desiredState:
+              type: OTHER_LOCATION
+            metadata:
+              createTime: '2020-05-13T09:29:49.464273Z'
+              description: >-
+                Location for instances where location has not been
+                specified
+              displayName: Unspecified (default)
+              kind: location
+              links:
+                rel: /api/v1/infrastructure/locations/unspecified
+              name: unspecified
+              tags:
+                - default
+              uid: 802ef1f8-9105-474a-b9a7-599837efd6b4
+              updateTime: '2020-05-13T09:29:49.464273Z'
+          - currentStatus:
+              type: OTHER_LOCATION
+            desiredState:
+              type: OTHER_LOCATION
+            metadata:
+              createTime: '2020-05-13T16:58:17.058124Z'
+              description: Other Location for managing instances
+              displayName: OtherLocation-1
+              kind: location
+              links:
+                rel: >-
+                  /api/v1/infrastructure/locations/my-other-location
+              name: my-other-location
+              tags:
+                - dev
+                - prod
+              uid: 97d06b70-0d00-4863-b86d-40ab29efefdc
+              updateTime: '2020-05-13T16:58:17.058124Z'

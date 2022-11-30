@@ -1,0 +1,199 @@
+openapi: 3.0.0
+info:
+  title: Verify Authorization API
+  version: v1
+  description: >-
+    Verifies the current session is authorized to access a list of
+    resources.
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+paths:
+  /platform/auth/verify:
+    x-f5-experimental: true
+    post:
+      x-f5-experimental: true
+      tags:
+        - Verify
+      summary: Request a collection of permitted actions
+      description: >
+        Returns a list of authorized actions based on a list of
+        requested actions and resources.
+      operationId: doVerify
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyList'
+            example:
+              items:
+                - path: /services/environments/test1
+                  method: DELETE
+                - path: /services/environments/test2
+                  method: PUT
+      responses:
+        '200':
+          description: |
+            Successfully retrieved a list of authorized actions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyList'
+              example:
+                items:
+                  - path: /services/environments/test1
+                    method: DELETE
+                    permitted: false
+                  - path: /services/environments/test2
+                    method: PUT
+                    permitted: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/Internal'
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: session
+  responses:
+    BadRequest:
+      description: >
+        Bad input parameter, or possibly a bad URI. Check the
+        input for typos and try again.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 4005
+            message: >-
+              Error verifying the authorization: could not decode
+              the request. Check the request body and try again.
+    Unauthorized:
+      description: |
+        User authentication is invalid or missing.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 401
+            message: authentication needed
+    Forbidden:
+      description: |
+        The request failed because of insufficient privileges.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 403
+            message: unauthorized
+    Internal:
+      description: >
+        The request cannot be processed because of an internal
+        server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 4000
+            message: >-
+              An internal error occurred while verifying the
+              authorization. If the problem persists, contact the
+              system administrator.
+  schemas:
+    VerifyList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthRequest'
+          description: |
+            Contains a list of authentication requests.
+    AuthRequest:
+      type: object
+      required:
+        - path
+        - method
+      example:
+        items:
+          - path: /services/environments/test1
+            method: DELETE
+            permitted: false
+          - path: /services/environments/test2
+            method: PUT
+            permitted: true
+      properties:
+        path:
+          type: string
+        method:
+          type: string
+          enum:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+            - HEAD
+            - TRACE
+            - PATCH
+            - CONNECT
+            - OPTIONS
+        permitted:
+          type: boolean
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'

@@ -1,0 +1,106 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Kong
+  provider: Kong
+  slug: kong
+  rating: 1
+  license: Proprietary, Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2021-10
+  description: >
+    Kong is presented as both an open source Gateway and as an enterprise platform named Kong Konnect.  The platform consists of an Gateway,  a Service Mesh, a Portal, an API client, and more. Kong has gained a strong footing for internal use cases, leading to its integrations with Kubernetes and Envoy.
+  platformCapabilities:
+    - Design
+    - Gateway
+    - Analytics
+    - Monitoring
+    - Portal
+    - Threat Protection
+  gatewayCapabilities:
+    - Custom Code Execution
+    - Protocol Transformation
+    - Traffic Management
+    - Mediation
+    - OpenAPI Integration
+  customCodeSupport:
+    - Lua
+  upstreamProtocols:
+    - HTTP/1.1
+    - HTTP/2
+    - gRPC
+    - GraphQL
+    - Kafka
+  downstreamProtocols:
+    - HTTP/1.1
+    - HTTP/2
+    - GraphQL
+  deliveryModels:
+    - SaaS
+    - Customer Managed (Cloud)
+    - Customer Managed (On-Premises)
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Canary Release
+        - GraphQL Caching
+        - Rate Limiting
+        - Mocking
+        - Cache Lookup
+        - Cache Invalidation
+        - Cache Population
+        - Cache Target Response
+        - Quota
+        - Request Size Limiting
+
+    - category: Mediation
+      capabilities:
+        - GraphQL to REST
+        - Request Transformation
+        - Response Transformation
+        - Context Persistence
+        - JSON to XML
+    - category: Security
+      capabilities:
+        - IP Access Rules
+        - Basic Authentication
+        - API Key
+        - OAuth 2.0
+        - HMAC
+        - JWT
+        - LDAP
+        - Message Inspection
+        - SAML Assertion
+        - Mutual TLS
+        - OpenID Connect
+        - HashiCorp Vault Authentication
+        - Okta
+        - Let's Encrypt
+        - Bot Detection
+        - CORS
+        - Access Control Lists
+    - category: Extensions
+      capabilities:
+        - Serverless Integrations
+        - Monitoring Integrations
+        - Statistics Collection
+        - Message Logging
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://konghq.com/
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://docs.konghq.com/
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/kong.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/kong.png     

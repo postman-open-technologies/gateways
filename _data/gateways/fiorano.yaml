@@ -1,0 +1,52 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Fiorano
+  provider: Fiorano
+  slug: fiorano
+  rating: 3
+  license: Proprietary
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    APIs are the backbone of the digital ecosystem and critical to reaching digital maturity. Accelerate development velocity, respond to digital disruption, improve customer experience and scale your enterprise – all with Fiorano.
+  platformCapabilities:
+    - Gateway
+    - Analytics
+    - Monitoring    
+  gatewayCapabilities:
+    - Mediation
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+  downstreamProtocols:
+    - HTTP/1.1
+  deliveryModels:
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Rate Limiting
+        
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://www.fiorano.com/products/fiorano_api_management
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://www.fiorano.com/products/fiorano_api_management
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/fiorano.png     

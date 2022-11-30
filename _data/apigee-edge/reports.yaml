@@ -1,0 +1,368 @@
+openapi: 3.0.0
+servers:
+- url: https://api.enterprise.apigee.com/v1
+info:
+  title: Reports API
+  description: >-
+    Define custom analytics report definitions. Report definitions define what type of metrics you want to view, how to group the data (dimensions), and which data to include (filters). 
+    
+    The report definitions you create appear in the Edge UI list of custom reports, where you can further manipulate the report definitions in the UI and run the reports.
+  version: '1.0'
+security:
+- Basic: []
+- OAuth: []
+paths:
+  "/organizations/{org_name}/reports":
+    get:
+      tags: ["Analytics", "Custom Reports"]
+      summary: Lists custom analytics report definitions
+      description: Lists custom analytics report definitions for an organization.
+      operationId: 'listCustomReportDefinitions'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/expand'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  qualifier:
+                    type: array
+                    description: List of custom analytics report definitions.
+                    items:
+                      type: object
+                      properties:
+                        displayName: 
+                          type: string
+                          description: Display name for the custom analytics report definition.
+                        name: 
+                          type: string
+                          description: ID of the custom analytics report definition.
+              example:
+                qualifier:
+                - displayName: MyFirstReport
+                  name: 74f47936-98df-43a4-bd85-3499bbd56820
+                - displayName: MySecondReport
+                  name: 8e5d348d-aa11-4158-a37f-ed254347e994
+        '400':
+          description: Bad request
+    post:
+      tags: ["Analytics", "Custom Reports"]
+      summary: Create a custom analytics report definition
+      description: >-
+        Creates a custom analytics report definition.
+
+        For more information on metrics, dimensions, and other report settings, see <a href="https://docs.apigee.com/api-platform/analytics/create-custom-reports">Create and manage custom reports</a>.
+      operationId: 'createCustomReportDefinition'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+              example:
+                chartType: line
+                comments: []
+                createdAt: 1585880499000
+                createdBy: 'ahamilton@example.com'
+                dimensions:
+                - ax_dn_region
+                - apiproxy
+                displayName: MyReport1
+                environment: 'test'
+                lastModifiedAt: 1585936509000
+                lastModifiedBy: 'ahamilton@example.com'
+                lastViewedAt: 1585936509000
+                metrics:
+                - function: sum
+                  name: is_error
+                - function: sum
+                  name: message_count
+                name: 74f47936-98df-43a4-bd85-3499bbd56820
+                organization: myog
+                properties: []
+                sortbyCols: []
+                tags: []
+                
+        '400':
+          description: Bad request
+      requestBody:
+        description: Custom analytics report definition.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Report'
+            example:
+              chartType: line
+              dimensions:
+              - ax_dn_region
+              - apiproxy
+              displayName: MyReport1
+              environment: 'test'
+              metrics:
+              - function: sum
+                name: is_error
+              - function: sum
+                name: message_count
+  "/organizations/{org_name}/reports/{report_name}":
+    put:
+      tags: ["Analytics", "Custom Reports"]
+      summary: Update a custom analytics report definition
+      description: >-
+        Updates a custom analytics report definition. 
+        
+        
+        **IMPORTANT**: To update a report, you must send the entire report definition that includes your report updates; otherwise the report definition is overwritten to include only the updated properties.
+        
+        
+        For more information on metrics, dimensions, and other report settings, see <a href="https://docs.apigee.com/api-platform/analytics/create-custom-reports">Create and manage custom reports</a>.
+      operationId: 'updateCustomReportDefinition'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/report_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+              example:
+                chartType: line
+                comments: []
+                createdAt: 1585880499000
+                createdBy: 'ahamilton@example.com'
+                dimensions:
+                - ax_dn_region
+                - apiproxy
+                displayName: MyReport1
+                environment: 'test'
+                lastModifiedAt: 1585936509000
+                lastModifiedBy: 'ahamilton@example.com'
+                lastViewedAt: 1585936509000
+                metrics:
+                - function: sum
+                  name: is_error
+                - function: sum
+                  name: message_count
+                name: 74f47936-98df-43a4-bd85-3499bbd56820
+                organization: myog
+                properties: []
+                sortbyCols: []
+                tags: []
+        '400':
+          description: Bad request
+      requestBody:
+        description: Custom analytics report definition.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Report'
+            example:
+              chartType: line
+              dimensions:
+              - ax_dn_region
+              - apiproxy
+              displayName: MyReport1
+              environment: 'test'
+              metrics:
+              - function: sum
+                name: is_error
+              - function: sum
+                name: message_count
+    get:
+      tags: ["Analytics", "Custom Reports"]
+      summary: Get a custom analytics report definition
+      description: >-
+        Gets the contents of a custom analytics report definition.
+      operationId: 'getCustomReportDefinition'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/report_name'
+      - $ref: '#/components/parameters/expand'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+              example:
+                chartType: line
+                comments: []
+                createdAt: 1585880499000
+                createdBy: 'ahamilton@example.com'
+                dimensions:
+                - ax_dn_region
+                - apiproxy
+                displayName: MyReport1
+                environment: 'test'
+                lastModifiedAt: 1585936509000
+                lastModifiedBy: 'ahamilton@example.com'
+                lastViewedAt: 1585936509000
+                metrics:
+                - function: sum
+                  name: is_error
+                - function: sum
+                  name: message_count
+                name: 74f47936-98df-43a4-bd85-3499bbd56820
+                organization: myog
+                properties: []
+                sortbyCols: []
+                tags: []
+        '400':
+          description: Bad request
+    delete:
+      tags: ["Analytics", "Custom Reports"]
+      summary: Delete a custom analytics report definition
+      description: Deletes a custom analytics report definition from an organization.
+      operationId: 'deleteCustomReportDefinition'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/report_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: >-
+                      Message indicating that the custom analytics report definition has been deleted. For example: `"Deleted report 54ae232a-ed02-4f34-b5a0-f5dbb56bde50"`
+        '400':
+          description: Bad request
+components:
+  securitySchemes:
+    Basic:
+      type: http
+      scheme: basic
+      description: >-
+        Multi-factor authentication is not supported.
+    OAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: >-
+        For OAuth, enter the following in the Key field: Bearer %your-token%
+        (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)
+  parameters:
+    org_name:
+      in: path
+      name: org_name
+      required: true
+      schema:
+        type: string
+      description: Organization name.
+    report_name:
+      in: path
+      name: report_name
+      required: true
+      schema:
+        type: string
+      description: Report ID specified using the `name` property. For example, `62d9de1f-9b56-4a27-ad74-14199eb07201`. Get the report name by using the <a href="/docs/reports/1/routes/organizations/%7Borg_name%7D/reports/get">Lists analytics report definitions API</a>.
+    expand:
+      in: query
+      name: expand
+      required: false
+      schema:
+        type: boolean
+      description: >-
+        Flag that specifies whether to view expanded details for each report. Set to `true` to view expanded details. Defaults to `false`.
+
+  schemas:
+    Report:
+      description: Details for the custom analytics report definition.
+      type: object
+      properties:
+        chartType:
+          type: string
+          description: Type of chart. Valid values include `column` and `line`.
+        comments:
+          type: array
+          description: List of comments associated with a custom analytics report definition.
+          items:
+            type: string
+        createdAt:
+          type: integer
+          description: Output only. Time at which the custom analytics report definition was created in milliseconds since epoch.
+        createdBy:
+          type: string
+          description: Output only. User that created the custom analytics report definition.
+        dimensions:
+          type: array
+          description: Dimensions used in the custom analytics report definition. See <a href="https://docs.apigee.com/api-platform/analytics/analytics-reference#dimensions">Dimensions</a>.
+          items:
+            type: string
+        displayName:
+          type: string
+          description: Display name for the analtyics report definition.
+        environment:
+          type: string
+          description: Environment name.
+        lastModifiedAt:
+          type: integer
+          description: Output only. Time at which the custom analytics report definition was last modified in milliseconds since epoch.
+        lastModifiedBy:
+          type: string
+          description: Output only. User that last updated the custom analytics report definition.
+        lastViewedAt:
+          type: integer
+          description: Output only. Time at which the custom analytics report definition was last viewed in milliseconds since epoch.
+        metrics:
+          type: array
+          description: List of metric names and functions.
+          items:
+            type: object
+            properties:
+              function:
+                type: string
+                description: Function name.
+              name:
+                type: string
+                description: Metric name.
+        name: 
+          type: string
+          description: ID of the custom analytics report definition.
+        organization: 
+          type: string
+          description: Output only. Organization name.
+        properties:
+          type: array
+          description: Properties associated with the custom analytics report definition.
+          items:
+            type: object
+            properties:
+              property:
+                type: string
+                description: Property name.
+              value:
+                type: array
+                description: Value of the property.
+                items:
+                  type: object
+                  properties:
+                    name: 
+                      type: string
+                      description: Name of the property.
+        sortbyCols:
+          type: array
+          description: Columns by which to sort.
+          items:
+            type: string
+        tags:
+          type: array
+          description: List of tags associated with the customer analytics report definition.
+          items:
+            type: string
+        timeUnit:
+          type: string
+          description: Time unit of aggregation to use. Set to `second`, `minute`, `hour`, `day`, `week`, `month`, `quarter`, `year`, `decade`, `century`, or `millennium`.

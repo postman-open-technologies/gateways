@@ -1,0 +1,141 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Axway
+  provider: Axway
+  slug: axway
+  rating: 1
+  license: Proprietary
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    Axway Software is a French-American publicly held information technology company that provides software tools for enterprise software, enterprise application integration, business activity monitoring, business analytics, mobile application development and web API management.
+  platformCapabilities:
+    - Design
+    - Gateway
+    - Analytics
+    - Portal
+    - Documentation
+    - Monetization
+    - Monitoring
+    - SDK
+    - Threat Protection
+  gatewayCapabilities:
+    - Custom Code Execution
+    - Mediation
+    - Mocking
+    - OpenAPI Integration
+    - OpenAPI Linting
+    - Protocol Transformation
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None   
+  upstreamProtocols:
+    - HTTP/1.1
+    - SOAP
+    - WebSockets
+    - FTP
+    - SQL
+  downstreamProtocols:
+    - HTTP/1.1
+    - SOAP
+    - WebSockets
+  deliveryModels:
+    - Customer Managed (Cloud)
+    - Customer Managed (On-Premises)
+    - Hybrid
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Cache Eviction
+        - Cache Invalidation
+        - Cache Lookup
+        - Cache Population
+        - Cache Storage
+        - Cache Target Response
+        - Cache Validation
+        - Dynamic Routing
+        - Load Balancer Routing
+        - Mocking
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Rate Limiting (Dynamic)
+        - Request Size Limiting
+        - Throttling
+        - Traffic Optimization
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Cache Eviction
+        - Cache Lookup
+        - Cache Store
+        - Context Persistence
+        - Custom Data Storage
+        - Custom Exception Handling
+        - JSON Validation
+        - Redaction
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - SOAP Validation
+        - URL Rewriting
+        - XML to JSON
+        - XSL Tranformations
+        - XSL Transformation
+    - category: Security
+      capabilities:
+        - Auth0
+        - API Key
+        - API Key Authentication
+        - AWS IAM roles and policies
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - Custom Credentials
+        - HMAC
+        - IP Access Rules
+        - JWT Validation
+        - JWT authorizers
+        - JWT authorizers (Custom
+        - Kerberos
+        - LDAP
+        - LDAP Authentication
+        - Message Inspection
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+        - Okta
+        - OpenID Connect
+        - PingFederate OAuth2.0 Token
+        - SAML Assertion
+        - SLA Management
+        - WAF
+    - category: Extensions
+      capabilities:
+      - HTTP Callout
+      - HTTP integrations
+
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://docs.axway.com/bundle/axway-open-docs/page/docs/api_mgmt_overview/api_mgmt_components/apigateway/index.html
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://docs.axway.com/bundle/axway-open-docs/page/docs/api_mgmt_overview/api_mgmt_components/apigateway/index.html
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/axway.png     

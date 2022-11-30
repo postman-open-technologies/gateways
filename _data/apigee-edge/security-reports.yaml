@@ -1,0 +1,773 @@
+---
+openapi: "3.0.1"
+info:
+  title: "API security reports API (Beta)"
+  description: "Access API security reports. For more about security reports, see\
+    \ <a href=\"https://docs.apigee.com/api-platform/security/reports\">Introduction\
+    \ to security reports</a>.\n\nNote: This is the Beta release of API security reports.\
+    \ See <a href=\"https://docs.apigee.com/release/release-stages\">Release Stages</a>."
+  version: "1.0"
+servers:
+- url: "https://apisecurity.enterprise.apigee.com"
+security:
+- OAuth: []
+paths:
+  /security/overview/faultcode:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Overview Service"
+      summary: "Get fault code counts"
+      description: "Gets fault code counts for selected time range.\n\n**Notes**:\n\
+        \n* This is the Beta release of API security reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      operationId: "overviewFaultCodes"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      responses:
+        "200":
+          description: "OK"
+  /security/overview/policies:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Overview Service"
+      summary: "Get policy usage information"
+      description: "Gets information about the policy usage for a given organization\
+        \ and environment.\n\n**Notes**:\n\n* This is the Beta release of API security\
+        \ reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      operationId: "overviewPolicies"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      responses:
+        "200":
+          description: "OK"
+  /security/overview/proxies:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Overview Service"
+      summary: "Retrieves the overall traffic and count of active proxies for a given\
+        \ time range."
+      description: "Gets the overall traffic and count of active proxies for a given\
+        \ time range.\n\n**Notes**:\n\n* This is the Beta release of API security\
+        \ reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      operationId: "overviewProxies"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      responses:
+        "200":
+          description: "OK"
+  /security/overview/traffic/environments:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Overview Service"
+      summary: "Get traffic by environment"
+      description: "Gets traffic data by environment for a given time range.\n\n**Notes**:\n\
+        \n* This is the Beta release of API security reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      operationId: "overviewTrafficEnvironments"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      responses:
+        "200":
+          description: "OK."
+  /security/overview/traffic/envbyregion:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Overview Service"
+      summary: "Get traffic by region and environment"
+      description: "Gets traffic for every region and environment combination.\n\n\
+        **Notes**:\n\n* This is the Beta release of API security reports. See <a href=\"\
+        https://docs.apigee.com/release/release-stages\">Release Stages</a>.\n* **Only\
+        \ available for Edge for Cloud Enterprise customers with the Advanced API\
+        \ Ops option.**\n* You can call this API at most six times per minute."
+      operationId: "overviewTrafficEnvbyregion"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      responses:
+        "200":
+          description: "OK"
+  /security/overview/traffic/resource:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Overview Service"
+      summary: "Get traffic information grouped by resource"
+      description: "Gets traffic information grouped by a given resource (such as\
+        \ by northbound proxy).\n\n**Notes**:\n\n* This is the Beta release of API\
+        \ security reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      - $ref: "#/components/parameters/groupBy"
+      - $ref: "#/components/parameters/topn"
+      - $ref: "#/components/parameters/filters.proxy"
+      - $ref: "#/components/parameters/filters.region"
+      - $ref: "#/components/parameters/filters.target"
+      - $ref: "#/components/parameters/filters.devapp"
+      operationId: "overviewTrafficResource"
+      responses:
+        "200":
+          description: "OK"
+  /security/overview/traffic/total:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Overview Service"
+      summary: "Get total traffic in a time series"
+      description: "Gets total traffic in a time series.\n\n**Notes**:\n\n* This is\
+        \ the Beta release of API security reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      operationId: "overviewTrafficTotal"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      - $ref: "#/components/parameters/interval"
+      - $ref: "#/components/parameters/filters.proxy"
+      - $ref: "#/components/parameters/filters.region"
+      - $ref: "#/components/parameters/filters.target"
+      - $ref: "#/components/parameters/filters.devapp"
+      responses:
+        "200":
+          description: "OK"
+  /security/configuration/flow:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Configuration Service"
+      summary: "Get information about a shared flow"
+      description: "Gets information about a shared flow.\n\n**Notes**:\n\n* This\
+        \ is the Beta release of API security reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      operationId: "configurationFlow"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/sharedFlow"
+      responses:
+        "200":
+          description: "OK"
+  /security/configuration/sharedflows:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Configuration Service"
+      summary: "Get information about all shared flows"
+      description: "Gets information about all shared flows deployed in an environment.\n\
+        \n**Notes**:\n\n* This is the Beta release of API security reports. See <a\
+        \ href=\"https://docs.apigee.com/release/release-stages\">Release Stages</a>.\n\
+        * **Only available for Edge for Cloud Enterprise customers with the Advanced\
+        \ API Ops option.**\n* You can call this API at most six times per minute."
+      operationId: "configurationFlow"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      responses:
+        "200":
+          description: "OK"
+  /security/configuration/sharedflows/detail:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Configuration Service"
+      summary: "Get information about a shared flow revision"
+      description: "Gets information about a shared flow revision.\n\n**Notes**:\n\
+        \n* This is the Beta release of API security reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      operationId: "configurationFlow"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/shared_flow"
+      - $ref: "#/components/parameters/revision"
+      responses:
+        "200":
+          description: "OK"
+  /security/configuration/proxy:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Configuration Service"
+      summary: "Get information about deployed proxies"
+      description: "Gets information about the proxies deployed for a given organization\
+        \ and environment.\n\n**Notes**:\n\n* This is the Beta release of API security\
+        \ reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      operationId: "configurationProxy"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/filters.proxy"
+      - $ref: "#/components/parameters/filters.region"
+      - $ref: "#/components/parameters/filters.target"
+      - $ref: "#/components/parameters/filters.devapp"
+      - $ref: "#/components/parameters/sortBy"
+      responses:
+        "200":
+          description: "OK"
+  /security/configuration/proxy/flow:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Configuration Service"
+      summary: "Get information about shared flow connections with an API proxy"
+      description: "Gets information about shared flow connections with an API proxy.\
+        \ Includes both flow callouts and flow hooks.\n\n**Notes**:\n\n* This is the\
+        \ Beta release of API security reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      operationId: "configurationProxy"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/proxy"
+      responses:
+        "200":
+          description: "OK"
+  /security/configuration/proxy/policies:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Configuration Service"
+      summary: "Get policy information for a proxy"
+      description: "Gets policy information for a proxy.\n\n**Notes**:\n\n* This is\
+        \ the Beta release of API security reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      operationId: "configurationProxyPolicies"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/proxy"
+      responses:
+        "200":
+          description: "OK"
+  /security/configuration/targets:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Configuration Service"
+      summary: "Get configured API proxy target security information"
+      description: "Gets security information for configured API proxy targets.\n\n\
+        **Notes**:\n\n* This is the Beta release of API security reports. See <a href=\"\
+        https://docs.apigee.com/release/release-stages\">Release Stages</a>.\n* **Only\
+        \ available for Edge for Cloud Enterprise customers with the Advanced API\
+        \ Ops option.**\n* You can call this API at most six times per minute."
+      operationId: "configurationProxyPolicies"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/filters.target"
+      responses:
+        "200":
+          description: "OK"
+  /security/runtime/proxy:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Runtime Service"
+      summary: "Get traffic information separated by protocol"
+      description: "Gets traffic information for the various proxies, separated by\
+        \ HTTP versus HTTPS.\n\n\n**Notes**:\n\n* This is the Beta release of API\
+        \ security reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      operationId: "runtimeProxy"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      - $ref: "#/components/parameters/filters.proxy"
+      - $ref: "#/components/parameters/filters.region"
+      - $ref: "#/components/parameters/filters.target"
+      responses:
+        "200":
+          description: "OK"
+  /security/runtime/target:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Runtime Service"
+      summary: "Get target traffic information"
+      description: "Gets information about traffic on various targets.\n\n**Notes**:\n\
+        \n* This is the Beta release of API security reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      operationId: "runtimeTarget"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      - $ref: "#/components/parameters/filters.proxy"
+      - $ref: "#/components/parameters/filters.region"
+      - $ref: "#/components/parameters/filters.target"
+      responses:
+        "200":
+          description: "OK"
+  /security/runtime/devapp:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Runtime Service"
+      summary: "Get developer app traffic"
+      description: "Gets traffic data aggregated by developer app in given time range.\n\
+        \n\n**Notes**:\n\n* This is the Beta release of API security reports. See\
+        \ <a href=\"https://docs.apigee.com/release/release-stages\">Release Stages</a>.\n\
+        * **Only available for Edge for Cloud Enterprise customers with the Advanced\
+        \ API Ops option.**\n* You can call this API at most six times per minute."
+      operationId: "runtimeDevapp"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      responses:
+        "200":
+          description: "OK"
+  /security/runtime/devapp/proxy:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Runtime Service"
+      summary: "Get proxy traffic for developer app"
+      description: "Gets traffic data for every proxy for a developer app and time\
+        \ range.\n\n\n**Notes**:\n\n* This is the Beta release of API security reports.\
+        \ See <a href=\"https://docs.apigee.com/release/release-stages\">Release Stages</a>.\n\
+        * **Only available for Edge for Cloud Enterprise customers with the Advanced\
+        \ API Ops option.**\n* You can call this API at most six times per minute."
+      operationId: "runtimeDevappProxy"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/devapp"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      responses:
+        "200":
+          description: "OK"
+  /security/runtime/faultcode/timeseries:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Runtime Service"
+      summary: "Get timeseries data for a fault code"
+      description: "Gets the timeseries data for a specific fault code. Use <a href=\"\
+        /docs/api-security-reports/1/routes/security/runtime/faultcode/summary/get\"\
+        >Get fault code summary</a> to obtain the list of fault codes that have occurred\
+        \ for an organization and environment.\n\n\n**Notes**:\n\n* This is the Beta\
+        \ release of API security reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      operationId: "runtimeFaultcodeTimeseries"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/code"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      - $ref: "#/components/parameters/filters.region"
+      - $ref: "#/components/parameters/intervalfs"
+      responses:
+        "200":
+          description: "OK"
+  /security/runtime/faultcode/resource:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Runtime Service"
+      summary: "Get grouped timeseries data for a fault code"
+      description: "Gets the timeseries data for a fault code based on a resource\
+        \ grouping.\n\n\n**Notes**:\n\n* This is the Beta release of API security\
+        \ reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      operationId: "runtimeFaultcodeResource"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/code"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      - $ref: "#/components/parameters/groupBy"
+      - $ref: "#/components/parameters/topN"
+      - $ref: "#/components/parameters/filters.region"
+      responses:
+        "200":
+          description: "OK"
+  /security/runtime/faultcode/summary:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Runtime Service"
+      summary: "Get fault code summary"
+      description: "Gets the distribution of errors per fault code for an organization\
+        \ and environment.\n\n\n**Notes**:\n\n* This is the Beta release of API security\
+        \ reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      operationId: "runtimeFaultcodeResource"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      - $ref: "#/components/parameters/filters.region"
+      responses:
+        "200":
+          description: "OK"
+  /security/runtime/traffic:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Runtime Service"
+      summary: "Get traffic data"
+      description: "Gets the traffic data for an organization and environment.\n\n\
+        \n**Notes**:\n\n* This is the Beta release of API security reports. See <a\
+        \ href=\"https://docs.apigee.com/release/release-stages\">Release Stages</a>.\n\
+        * **Only available for Edge for Cloud Enterprise customers with the Advanced\
+        \ API Ops option.**\n* You can call this API at most six times per minute."
+      operationId: "runtimeTraffic"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      - $ref: "#/components/parameters/proxy.names"
+      - $ref: "#/components/parameters/region"
+      responses:
+        "200":
+          description: "OK"
+  /security/users/summary:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Runtime Service"
+      summary: "Get all user activity"
+      description: "Gets aggregated user activity information for all users in an\
+        \ organization for specified time range.\n\n\n**Notes**:\n\n* This is the\
+        \ Beta release of API security reports. See <a href=\"https://docs.apigee.com/release/release-stages\"\
+        >Release Stages</a>.\n* **Only available for Edge for Cloud Enterprise customers\
+        \ with the Advanced API Ops option.**\n* You can call this API at most six\
+        \ times per minute."
+      operationId: "userSummary"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      responses:
+        "200":
+          description: "OK"
+  /security/users/activity:
+    get:
+      tags:
+      - "API Security Reporting"
+      - "Runtime Service"
+      summary: "Get user activity"
+      description: "Gets user activity details for a given user in specified time\
+        \ range.\n\n\n**Notes**:\n\n* This is the Beta release of API security reports.\
+        \ See <a href=\"https://docs.apigee.com/release/release-stages\">Release Stages</a>.\n\
+        * **Only available for Edge for Cloud Enterprise customers with the Advanced\
+        \ API Ops option.**\n* You can call this API at most six times per minute.\n\
+        \n**Returning results in pages**\n\nBy default, this API returns all activity\
+        \ details in a single `logs` array as part of the response object. Because\
+        \ there can be a large number of entries in the `logs` array, you can configure\
+        \ the API to return the results as a collection of pages. For example:\n\n\
+        * On the first call, return the first 25 results in the `logs` array. This\
+        \ response contains the first results page.\n* On the second call, return\
+        \ the next 25 results. This response contains the second results page.\n*\
+        \ Continue until you have returned all entries in the `logs` array.\n\nTo\
+        \ configure the API to return results as a collection of pages:\n\n\nOn the\
+        \ first call, pass the `page.size` query parameter specifying the number of\
+        \ results to return per page.\n\n\n  ```\n\n  https://apisecurity.enterprise.apigee.com/security/users/activity?org={org}&from={start}&to={end}&email={email}&page.size=25\n\
+        \n  ```\n\n\n  The response object contains the `page.nextPageToken` property\
+        \ that identifies the second page of results:\n\n\n  ```\n\n  \"page\": {\n\
+        \    \"current\": 0,\n    \"total\": 0,\n    \"nextPageToken\": \"TOKEN\"\n\
+        \  },\n\n  ```\n\n\n  Note that `current` and `total` are always set to 0.\n\
+        \n\nOn the second API request, pass the `TOKEN` as the value of the `page.pageToken`\
+        \ query parameter to obtain the second page of results.\n\n\n\n  ```\n\n \
+        \ https://apisecurity.enterprise.apigee.com/security/users/activity?org={org}&from={start}&to={end}&email={email}&page.size=25&page.pageToken=TOKEN\n\
+        \n  ```\n\n\n  The second page of results contains a new `TOKEN` value that\
+        \ identifies the third page.\n\n\n  Pass the new `TOKEN` to the API to obtain\
+        \ the third page of results.\n\n\nRepeat these steps until you have received\
+        \ all the results."
+      operationId: "usersActivity"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/email"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+      - $ref: "#/components/parameters/log.type"
+      - $ref: "#/components/parameters/page.size"
+      - $ref: "#/components/parameters/page.pageToken"
+      responses:
+        "200":
+          description: "OK"
+components:
+  securitySchemes:
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%"
+  parameters:
+    org:
+      in: "query"
+      name: "org"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of the organization."
+    env:
+      in: "query"
+      name: "env"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of the environment."
+    proxy:
+      in: "query"
+      name: "proxy"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of the API proxy."
+    code:
+      in: "query"
+      name: "code"
+      required: true
+      schema:
+        type: "string"
+      description: "Fault code."
+    devapp:
+      in: "query"
+      name: "devapp"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of the developer app."
+    shared_flow:
+      in: "query"
+      name: "shared_flow"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of the shared flow."
+    sharedFlow:
+      in: "query"
+      name: "sharedFlow"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of the shared flow."
+    from:
+      name: "from"
+      in: "query"
+      description: "Start of the time period to analyze, inclusive. Specify the time\
+        \ in the ISO format: `yyyy-mm-ddThh:mm:ssZ`. For example: `2018-07-29T00:13:00Z`."
+      required: true
+      schema:
+        type: "string"
+    to:
+      name: "to"
+      in: "query"
+      description: "End of the time period to analyze, exclusive. Specify the time\
+        \ in the ISO format: `yyyy-mm-ddThh:mm:ssZ`. For example: `2018-07-29T00:13:00Z`."
+      required: true
+      schema:
+        type: "string"
+    groupBy:
+      name: "groupBy"
+      in: "query"
+      description: "When getting the traffic information grouped by a given resource,\
+        \ set this value to one of the following:\n\n* `NORTHBOUND_PROXY`: Traffic\
+        \ from clients to a proxy.\n* `SOUTHBOUND_TARGET`: Traffic from a proxy to\
+        \ a target.\n* `REGION`: Traffic by region.\n* `DEV_APP`: Traffic by developer\
+        \ application.\n* `VHOST`: Traffic by virtual host.\n\nWhen getting the timeseries\
+        \ data for a fault code based on a resource grouping, set this value to `PROXY`."
+      required: true
+      schema:
+        type: "string"
+    sortBy:
+      name: "sortBy"
+      in: "query"
+      description: "One of the following values:\n\n* `TRAFFIC_ASC`: Sort by ascending\
+        \ traffic totals.\n* `TRAFFIC_DESC`: Sort by descending traffic totals.\n\
+        * `LAST_MODIFIED`: Sort by last modified date.\n* `PROXY`: Sort by proxy name.\n\
+        * `TRAFFIC_MANAGEMENT`: Sort by traffic management policy inclusion.\n* `SECURITY`:\
+        \ Sort by security policy inclusion.\n* `EXTENSIONS`: Sort by extensions policy\
+        \ inclusion.\n* `VHOST_DEFAULT`: Sort by whether the default vhost is enabled.\n\
+        * `VHOST_SECURE`:Sort by whether a secure vhost is enabled."
+      required: true
+      schema:
+        type: "string"
+        default: "TRAFFIC_ASC"
+        enum:
+        - "TRAFFIC_ASC"
+        - "TRAFFIC_DESC"
+        - "LAST_MODIFIED"
+        - "PROXY"
+        - "TRAFFIC_MANAGEMENT"
+        - "SECURITY"
+        - "EXTENSIONS"
+        - "VHOST_DEFAULT"
+        - "VHOST_SECURE"
+    topn:
+      name: "topn"
+      in: "query"
+      description: "Number of values from the top, sorted by HTTP requests."
+      schema:
+        type: "integer"
+        format: "int64"
+        default: 3
+    topN:
+      name: "topN"
+      in: "query"
+      description: "Number of results to return."
+      schema:
+        type: "integer"
+        format: "int64"
+        default: 3
+    interval:
+      name: "interval"
+      in: "query"
+      description: "The size of the buckets that the data comes back in, in minutes."
+      schema:
+        type: "integer"
+        format: "int64"
+        default: 60
+    intervalfs:
+      name: "interval"
+      in: "query"
+      description: "Specifies the time interval, in minutes, used to group the fault\
+        \ code data. By default, the value is set to 5 minutes so that the fault code\
+        \ data is grouped by 5 minute intervals. The minimum interval is 1 minute."
+      schema:
+        type: "integer"
+        format: "int64"
+        default: 60
+    filters.proxy:
+      name: "filters.proxy"
+      in: "query"
+      description: "Proxy to filter results by."
+      schema:
+        type: "string"
+    filters.region:
+      name: "filters.region"
+      in: "query"
+      description: "Region to filter results by."
+      schema:
+        type: "string"
+    filters.target:
+      name: "filters.target"
+      in: "query"
+      description: "Target server to filter results by."
+      schema:
+        type: "string"
+    filters.devapp:
+      name: "filters.devapp"
+      in: "query"
+      description: "Developer app to filter results by. Use the following structure:\
+        \ <code><i>appname</i>(<i>appId</i>)</code>. To get a list of app IDs, see\
+        \ <a href=\"/docs/developer-apps/1/routes/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email%7D/apps/get\"\
+        >List all apps</a> and use the `expand=true` query parameter."
+      schema:
+        type: "string"
+    proxy.names:
+      name: "proxy.names"
+      in: "query"
+      description: "Name of an API proxy. If omitted, this API returns traffic data\
+        \ for all proxies in the organization and environment."
+      schema:
+        type: "string"
+    region:
+      name: "region"
+      in: "query"
+      description: "Region to filter results by."
+      schema:
+        type: "string"
+    revision:
+      name: "revision"
+      in: "query"
+      description: "Shared flow revision."
+      schema:
+        type: "string"
+    log.type:
+      name: "log.type"
+      in: "query"
+      description: "Type of log activity to return. Valid values include: `ALL` (default),\
+        \ `UI`, and `API`."
+      schema:
+        type: "string"
+    page.size:
+      name: "page.size"
+      in: "query"
+      description: "Number of results to return per page of results. The maximum value\
+        \ is 5000.\n\nTo obtain the first page of results, specify only the `page.size`\
+        \ query parameter. Each page of results contains the `nextPageToken` property.\
+        \ Pass the value of `nextPageToken` on each subsequent request."
+      schema:
+        type: "integer"
+    page.pageToken:
+      name: "page.size"
+      in: "query"
+      description: "Page of results to return.\n\nTo obtain the first page of results,\
+        \ specify only the `page.size` query parameter. The result object of the first\
+        \ page of results contains the `nextPageToken` property. Pass the value of\
+        \ `nextPageToken` on the second request to return the second page of results.\n\
+        \nEach results object contains a new value for `nextPageToken` that identifies\
+        \ the next page of the results to return."
+      schema:
+        type: "integer"
+    email:
+      name: "email"
+      in: "query"
+      description: "Email address of the user."
+      schema:
+        type: "string"

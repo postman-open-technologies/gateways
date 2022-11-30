@@ -1,0 +1,92 @@
+---
+class:
+  - gateway
+
+properties:
+  name: SnapLogic
+  provider: SnapLogic
+  slug: snaplogic
+  rating: 2
+  license: Proprietary, Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    SnapLogic is a commercial software company that provides integration platform as a service tools for connecting Cloud data sources, SaaS applications and on-premises business software applications. SnapLogic was founded in 2006, and its headquarters are in San Mateo, CA.
+  platformCapabilities:
+    - Gateway
+    - Analytics
+    - Portal
+    - Documentation
+    - Dashboard
+  gatewayCapabilities:
+    - Mediation
+    - OpenAPI Integration
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+    - Database
+    - ERP    
+  downstreamProtocols:
+    - HTTP/1.1
+  deliveryModels:
+    - Customer Managed (Cloud)
+    - Customer Managed (On-Premises)
+    - Hybrid
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Throttling
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - URL Rewriting
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - IP Access Rules
+        - JWT
+        - JWT Validation
+        - JWT authorizers
+        - Message Inspection
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+    - category: Extensions
+      capabilities:
+        - HTTP Callout
+        - HTTP integrations
+        - Integration Server services
+        
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://www.snaplogic.com/products/api-management-development
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://www.snaplogic.com/products/api-management-development
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/snaplogic.png     

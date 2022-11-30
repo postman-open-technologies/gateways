@@ -1,0 +1,707 @@
+---
+openapi: "3.0.0"
+servers:
+- url: "https://api.enterprise.apigee.com/v1"
+info:
+  title: "Analytics API"
+  description: "Use Apigee Edge Analytics."
+  version: "1.0"
+security:
+- Basic: []
+- OAuth: []
+paths:
+  /analytics/groups/ax/{group_name}/scopes:
+    delete:
+      tags:
+      - "Analytics"
+      summary: "Remove analytics information about an environment"
+      description: "Remove analytics information for an environment. You must remove\
+        \ analtyics information before you can delete an environment.\n\n**Notes**:\n\
+        * **Apigee Edge for Private Cloud only**. If you are using Apigee Edge for\
+        \ Public Cloud, contact Apigee Support for assistance.\n* **This API cannot\
+        \ be executed using the Try this API panel**.\n\nBy default, the name of the\
+        \ analytics group is `analytics-001`. If you need to determine the group name,\
+        \ you can use the following curl command:\n```\ncurl -u sysAdminEmail:password\
+        \  \"http://<MS_IP>:8080/v1/analytics/groups/ax\"\n```\n\nwhere `sysAdminEmail:password`\
+        \ is the email address and password of the system administrator, and `MS_IP`\
+        \ is the IP address or DNS name of the Edge Management Server."
+      operationId: "deleteAnalytics"
+      parameters:
+      - $ref: "#/components/parameters/group_name"
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/environments/{env_name}/analytics/admin:
+    post:
+      tags:
+      - "Analytics"
+      summary: "Enable analytics for an environment"
+      description: "Enables analytics for an environment.\n\n**Notes**:\n* **Apigee\
+        \ Edge for Private Cloud only**. If you are using Apigee Edge for Public Cloud,\
+        \ contact Apigee Support for assistance.\n* **This API cannot be executed\
+        \ using the Try this API panel**.\n\nAfter you <a href=\"/docs/environments/1/routes/organizations/%7Borg_name%7D/environments/post\"\
+        >create an environment</a>, you can enable analytics for the environment.\
+        \ If you wish to enable analytics for one environment, you must enable analytics\
+        \ for all environments in the organization.\n\nYou must pass the entries for\
+        \ Analtyics onboarding in a file named `sample.json`. For example:\n\n```\n\
+        {\n  \"properties\" : {\n    \"samplingAlgo\" : \"reservoir_sampler\",\n \
+        \   \"samplingTables\" : \"10=ten;1=one;\",\n    \"aggregationinterval\" :\
+        \ \"300000\",\n    \"samplingInterval\" : \"300000\",\n    \"useSampling\"\
+        \ : \"100\",\n    \"samplingThreshold\" : \"100000\"\n  },\n  \"servers\"\
+        \ : {\n    \"postgres-server\" : [ \"1acff3a5-8a6a-4097-8d26-d0886853239c\"\
+        , \"f93367f7-edc8-4d55-92c1-2fba61ccc4ab\" ],\n    \"qpid-server\" : [ \"\
+        d3c5acf0-f88a-478e-948d-6f3094f12e3b\", \"74f67bf2-86b2-44b7-a3d9-41ff117475dd\"\
+        ]\n  }\n}\n```\nThe `postgres-servers` property contains a comma-separated\
+        \ list of the Postgres UUIDs, and the `qpid-server` property contains the\
+        \ Qpid UUIDs. If you need to obtain these UUIDs, use the following commands.\n\
+        \n\n For Qpid, run the following command:\n\n\n ```\n curl -u <sysAdminEmail>:<passwd>\
+        \ http://<ms-ip>/v1/servers?pod=central\n ```\n\nThe output of this command\
+        \ is a JSON object. For each Qpid server, you will see output in the form:\n\
+        \n``` \"type\" : [ \"qpid-server\" ],\n\"uUID\" : \"d3c5acf0-f88a-478e-948d-6f3094f12e3b\"\
+        \n```\n\nFor Postgres, run the following command:\n```\ncurl -u <sysAdminEmail>:<passwd>\
+        \ http://<ms-ip>/v1/servers?pod=analytics\n```\n\nFor each Postgres server,\
+        \ you will see output in the form:\n\n``` \"type\" : [ \"postgres-server\"\
+        \ ],\n\"uUID\" : \"d3c5acf0-f88a-478e-948d-6f3094f12e3b\"\n```\n\nIf you are\
+        \ using Edge for Private Cloud 4.16.01 or later, rather than use the API call,\
+        \ use the following command to enable Analytics:\n\n```\n/<inst_root>/apigee/apigee-service/bin/apigee-service\
+        \ apigee-provision enable-ax -f configFile\n```\nWhere `configFile` contains:\n\
+        ```\nORG_NAME=orgName  # lowercase only, no spaces, underscores, or periods.\n\
+        ENV_NAME=envName\nADMIN_EMAIL=adminEmail\nAPIGEE_ADMINPW=adminPWord\n```"
+      operationId: "enableAnalytics"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: "object"
+              properties:
+                file:
+                  type: "string"
+                  format: "binary"
+                  description: "File named `sample.json` that contains entires for\
+                    \ onboarding."
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/environments/{env_name}/analytics/exports:
+    post:
+      tags:
+      - "Analytics"
+      - "Data Exports"
+      summary: "Create an analytics data export job"
+      description: "Creates an analytics data export job.\n\nThe API returns the data\
+        \ export job ID that you use to track the status of the job. You must be in\
+        \ the role of organization administrator to call this API.\n\n\n**Note** Free\
+        \ and trial accounts cannot export analytics data. For more information on\
+        \ Edge pricing plans, see <a href=\"https://cloud.google.com/apigee/pricing\"\
+        >Apigee pricing plans</a>.\n\nTo export data from an organization that supports\
+        \ monetization, specify `\"dataset\":\"mint\"`. The organization must support\
+        \ monetization to set this option, otherwise omit this property.\n\nSee <a\
+        \ href=\"https://docs.apigee.com/api-platform/analytics/export-data\">Export\
+        \ data from Analytics</a> for more information and examples.\n\n**Export API\
+        \ quotas**\n\nTo prevent overuse of expensive data export API calls, Edge\
+        \ enforces a quota on calls to this API:\n\n* For organizations and environments\
+        \ that **do not have monetization** enabled, the quota is 70 calls per month\
+        \ per organization/environment. For example, if you have two environments\
+        \ in your organization, `prod` and `test`, you can make 70 API calls per month\
+        \ for each environment.\n\n* For organizations and environments **with monetization\
+        \ enabled**, the quota is:\n\n   * 70 calls per month for each organization\
+        \ and environment for standard data\n   * 70 calls per month for each organization\
+        \ and environment for monetization data\n\n\n   For example, if you enable\
+        \ monetization on your `prod` organization, you can make 70 API calls for\
+        \ standard data and 70 additional API calls for monetization data.\n\n\nIf\
+        \ you exceed the call quota, this API returns an `HTTP 429` response."
+      operationId: "createDataExport"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Export"
+              example:
+                self: "/v1/organizations/myorg/environments/test/analytics/exports/4d6d94ad-a33b-4572-8dba-8677c9c4bd98"
+                name: "Export results To Cloud Storage"
+                description: "One-time export to Google Cloud Storage"
+                userId: "my@email.com"
+                datastoreName: "My Cloud Storage data store"
+                executionTime: "36 seconds"
+                created: "2018-09-28T12:39:35Z"
+                updated: "2018-09-28T12:39:42Z"
+                state: "enqueued"
+        "400":
+          description: "Bad request"
+      requestBody:
+        description: "Data export request."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExportRequest"
+            example:
+              datastoreName: "My Cloud Storage data repository"
+              dateRange:
+                start: "2018-06-08"
+                end: "2018-06-09"
+              description: "Export raw results to Cloud Storage for last 24 hours"
+              name: "Export raw results to Cloud Storage"
+              outputFormat: "json"
+    get:
+      tags:
+      - "Analytics"
+      - "Data Exports"
+      summary: "Get a list of analytics data export jobs"
+      description: "Gets a list of all analytics data export jobs created for an organization\
+        \ and environment. The response provides links to get status of individual\
+        \ jobs. See <a href=\"https://docs.apigee.com/api-platform/analytics/export-data\"\
+        >Export data from Analytics</a> for more information and examples."
+      operationId: "getDataExportJobs"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                description: "List of data export jobs, including status."
+                items:
+                  $ref: "#/components/schemas/Export"
+              example:
+                self: "/v1/organizations/myorg/environments/test/analytics/exports/4d6d94ad-a33b-4572-8dba-8677c9c4bd98"
+                name: "Export results To Cloud Storage"
+                description: "One-time export to Google Cloud Storage"
+                userId: "my@email.com"
+                datastoreName: "My Cloud Storage data store"
+                executionTime: "36 seconds"
+                created: "2018-09-28T12:39:35Z"
+                updated: "2018-09-28T12:39:42Z"
+                state: "enqueued"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/environments/{env_name}/analytics/exports/{export_id}:
+    get:
+      tags:
+      - "Analytics"
+      - "Data Exports"
+      summary: "Get analytics data export job status"
+      description: "Gets the status of an analytics data export job. Create an export\
+        \ job using the Create an analytics data export job API.\n\nThe `state` property\
+        \ specifies the status of the job and can have one of the following values:\
+        \ `enqueued`, `running`, `completed`, `failed`\n\nSee <a href=\"https://docs.apigee.com/api-platform/analytics/export-data\"\
+        >Export data from Analytics</a> for more information and examples."
+      operationId: "getDataExportJobs"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/export_id"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Export"
+              example:
+                self: "/v1/organizations/myorg/environments/test/analytics/exports/4d6d94ad-a33b-4572-8dba-8677c9c4bd98"
+                name: "Export results To Cloud Storage"
+                description: "One-time export to Google Cloud Storage"
+                userId: "my@email.com"
+                datastoreName: "My Cloud Storage data store"
+                executionTime: "36 seconds"
+                created: "2018-09-28T12:39:35Z"
+                updated: "2018-09-28T12:39:42Z"
+                state: "enqueued"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/environments/{env_name}/queries:
+    post:
+      tags:
+      - "Analytics"
+      summary: "Create an asynchronous analytics query"
+      description: "Creates an asynchronous analytics query.\n\n\n You must be an\
+        \ organization administrator to call this API. You can make up to seven calls\
+        \ per hour to this API. If you exceed the call quota, this API returns an\
+        \ `HTTP 429` response.\n\n\n**Note**: Free and trial accounts cannot create\
+        \ asynchronous reports. For more information on Edge pricing plans, see\n\
+        \  <a href=\"https://cloud.google.com/apigee/pricing\">Apigee pricing plans</a>.\n\
+        \n\nSee <a href=\"https://docs.apigee.com/api-platform/analytics/asynch-reports-api\"\
+        >Use the asynchronous custom reports API</a> for more information and examples."
+      operationId: "getDataExportJobs"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Query"
+              example:
+                self: "/organizations/myorg/environments/myenv/queries/9cfc0d85-0f30-46d6-ae6f-318d0cb961bd"
+                created: "2018-05-10T07:11:10Z"
+                state: "enqueued"
+                error: "false"
+        "400":
+          description: "Bad request"
+      requestBody:
+        description: "Asynchronous analytics query request."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QueryRequest"
+            example:
+              metrics:
+              - name: "message_count"
+                function: "sum"
+                alias: "sum_txn"
+              dimensions:
+              - "apiproxy"
+              timeRange: "last24hours"
+              limit: 14400
+              filter: "(message_count ge 0)"
+    get:
+      tags:
+      - "Analytics"
+      summary: "Lists asynchronous analytics queries"
+      description: "Lists the asynchronous analytics queries for an environment."
+      operationId: "listAsynchronousAnlayticsQueries"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/submittedBy"
+      - $ref: "#/components/parameters/status"
+      - $ref: "#/components/parameters/dataset"
+      - $ref: "#/components/parameters/inclQueriesWithoutReport"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                description: "List of asynchronous analytics queries."
+                items:
+                  $ref: "#/components/schemas/Query"
+              example:
+                self: "/organizations/myorg/environments/test/queries/b23415d7-edd0-4c84-99e4-e4dc790f723b"
+                state: "completed"
+                userId: "ahamilton@example.com"
+                result:
+                  self: "/organizations/myorg/environments/test/queries/b23415d7-edd0-4c84-99e4-e4dc790f723b/result"
+                  expires: "2020-10-13T19:46:44Z"
+                resultFileSize: "0.02 KB"
+                resultRows: "0"
+                executionTime: "10 seconds"
+                queryParams:
+                  dimensions:
+                  - "apiproxy"
+                  endTimestamp: "2020-10-06T19:46:30.006Z"
+                  metrics:
+                  - "name:message_count,func:sum,alias:sum_txn"
+                  startTimestamp: "2020-10-05T19:46:30.006Z"
+                created: "2020-10-06T19:46:30Z"
+                updated: "2020-10-06T19:46:44Z"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/environments/{env_name}/queries/{queryId}:
+    get:
+      tags:
+      - "Analytics"
+      summary: "Get status of an asychronous analytics query"
+      description: "Gets the status of an asynchronous analytics query.\nObtain the\
+        \ `queryId` when you created the query by using the <a href=\"https://docs-edgeapis.apigee.io/docs/analytics/1/routes/organizations/%7Borg_name%7D/environments/%7Benv_name%7D/queries/post\"\
+        >Create an asynchronous analytics query API</a>.\n\nIn the response, the value\
+        \ of the state property contains the query status as either `running` or `completed`.\n\
+        \nSee <a href=\"https://docs.apigee.com/api-platform/analytics/asynch-reports-api\"\
+        >Use the asynchronous custom reports API</a> for more information and examples."
+      operationId: "getDataExportJobs"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/queryId"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Query"
+              example:
+                self: "/organizations/myorg/environments/myenv/queries/9cfc0d85-0f30-46d6-ae6f-318d0cb961bd"
+                state: "completed"
+                result:
+                  self: "/organizations/myorg/environments/myenv/queries/9cfc0d85-0f30-46d6-ae6f-318d0cb961bd/result"
+                  expires: "2017-05-22T14:56:31Z"
+                resultRows: 1
+                resultFileSize: "922KB"
+                executionTime: "11 sec"
+                created: "2018-05-10T07:11:10Z"
+                updated: "2018-05-10T07:13:22Z"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/environments/{env_name}/queries/{queryId}/result:
+    get:
+      tags:
+      - "Analytics"
+      summary: "Get results of an asychronous analytics query"
+      description: "Gets the results of an asynchronous analytics query.\nThe `status`\
+        \ value must be set to `completed`.\nIf the request succeeds, and there is\
+        \ a non-zero result set, the result is downloaded to the client as a zipped\
+        \ JSON (newline-delimited) file. The name of the downloaded file will be:\
+        \ `OfflineQueryResult-<query-id>.zip`\n\nFor example: `OfflineQueryResult-9cfc0d85-0f30-46d6-ae6f-318d0cb961bd.zip`\n\
+        \n**Notes**:\n* A zip file is downloaded because for very large files it takes\
+        \ Edge a long time to combine the results. Thus, for performance reasons,\
+        \ Edge returns a zip file consisting of the result parts.\n* **Currently,\
+        \ this API cannot be executed using the Try this API panel**.\n\nObtain the\
+        \ `queryId` when you created the query by using the <a href=\"https://docs-edgeapis.apigee.io/docs/analytics/1/routes/organizations/%7Borg_name%7D/environments/%7Benv_name%7D/queries/post\"\
+        >Create an asynchronous analytics query API</a>.\n\nSee <a href=\"https://docs.apigee.com/api-platform/analytics/asynch-reports-api\"\
+        >Use the asynchronous custom reports API</a> for more information and examples."
+      operationId: "getDataExportJobs"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/queryId"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+components:
+  securitySchemes:
+    Basic:
+      type: "http"
+      scheme: "basic"
+      description: "Multi-factor authentication is not supported."
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)"
+  parameters:
+    org_name:
+      in: "path"
+      name: "org_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Organization name."
+    env_name:
+      in: "path"
+      name: "env_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Environment name."
+    export_id:
+      in: "path"
+      name: "export_id"
+      required: true
+      schema:
+        type: "string"
+      description: "ID of the data export job."
+    queryId:
+      in: "path"
+      name: "queryId"
+      required: true
+      schema:
+        type: "string"
+      description: "ID of the asynchronous analytics query."
+    group_name:
+      in: "path"
+      name: "group_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Group name."
+    dimension_name:
+      in: "path"
+      name: "dimension_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Dimension name."
+    org:
+      in: "query"
+      name: "org"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of the organization."
+    env:
+      in: "query"
+      name: "env"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of the environment."
+    submittedBy:
+      in: "query"
+      name: "submittedBy"
+      required: false
+      schema:
+        type: "string"
+      description: "Filter response by email address of user who submitted the queries."
+    status:
+      in: "query"
+      name: "status"
+      required: false
+      schema:
+        type: "string"
+      description: "Filter response list by asynchronous query status."
+    dataset:
+      in: "query"
+      name: "dataset"
+      required: false
+      schema:
+        type: "string"
+      description: "Filter response list by dataset type, `api` or` mint`. By default,\
+        \ all datasets are returned."
+    inclQueriesWithoutReport:
+      in: "query"
+      name: "inclQueriesWithoutReport"
+      required: false
+      schema:
+        type: "string"
+      description: "If `true`, include asynchronous queries that don't have a report\
+        \ definition."
+  schemas:
+    ExportRequest:
+      description: "Details for data export."
+      type: "object"
+      required:
+      - "name"
+      - "dateRange"
+      - "outputFormat"
+      - "datastoreName"
+      properties:
+        csvDelimiter:
+          type: "string"
+          description: "Delimiter used in the CSV output file, if `outputFormat` is\
+            \ set to `csv`."
+        dateRange:
+          type: "object"
+          description: "Start and end time of the data to export in the format `yy-mm-dd`.\
+            \ For example:\n\n```\n\"dateRange\": {\n   \"start\": \"2018-07-29\"\
+            ,\n   \"end\": \"2018-07-30\"\n}\n```\nThe `dateRange` value can only\
+            \ span one day. The date range begins at 00:00:00 UTC on the start date\
+            \ and ends at 00:00:00 UTC on the end date."
+          properties:
+            start:
+              type: "string"
+              description: "Start time in the format `yy-mm-dd`."
+            end:
+              type: "string"
+              description: "End time in the format `yy-mm-dd`."
+        dataset:
+          type: "string"
+          description: "To export data from an organization that supports monetization,\
+            \ specify `\"dataset\":\"mint\"`. You must set this property for organizations\
+            \ that support monetization; otherwise omit this property."
+        datastoreName:
+          type: "string"
+          description: "Name of the data store containing the definition of your data\
+            \ store. The data store defines the connection to your export data repository\
+            \ (GCS, BigQuery), including the credentials used to access the data repository.\
+            \ You must create the data store in the Edge UI. See <a href=\"https://docs.apigee.com/api-platform/analytics/export-data#create-a-data-store\"\
+            >Create a data store</a>."
+        description:
+          type: "string"
+          description: "Description of the data export request."
+        name:
+          type: "string"
+          description: "Name of the data export request."
+        outputFormat:
+          type: "string"
+          description: "Format of the response. Set to `json` or `csv`."
+    QueryRequest:
+      description: "Details for asynchronous analytics query."
+      type: "object"
+      properties:
+        csvDelimiter:
+          type: "string"
+          description: "Delimiter used in the CSV output file, if `outputFormat` is\
+            \ set to `csv`. Defaults to the `,` (comma) character. Supported delimiter\
+            \ characters include comma (`,`), pipe (`|`), and tab (`\\t`)."
+        timeRange:
+          description: "Start and end time of the asynchronous analytics query.\n\
+            You can use the following predefined strings to specify the time range:\
+            \ `last60minutes`, `last24hours`, `last7days`. Or, you can specify the\
+            \ timeRange as a structure describing start and end timestamps in the\
+            \ ISO format: `yyyy-mm-ddThh:mm:ssZ`. For example:\n\n```\n\"timeRange\"\
+            : {\n  \"start\": \"2018-07-29T00:13:00Z\",\n  \"end\": \"2018-08-01T00:18:00Z\"\
+            \n}\n```"
+          oneOf:
+          - type: "string"
+          - type: "object"
+            properties:
+              start:
+                type: "string"
+                description: "Start time in ISO format: `yyyy-mm-ddThh:mm:ssZ`."
+              end:
+                type: "string"
+                description: "End time in ISO format: `yyyy-mm-ddThh:mm:ssZ`."
+        metrics:
+          type: "array"
+          description: "List of metrics. You can specify one or more metrics for a\
+            \ query."
+          items:
+            type: "object"
+            required:
+            - "name"
+            properties:
+              name:
+                type: "string"
+                description: "Name of the metric. For a list of valid metrics, see\
+                  \ <a href=\"https://docs.apigee.com/api-platform/analytics/analytics-reference#metrics\"\
+                  >Metrics</a>."
+              function:
+                type: "string"
+                description: "Aggregation function as `avg`, `min`, `max`, or `sum`.\
+                  \ Not all metrics support all aggregation functions. See <a href=\"\
+                  https://docs.apigee.com/api-platform/analytics/analytics-reference#metrics\"\
+                  >Metrics</a>."
+              alias:
+                type: "string"
+                description: "Name of the proroperty containing the metric data in\
+                  \ the output. If omitted, it defaults to the metric name combined\
+                  \ with the name of the aggregation function."
+              operator:
+                type: "string"
+                description: "Operation to perform on the metric after its value has\
+                  \ been calculated. Works with the value property. Supported operations\
+                  \ include: `+ - / % *` The operator and value properties define\
+                  \ a post-processing operation performed on the metric. For example,\
+                  \ if you specify the metric `response_processing_latency`, the metric\
+                  \ returns the average response processing latency with a unit of\
+                  \ milliseconds. To convert the units to seconds, set the operator\
+                  \ to `/` and the value to `1000.0`. See <a href=\"https://docs.apigee.com/api-platform/analytics/analytics-reference\"\
+                  >Analytics metrics, dimensions, and filters reference</a>."
+              value:
+                type: "string"
+                description: "Value applied to the calculated metric by the specified\
+                  \ operator."
+        dimensions:
+          type: "array"
+          description: "Array of dimensions to group the metrics. For more information,\
+            \ see the list of <a href=\"https://docs.apigee.com/api-platform/analytics/analytics-reference#dimensions\"\
+            >supported dimensions</a>. You can specify multiple dimensions."
+          items:
+            type: "string"
+        groupByTimeUnit:
+          type: "string"
+          description: "Time unit used to group the result set. Valid values include:\
+            \ `second`, `minute`, `hour`, `day`, `week`, or `month`. If a query includes\
+            \ `groupByTimeUnit`, then the result is an aggregation based on the specified\
+            \ time unit and the resultant timestamp does not include milliseconds\
+            \ precision. If a query omits `groupByTimeUnit`, then the resultant timestamp\
+            \ includes milliseconds precision."
+        limit:
+          type: "integer"
+          description: "Maximum number of rows that can be returned in the result."
+        filter:
+          type: "string"
+          description: "Boolean expression that can be used to filter data. Filter\
+            \ expressions can be combined using AND/OR terms and should be fully parenthesized\
+            \ to avoid ambiguity. See <a href=\"https://docs.apigee.com/api-platform/analytics/analytics-reference\"\
+            >Analytics metrics, dimensions, and filters reference</a> for more information\
+            \ on the fields available to filter on. For more information on the tokens\
+            \ that you use to build filter expressions, see <a href=\"https://docs.apigee.com/api-platform/analytics/asynch-reports-api#filter-expression-syntax\"\
+            >Filter expression syntax</a>."
+        outputFormat:
+          type: "string"
+          description: "Format of the response. Set to `json` or `csv`. Defaults to\
+            \ `json`."
+    Export:
+      description: "Status of data export job. When you create a data export initially,\
+        \ only the `created`, `self`, and `state` values are returned in the response."
+      type: "object"
+      properties:
+        created:
+          type: "string"
+          description: "Date and time the data export request was created."
+        datastoreName:
+          type: "string"
+          description: "Name of the data store."
+        description:
+          type: "string"
+          description: "Description of the data export request."
+        executionTime:
+          type: "string"
+          description: "Time required to execute data export."
+        name:
+          type: "string"
+          description: "Display name of the data export request."
+        self:
+          type: "string"
+          description: "URL to access the data export job."
+        state:
+          type: "string"
+          description: "Status of the data export job. Valid values include: `enqueued`,\
+            \ `running`, `completed`, and `failed`."
+        updated:
+          type: "string"
+          description: "Date and time the data export request was created."
+        userId:
+          type: "string"
+          description: "Email address of the user that requested the data export."
+    Query:
+      description: "Status of asynchronous analytics query. When you create an asynchronous\
+        \ analytics query initially, only the `created`, `self`, and `state` values\
+        \ are returned in the response."
+      type: "object"
+      properties:
+        created:
+          type: "string"
+          description: "Date and time the asynchronous analytics query was created."
+        error:
+          type: "string"
+          description: "Flag that specifies whether or not an error was encountered."
+        executionTime:
+          type: "string"
+          description: "Time required to execute asynchronous analytics query in the\
+            \ ISO format: `yyyy-mm-ddThh:mm:ssZ`."
+        result:
+          type: "object"
+          description: "Result information. Provided when `state` is set to `completed`."
+          properties:
+            expires:
+              type: "string"
+              description: "Date and time the asynchronous analytics query expires\
+                \ in the ISO format: `yyyy-mm-ddThh:mm:ssZ`."
+            self:
+              type: "string"
+              description: "URL to access the asynchronous analytics query result."
+        resultFileSize:
+          type: "string"
+          description: "File size in KBs of the asynchronous analytics query results.\
+            \ Provided when `state` is set to `completed`."
+        resultRows:
+          type: "integer"
+          description: "Number of rows in the asynchronous analytics query results.\
+            \ Provided when `state` is set to `completed`."
+        self:
+          type: "string"
+          description: "URL to access the asynchronous analytics query results."
+        state:
+          type: "string"
+          description: "Status of the asynchronous analytics query. Valid values include\
+            \ `enqueued`, `running`, and `completed`."
+        updated:
+          type: "string"
+          description: "Date and time the asynchronous analytics query was created\
+            \ in the ISO format: `yyyy-mm-ddThh:mm:ssZ`."

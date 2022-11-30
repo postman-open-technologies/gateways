@@ -1,0 +1,293 @@
+---
+openapi: "3.0.0"
+info:
+  title: "Apps API"
+  version: "1.0"
+  description: "Apps are API consumers registered with an API provider's organization.\
+    \ Apps are registered with an\n  organization to obtain credentials that enable\
+    \ access to one or more API products (or a set of URIs).\n  The default app profile\
+    \ can be extended by using custom attributes. Apps can be associated with\n  developers\
+    \ (as developer apps) or with companies (company apps)."
+servers:
+- url: "https://api.enterprise.apigee.com/v1"
+security:
+- Basic: []
+- OAuth: []
+paths:
+  /organizations/{org_name}/apps:
+    get:
+      summary: "List apps in an organization"
+      description: "Lists apps in an organization. Filter the list of apps by app\
+        \ status, type, or family."
+      operationId: "listApps"
+      tags:
+      - "App"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/apptype"
+      - $ref: "#/components/parameters/expand"
+      - $ref: "#/components/parameters/rows"
+      - $ref: "#/components/parameters/startKey"
+      - $ref: "#/components/parameters/status"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: "array"
+                  items:
+                    type: "string"
+                - $ref: "#/components/schemas/Apps"
+              example:
+              - "app"
+              - "app2"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/apps/{app_id}:
+    get:
+      summary: "Get app in an organization"
+      description: "Gets an app in an organization."
+      operationId: "getApp"
+      tags:
+      - "App"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/app_id"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App"
+              example:
+                apiProducts: []
+                appFamily: "default"
+                appId: "0207d728-0c74-458b-a97b-c0627a7ee079"
+                attributes:
+                - name: "DisplayName"
+                  value: "MyApp"
+                callbackUrl: ""
+                createdAt: 1450367690169
+                createdBy: "ahamilton@example.com"
+                credentials:
+                - apiProducts:
+                  - apiproduct: "MyProduct"
+                    status: "approved"
+                  attributes: []
+                  consumerKey: "Wf4GKmDwroHY10obg4LbMwXYxxxx"
+                  consumerSecret: "9BTxjuWG0fxxxxx"
+                  expiresAt: -1
+                  issuedAt: 1450367690196
+                  scopes: []
+                  status: "approved"
+                developerId: "e0150b7c-47e8-4461-9670-edbaa3fde236"
+                lastModifiedAt: 1450367690169
+                lastModifiedBy: "ahamilton@example.com"
+                name: "MyApp"
+                scopes: []
+                status: "approved"
+        "400":
+          description: "Bad request"
+components:
+  schemas:
+    Apps:
+      description: "List of app details."
+      type: "object"
+      properties:
+        app:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/App"
+    App:
+      title: "App"
+      description: "App details."
+      type: "object"
+      properties:
+        apiProducts:
+          description: "List of API products associated with the app."
+          type: "array"
+          items:
+            type: "string"
+        appFamily:
+          description: "App family."
+          type: "string"
+        appId:
+          description: "ID of the app."
+          type: "string"
+        attributes:
+          description: "List of attributes. With Apigee Edge for Public Cloud, the\
+            \ custom attribute limit is 18."
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              name:
+                type: "string"
+              value:
+                type: "string"
+        callbackUrl:
+          description: "Callback URL used by OAuth 2.0 authorization servers to communicate\
+            \ authorization codes back to apps."
+          type: "string"
+        companyName:
+          description: "Name of the company that owns the app, if applicable."
+          type: "string"
+        createdAt:
+          format: "int32"
+          description: "Output only. Time the app was created in milliseconds since\
+            \ epoch."
+          type: "integer"
+        createdBy:
+          description: "Output only. Email address of the developer that created the\
+            \ app."
+          type: "string"
+        credentials:
+          description: "Output only. Set of credentials for the app. Credentials are\
+            \ API key/secret pairs associated with API products."
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              apiProducts:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    apiproduct:
+                      type: "string"
+                    status:
+                      type: "string"
+              attributes:
+                type: "array"
+                items:
+                  type: "object"
+              consumerKey:
+                type: "string"
+              consumerSecret:
+                type: "string"
+              expiresAt:
+                format: "int32"
+                type: "integer"
+              issuedAt:
+                format: "int32"
+                type: "integer"
+              scopes:
+                type: "array"
+                items:
+                  type: "object"
+              status:
+                type: "string"
+        developerId:
+          description: "ID of the developer."
+          type: "string"
+        lastModifiedAt:
+          format: "int32"
+          description: "Output only. Last modified time as milliseconds since epoch."
+          type: "integer"
+        lastModifiedBy:
+          description: "Output only. Email of developer that last modified the app."
+          type: "string"
+        name:
+          description: "Name of the app."
+          type: "string"
+        scopes:
+          description: "Scopes to apply to the app. The specified scope names must\
+            \ already exist on the API product that you associate with the app."
+          type: "array"
+          items:
+            type: "string"
+        status:
+          description: "Status of the credential."
+          type: "string"
+  parameters:
+    org_name:
+      name: "org_name"
+      description: "Organization name."
+      schema:
+        type: "string"
+      in: "path"
+      required: true
+    app_id:
+      name: "app_id"
+      description: "App ID."
+      schema:
+        type: "string"
+      in: "path"
+      required: true
+    status:
+      name: "status"
+      description: "Status of the apps that you want to view. Valid values include\
+        \ `approved` or `revoked`."
+      schema:
+        type: "string"
+      in: "query"
+      required: false
+    apptype:
+      name: "apptype"
+      description: "Type of the apps that you want to view. Valid values include `company`\
+        \ or `developer`."
+      schema:
+        type: "string"
+      in: "query"
+      required: false
+    appfamily:
+      name: "appfamily"
+      description: "Name of the app family."
+      schema:
+        type: "string"
+      in: "query"
+      required: false
+    includeCred:
+      name: "includeCred"
+      description: "Flag that specifies whether to include the consumer key and secret\
+        \ for each app profile. Set\n        to `true` to include the consumer key\
+        \ and secret."
+      schema:
+        type: "boolean"
+      in: "query"
+      required: false
+    expand:
+      name: "expand"
+      description: "Flag that specifies whether to view expanded details for each\
+        \ app. Set to `true` to view expanded details."
+      schema:
+        type: "boolean"
+      in: "query"
+      required: false
+    startKey:
+      name: "startKey"
+      description: "**Apigee Edge for Public Cloud only**. ID of the app from which\
+        \ to start displaying the list of apps. For example, if the unfiltered list\
+        \ includes the following app names:\n\n```\n\"ddce5dff-d0b7-4c91-9be1-ac586ea99a8e\"\
+        ,\n\"e8fd6a3d-f88c-462e-a4ec-41cf886f12b7\",\n\"f1360a60-d927-42ff-8c86-1466e6546b39\"\
+        \n```\nIf you set the `startKey` to `e8fd6a3d-f88c-462e-a4ec-41cf886f12b7`,\
+        \ the list will include:\n```\n\"e8fd6a3d-f88c-462e-a4ec-41cf886f12b7\",\n\
+        \"f1360a60-d927-42ff-8c86-1466e6546b39\"\n```"
+      schema:
+        type: "string"
+      in: "query"
+      required: false
+    rows:
+      name: "rows"
+      description: "**Apigee Edge for Public Cloud only**. Number of apps to return.\
+        \ Required if you specify `startKey`.\n\nWith **Apigee Edge for Public Cloud**,\
+        \ the maximum number of entities returned is 1000. With **Apigee Edge for\
+        \ Private Cloud**, the maximum number of entities returned is 10,000."
+      schema:
+        type: "integer"
+      in: "query"
+      required: false
+  securitySchemes:
+    Basic:
+      type: "http"
+      scheme: "basic"
+      description: "Multi-factor authentication is not supported."
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)"

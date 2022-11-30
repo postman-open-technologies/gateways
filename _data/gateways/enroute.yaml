@@ -1,0 +1,109 @@
+---
+class:
+  - gateway
+
+properties:
+  name: EnRoute
+  provider: EnRoute
+  slug: enroute
+  rating: 2
+  license: Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    EnRoute makes is simple to expose services running in Kubernetes using one helm command. L7 policy can be specified using simple switches to enable/disable functionality.
+  platformCapabilities:
+    - Gateway
+    - Analytics
+    - Portal
+    - Documentation
+  gatewayCapabilities:
+    - Mediation
+    - Protocol Transformation
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - WASM
+    - Lua
+  upstreamProtocols:
+    - HTTP/1.1
+    - GraphQL
+    - WebSockets
+  downstreamProtocols:
+    - HTTP/1.1
+    - GraphQL
+    - WebSockets
+  deliveryModels:
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Health Checks 
+        - Cache Eviction
+        - Cache Invalidation
+        - Cache Lookup
+        - Cache Population
+        - Cache Storage
+        - Cache Target Response
+        - Cache Validation
+        - Canary Release
+        - Circuit Breaker
+        - Edge
+        - Kubernetes Ingress
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Telemetry
+        - Throttling
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Custom Resource Definitions
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - URL Rewriting
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - HashiCorp Vault Authentication
+        - IP Access Rules
+        - JWT
+        - JWT Validation
+        - JWT authorizers
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0    
+        - OpenID Connect
+    - category: Extensions
+      capabilities:
+        - AWS Lambda
+        - HTTP Callout
+        - HTTP integrations
+        - Open Policy Agent
+        - Plugins
+        - Envoy Proxy
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://getenroute.io/
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://getenroute.io/
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/enroute.png     

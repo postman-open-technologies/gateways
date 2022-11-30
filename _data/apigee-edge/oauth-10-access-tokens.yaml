@@ -1,0 +1,195 @@
+---
+openapi: "3.0.0"
+servers:
+- url: "https://api.enterprise.apigee.com/v1"
+info:
+  title: "OAuth 1.0a Access Tokens API"
+  description: "Manage OAuth 1.0a access tokens."
+  version: "1.0"
+security:
+- Basic: []
+- OAuth: []
+paths:
+  /organizations/{org_name}/oauth1/accesstokens:
+    get:
+      tags:
+      - "OAuth 1.0a"
+      summary: "Get OAuth 1.0a access token count"
+      description: "Gets the OAuth 1.0a access token count in an organization."
+      operationId: "getOAuth10aAccessTokenCount"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/oauth1/accesstokens/{access_token}:
+    delete:
+      tags:
+      - "OAuth 1.0a"
+      summary: "Delete OAuth 1.0a access token"
+      description: "Deletes the specified OAuth 1.0a access token."
+      operationId: "deleteOAuth10aAccessToken"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/access_token"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+    post:
+      tags:
+      - "OAuth 1.0a"
+      summary: "Approve, revoke, or update an OAuth 1.0a access token"
+      description: "Enables you to perform one of the following tasks:\n\n* Approve\
+        \ or revoke the specified access token by setting the `action` query parameter\
+        \ to `approve` or `revoke`.\n* Update the attributes for the specified access\
+        \ token. The `scope` property is required. Only specify other properties if\
+        \ you want to update them."
+      operationId: "updateOAuth10aAccessToken"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/access_token"
+      - $ref: "#/components/parameters/action"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccessTokenAttributes"
+    get:
+      tags:
+      - "OAuth 1.0a"
+      summary: "Get OAuth 1.0a access token"
+      description: "Gets details for an OAuth 1.0 access token.\n\n**DEPRECATED**:\
+        \ This API is deprecated and will be removed from Apigee Edge in a future\
+        \ release. "
+      operationId: "getOAuth10aAccessToken"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/access_token"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/developers/{developer_email}/apps/{app_name}/oauth1accesstokens:
+    get:
+      tags:
+      - "OAuth 1.0a"
+      summary: "Get OAuth 1.0 access tokens count for a developer app"
+      description: "Gets the OAuth 1.0 access tokens count for the specified developer\
+        \ app."
+      operationId: "getOAuth10aAccessTokenCountDevApp"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/developer_email"
+      - $ref: "#/components/parameters/app_name"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/developers/{developer_email}/apps/{app_name}/keys/{consumer_key}/oauth1accesstokens:
+    get:
+      tags:
+      - "OAuth 1.0a"
+      summary: "Get OAuth 1.0a access token count for a developer app key"
+      description: "Gets the OAuth 1.0a access tokens count for the specified developer\
+        \ app key."
+      operationId: "getOAuth10aAccessTokenCountDevAppKey"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/developer_email"
+      - $ref: "#/components/parameters/app_name"
+      - $ref: "#/components/parameters/consumer_key"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+components:
+  securitySchemes:
+    Basic:
+      type: "http"
+      scheme: "basic"
+      description: "Multi-factor authentication is not supported."
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)"
+  parameters:
+    org_name:
+      in: "path"
+      name: "org_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Organization name."
+    access_token:
+      in: "path"
+      name: "access_token"
+      required: true
+      schema:
+        type: "string"
+      description: "Access token."
+    developer_email:
+      in: "path"
+      name: "developer_email"
+      required: true
+      schema:
+        type: "string"
+      description: "Email address of the developer."
+    app_name:
+      in: "path"
+      name: "app_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of the developer application."
+    consumer_key:
+      in: "path"
+      name: "consumer_key"
+      required: true
+      schema:
+        type: "string"
+      description: "Consumer key."
+    action:
+      in: "query"
+      name: "action"
+      required: false
+      schema:
+        type: "string"
+      description: "Set to `approve` or `revoke`."
+  schemas:
+    AccessTokenAttributes:
+      description: "Update access token attributes."
+      type: "object"
+      properties:
+        attributes:
+          description: "Attributes used to extend the default profile."
+          type: "array"
+          items:
+            $ref: "#/components/schemas/NameValue"
+        scope:
+          description: "List of scopes associated with the access token, validated\
+            \ at runtime against scopes defined in API product."
+          type: "string"
+    NameValue:
+      description: "Name/value attribute pairs."
+      type: "object"
+      properties:
+        name:
+          description: "Name of attribute."
+          type: "string"
+        value:
+          description: "Value of attribute."
+          type: "string"

@@ -1,0 +1,82 @@
+---
+openapi: "3.0.0"
+servers:
+- url: "https://api.enterprise.apigee.com/v1"
+info:
+  title: "OAuth 2.0 Authorization Codes API"
+  description: "Manage OAuth 2.0 authorization codes."
+  version: "1.0"
+security:
+- Basic: []
+- OAuth: []
+paths:
+  /organizations/{org_name}/oauth2/authorizationcodes:
+    get:
+      tags:
+      - "OAuth 2.0"
+      summary: "List OAuth 2.0 authorization codes"
+      description: "Lists OAuth 2.0 authorization codes in an organization."
+      operationId: "listOAuth20AuthCodes"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/oauth2/authorizationcodes/{authorization_code}:
+    get:
+      tags:
+      - "OAuth 2.0"
+      summary: "Get OAuth 2.0 authorization code"
+      description: "Gets details for the specified OAuth 2.0 authorization code."
+      operationId: "getOAuth20AuthCode"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/authorization_code"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+    delete:
+      tags:
+      - "OAuth 2.0"
+      summary: "Delete OAuth 2.0 authorization code"
+      description: "Deletes the specified OAuth 2.0 authorization code."
+      operationId: "deleteOAuth20AuthCode"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/authorization_code"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+components:
+  securitySchemes:
+    Basic:
+      type: "http"
+      scheme: "basic"
+      description: "Multi-factor authentication is not supported."
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)"
+  parameters:
+    org_name:
+      in: "path"
+      name: "org_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Organization name."
+    authorization_code:
+      in: "path"
+      name: "authorization_code"
+      required: true
+      schema:
+        type: "string"
+      description: "Authorization code."

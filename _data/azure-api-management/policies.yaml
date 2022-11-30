@@ -1,0 +1,359 @@
+openapi: 3.0.0
+info:
+  title: Azure API Management - Policies
+  description: Use these REST APIs for performing operations on entities like API, Product,
+    and Subscription associated with your Azure API Management deployment.
+  version: 2017-03-01
+security:
+  - apim_key: []
+paths:
+  /policies:
+    get:
+      tags:
+        - Policy
+      operationId: Policy_List
+      description: Lists all the Global Policy definitions of the Api Management service.
+      parameters:
+        - name: scope
+          in: query
+          required: false
+          description: Policy scope.
+          x-ms-enum:
+            name: PolicyScopeContract
+            modelAsString: false
+          schema:
+            type: string
+            enum:
+              - Tenant
+              - Product
+              - Api
+              - Operation
+              - All
+        - $ref: "#/components/parameters/ApiVersionParameter"
+      x-ms-pageable: {}
+      responses:
+        "200":
+          description: Returns an array of Policy Contracts.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicyCollection"
+  "/policies/{policyId}":
+    get:
+      tags:
+        - Policy
+      operationId: Policy_Get
+      description: Get the Global policy definition of the Api Management service.
+      parameters:
+        - $ref: "#/components/parameters/PolicyIdParameter"
+        - $ref: "#/components/parameters/ApiVersionParameter"
+      responses:
+        "200":
+          description: Returns the Policy Contracts.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicyContract"
+            application/vnd.ms-azure-apim.policy+xml:
+              schema:
+                $ref: "#/components/schemas/PolicyContract"
+            application/vnd.ms-azure-apim.policy.raw+xml:
+              schema:
+                $ref: "#/components/schemas/PolicyContract"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+            application/vnd.ms-azure-apim.policy+xml:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+            application/vnd.ms-azure-apim.policy.raw+xml:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      tags:
+        - Policy
+      operationId: Policy_CreateOrUpdate
+      description: Creates or updates the global policy configuration of the Api Management
+        service.
+      parameters:
+        - $ref: "#/components/parameters/PolicyIdParameter"
+        - $ref: "#/components/parameters/ApiVersionParameter"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PolicyContract"
+          application/vnd.ms-azure-apim.policy+xml:
+            schema:
+              $ref: "#/components/schemas/PolicyContract"
+          application/vnd.ms-azure-apim.policy.raw+xml:
+            schema:
+              $ref: "#/components/schemas/PolicyContract"
+        description: The policy contents to apply.
+        required: true
+      responses:
+        "200":
+          description: Global policy configuration of the Api Management service was
+            successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicyContract"
+        "201":
+          description: Global policy configuration was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicyContract"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      tags:
+        - Policy
+      operationId: Policy_Delete
+      description: Deletes the global policy configuration of the Api Management Service.
+      parameters:
+        - $ref: "#/components/parameters/PolicyIdParameter"
+        - name: If-Match
+          in: header
+          required: true
+          description: The entity state (Etag) version of the policy to be deleted. A value
+            of "*" can be used for If-Match to unconditionally apply the
+            operation.
+          schema:
+            type: string
+        - $ref: "#/components/parameters/ApiVersionParameter"
+      responses:
+        "204":
+          description: Successfully deleted the policy configuration at the Global level.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /policySnippets:
+    get:
+      tags:
+        - PolicySnippets
+      operationId: PolicySnippets_List
+      description: Lists all policy snippets.
+      parameters:
+        - name: scope
+          in: query
+          required: false
+          description: Policy scope.
+          x-ms-enum:
+            name: PolicyScopeContract
+            modelAsString: false
+          schema:
+            type: string
+            enum:
+              - Tenant
+              - Product
+              - Api
+              - Operation
+              - All
+        - $ref: "#/components/parameters/ApiVersionParameter"
+      x-ms-pageable: {}
+      responses:
+        "200":
+          description: Returns an array of Policy Contracts.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicySnippetsCollection"
+  /regions:
+    get:
+      tags:
+        - Regions
+      operationId: Regions_List
+      description: Lists all azure regions in which the service exists.
+      parameters:
+        - $ref: "#/components/parameters/ApiVersionParameter"
+      responses:
+        "200":
+          description: Lists of Regions in which the service is deployed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegionListResult"
+      x-ms-pageable:
+        nextLinkName: ""
+servers:
+  - url: "{apimBaseUrl}"
+    variables:
+      apimBaseUrl:
+        description: The management endpoint of the API Management service, for example
+          https://myapimservice.management.azure-api.net.
+        x-ms-skip-url-encoding: true
+        default: ""
+components:
+  parameters:
+    ApiVersionParameter:
+      name: api-version
+      in: query
+      required: true
+      description: Version of the API to be used with the client request.
+      schema:
+        type: string
+    SkipQueryParameter:
+      name: $skip
+      in: query
+      required: false
+      description: Number of records to skip.
+      x-ms-parameter-location: method
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+    TopQueryParameter:
+      name: $top
+      in: query
+      required: false
+      description: Number of records to return.
+      x-ms-parameter-location: method
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+    PolicyIdParameter:
+      name: policyId
+      in: path
+      required: true
+      description: The identifier of the Policy.
+      x-ms-enum:
+        modelAsString: true
+        name: PolicyIdName
+      x-ms-parameter-location: method
+      schema:
+        type: string
+        enum:
+          - policy
+  securitySchemes:
+    apim_key:
+      type: apiKey
+      name: Authorization
+      in: header
+  schemas:
+    ErrorFieldContract:
+      properties:
+        code:
+          type: string
+          description: Property level error code.
+        message:
+          type: string
+          description: Human-readable representation of property-level error.
+        target:
+          type: string
+          description: Property name.
+      description: Error Field contract.
+    ErrorResponse:
+      properties:
+        code:
+          type: string
+          description: Service-defined error code. This code serves as a sub-status for the
+            HTTP error code specified in the response.
+        message:
+          type: string
+          description: Human-readable representation of the error.
+        details:
+          type: array
+          items:
+            $ref: "#/components/schemas/ErrorFieldContract"
+          description: The list of invalid fields send in request, in case of validation
+            error.
+      description: Error Body contract.
+    PolicyCollection:
+      properties:
+        value:
+          type: array
+          items:
+            $ref: "#/components/schemas/PolicyContract"
+          description: Policy Contract value.
+        count:
+          type: integer
+          description: Total number of records
+        nextLink:
+          type: string
+          description: Next page link if any.
+      description: The response of the list policy operation.
+    PolicyContract:
+      properties:
+        id:
+          type: string
+          description: Policy identifier.
+        policyContent:
+          type: string
+          description: Json escaped Xml Encoded contents of the Policy.
+      required:
+        - policyContent
+      description: Policy contract Properties.
+    PolicySnippetsCollection:
+      properties:
+        value:
+          type: array
+          items:
+            $ref: "#/components/schemas/PolicySnippetContract"
+          description: Policy snippet value.
+      description: The response of the list policy snippets operation.
+    PolicySnippetContract:
+      properties:
+        name:
+          type: string
+          description: Snippet name.
+          readOnly: true
+        content:
+          type: string
+          description: Snippet content.
+          readOnly: true
+        toolTip:
+          type: string
+          description: Snippet toolTip.
+          readOnly: true
+        scope:
+          type: integer
+          description: Binary OR value of the Snippet scope.
+          readOnly: true
+      description: Policy snippet.
+    RegionContract:
+      properties:
+        name:
+          type: string
+          description: Region name.
+          readOnly: true
+        isMasterRegion:
+          description: whether Region is the master region.
+          type: boolean
+        isDeleted:
+          description: whether Region is deleted.
+          type: boolean
+      description: Region profile.
+    RegionListResult:
+      properties:
+        value:
+          type: array
+          items:
+            $ref: "#/components/schemas/RegionContract"
+          description: Lists of Regions.
+        count:
+          type: integer
+          format: int64
+          description: Total record count number across all pages.
+        nextLink:
+          type: string
+          description: Next page link if any.
+      description: Lists Regions operation response details.

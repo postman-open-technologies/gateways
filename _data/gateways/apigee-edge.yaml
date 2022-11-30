@@ -1,0 +1,117 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Apigee Edge
+  provider: Google Cloud
+  slug: apigee-edge
+  rating: 1
+  license: Proprietary
+  status: Pending Review
+  researchDate: 2021-10
+  description: >
+    Apigee Edge is a first-generation, commercial gateway platform.  It includes a fully-integrated API Provider experience along with API Consumer
+    management via a [Portal](../../platform-capabilities/developer-portal/).  While Apigee Edge comes with a number of different delivery options,  newer
+    SaaS deliveries seem to be getting pushed more towards [Apigee X](../apigee-x/). Policies for Apigee Edge Gateways are configured with XML and can be
+    accessed via a UI, CLI, and API. Apigee Edge has a few different gateway offerings, including both a microgateway  hybrid approach.
+  platformCapabilities:
+    - Design
+    - Gateway
+    - Analytics
+    - Monetization
+    - Monitoring
+    - Portal
+    - Threat Protection
+    - Documentation
+  gatewayCapabilities:
+    - Custom Code Execution
+    - Protocol Transformation
+    - Versioning
+    - Traffic Management
+    - Mediation
+    - OpenAPI Integration
+  customCodeSupport:
+    - Java
+    - JavaScript
+    - Node.js
+    - Python
+  upstreamProtocols:
+    - HTTP/1.1
+  downstreamProtocols:
+    - HTTP/1.1
+  deliveryModels:
+    - SaaS
+    - Customer Managed (Cloud)
+    - Customer Managed (On-Premises)
+    - Hybrid
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Cache Lookup
+        - Cache Invalidation
+        - Cache Population
+        - Cache Target Response
+        - Concurrent Rate Limit
+        - Quota
+        - Quota Reset
+        - Spike Arrest
+    - category: Mediation
+      capabilities:
+        - Platform Data Lookup
+        - Request Transformation
+        - Response Transformation
+        - Context Persistence
+        - Custom Data Storage
+        - JSON to XML
+        - XML to JSON
+        - SOAP Validation
+        - OpenAPI Validation
+        - Custom Exception Handling
+        - XSL Tranformations
+    - category: Security
+      capabilities:
+        - IP Access Rules
+        - Basic Authentication
+        - API Key
+        - OAuth 2.0
+        - OAuth 1.0
+        - HMAC
+        - JSON Threat Protection
+        - XML Threat Protection
+        - JWS
+        - JWT
+        - LDAP
+        - Message Inspection
+        - SAML Assertion
+    - category: Extensions
+      capabilities:
+        - Platform Integration
+        - Java
+        - JavaScript
+        - Python
+        - Message Logging
+        - HTTP Callout
+        - Statistics Collection
+
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://docs.apigee.com/
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://docs.apigee.com/api-platform/get-started/get-started
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/apigee-edge.svg
+  - rel:
+      - urn:gateway:related
+    title: Apigee X
+    href: ../apigee-x
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/apigee-edge.png     

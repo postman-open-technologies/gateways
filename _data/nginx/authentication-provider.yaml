@@ -1,0 +1,1670 @@
+openapi: 3.0.0
+info:
+  version: v1
+  title: Authentication Provider API
+  description: >-
+    Use the Authentication Provider API to create, update, or
+    remove authentication providers.
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+paths:
+  /platform/auth/providers:
+    post:
+      tags:
+        - Authentication Providers
+      summary: Create an Authentication Provider
+      description: |
+        Creates a new authentication provider.
+      operationId: configureAuthProvider
+      requestBody:
+        description: >
+          Contains the configuration for a supported
+          authentication provider.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthProvider'
+            example:
+              desiredState:
+                provider:
+                  type: ACTIVE_DIRECTORY
+                  domain: 'DC=mydomain,DC=example,DC=com'
+                  defaultLoginDomain: mydomain
+                  connection:
+                    - uri: 'ldaps://dc1.mydomain.com'
+                      sslMode: VERIFY_CA
+                      rawCa: |-
+                        -----BEGIN CERTIFICATE-----
+                          MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+                          [SNIP]
+                          2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+                          rg7hesA=
+                          -----END CERTIFICATE-----
+                  groupSearchFilter: (objectClass=group)
+                  groupMemberAttribute: memberof
+                  userFormat: UPN
+                  bindUser:
+                    type: PASSWORD
+                    username: user@mydomain
+                    password: passwd1234
+                  pollIntervalSec: 3600
+                  groupCacheTimeSec: 7200
+                  honorStaleGroups: false
+                  groupMappings:
+                    - external: Engineering-US-West
+                      caseSensitive: true
+                      internal:
+                        ref: /platform/auth/groups/eng-west
+                    - external: Engineering-US-East
+                      caseSensitive: true
+                      internal:
+                        ref: /platform/auth/groups/eng-east
+              metadata:
+                kind: auth-provider
+                name: ad-dc-1
+                tags:
+                  - dev
+                  - us-1
+      responses:
+        '201':
+          description: |
+            Successfully created the authentication provider.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthProvider'
+              example:
+                currentStatus:
+                  provider:
+                    type: ACTIVE_DIRECTORY
+                    status: CONNECTED_BOUND
+                    domain: 'DC=mydomain,DC=example,DC=com'
+                    defaultLoginDomain: mydomain
+                    connection:
+                      - uri: 'ldap://dc1.mydomain.com'
+                        sslMode: REQUIRE
+                        rawCa: |-
+                          -----BEGIN CERTIFICATE-----
+                            MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+                            [SNIP]
+                            2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+                            rg7hesA=
+                            -----END CERTIFICATE-----
+                    groupSearchFilter: (objectClass=group)
+                    groupMemberAttribute: memberof
+                    userFormat: UPN
+                    bindUser:
+                      type: PASSWORD
+                      username: user@mydomain
+                      password: '********'
+                    pollIntervalSec: 3600
+                    groupCacheTimeSec: 7200
+                    honorStaleGroups: false
+                    groupMappings:
+                      - external: Engineering-US-West
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-west
+                          links:
+                            rel: /api/v1/platform/auth/groups/eng-west
+                            name: eng-west
+                            displayName: West engineering
+                      - external: Engineering-US-East
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-east
+                          links:
+                            rel: /api/v1/platform/auth/groups/eng-east
+                            name: eng-east
+                            displayName: East engineering
+                desiredState:
+                  provider:
+                    type: ACTIVE_DIRECTORY
+                    domain: 'DC=mydomain,DC=example,DC=com'
+                    defaultLoginDomain: mydomain
+                    connection:
+                      - uri: 'ldap://dc1.mydomain.com'
+                        sslMode: REQUIRE
+                        rawCa: |-
+                          -----BEGIN CERTIFICATE-----
+                            MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+                            [SNIP]
+                            2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+                            rg7hesA=
+                            -----END CERTIFICATE-----
+                    groupSearchFilter: (objectClass=group)
+                    groupMemberAttribute: memberof
+                    userFormat: UPN
+                    bindUser:
+                      type: PASSWORD
+                      username: user@mydomain
+                      password: '********'
+                    pollIntervalSec: 3600
+                    groupCacheTimeSec: 7200
+                    honorStaleGroups: false
+                    groupMappings:
+                      - external: Engineering-US-West
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-west
+                      - external: Engineering-US-East
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-east
+                metadata:
+                  createTime: '2020-02-24T22:55:51.729272Z'
+                  kind: auth-provider
+                  name: ad-dc-1
+                  tags:
+                    - dev
+                    - us-1
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/Internal'
+    get:
+      tags:
+        - Authentication Providers
+      summary: List all Authentication Providers
+      description: |
+        Returns a list of all authentication providers.
+      operationId: listAuthProviders
+      responses:
+        '200':
+          description: >
+            Successfully returned a list of authentication
+            providers.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAuthProviders'
+              example:
+                items:
+                  - currentStatus:
+                      provider:
+                        type: ACTIVE_DIRECTORY
+                        status: CONNECTED_BOUND
+                        domain: 'DC=mydomain,DC=example,DC=com'
+                        defaultLoginDomain: mydomain
+                        connection:
+                          - uri: 'ldap://dc1.mydomain.com'
+                            sslMode: REQUIRE
+                            rawCa: |-
+                              -----BEGIN CERTIFICATE-----
+                                MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+                                [SNIP]
+                                2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+                                rg7hesA=
+                                -----END CERTIFICATE-----
+                        groupSearchFilter: (objectClass=group)
+                        groupMemberAttribute: memberof
+                        userFormat: UPN
+                        bindUser:
+                          type: PASSWORD
+                          username: user@mydomain
+                          password: '********'
+                        filteredGroups:
+                          - >-
+                            CN=Office_Admins_SF,OU=San
+                            Francisco,OU=North America,OU=Acme
+                            Financial
+                          - >-
+                            CN=RM_SF,OU=San Francisco,OU=North
+                            America,OU=Acme Financial
+                          - >-
+                            CN=Sales_Warsaw,OU=Warsaw,OU=Europe,OU=Acme
+                            Financial
+                          - 'CN=ACC_EU,OU=Europe,OU=Acme Financial'
+                        pollIntervalSec: 3600
+                        groupCacheTimeSec: 7200
+                        honorStaleGroups: false
+                        groupMappings:
+                          - external: Engineering-US-West
+                            caseSensitive: true
+                            internal:
+                              ref: /platform/auth/groups/eng-west
+                              links:
+                                rel: /api/v1/platform/auth/groups/eng-west
+                                name: eng-west
+                                displayName: West engineering
+                          - external: Engineering-US-East
+                            caseSensitive: true
+                            internal:
+                              ref: /platform/auth/groups/eng-east
+                              links:
+                                rel: /api/v1/platform/auth/groups/eng-east
+                                name: eng-east
+                                displayName: East engineering
+                    desiredState:
+                      provider:
+                        type: ACTIVE_DIRECTORY
+                        domain: 'DC=mydomain,DC=example,DC=com'
+                        defaultLoginDomain: mydomain
+                        connection:
+                          - uri: 'ldap://dc1.mydomain.com'
+                            sslMode: REQUIRE
+                            rawCa: |-
+                              -----BEGIN CERTIFICATE-----
+                                MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+                                [SNIP]
+                                2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+                                rg7hesA=
+                                -----END CERTIFICATE-----
+                        groupSearchFilter: (objectClass=group)
+                        groupMemberAttribute: memberof
+                        userFormat: UPN
+                        bindUser:
+                          type: PASSWORD
+                          username: user@mydomain
+                          password: '********'
+                        filteredGroups:
+                          - >-
+                            CN=Office_Admins_SF,OU=San
+                            Francisco,OU=North America,OU=Acme
+                            Financial
+                          - >-
+                            CN=RM_SF,OU=San Francisco,OU=North
+                            America,OU=Acme Financial
+                          - >-
+                            CN=Sales_Warsaw,OU=Warsaw,OU=Europe,OU=Acme
+                            Financial
+                          - 'CN=ACC_EU,OU=Europe,OU=Acme Financial'
+                        pollIntervalSec: 3600
+                        groupCacheTimeSec: 7200
+                        honorStaleGroups: false
+                        groupMappings:
+                          - external: Engineering-US-West
+                            caseSensitive: true
+                            internal:
+                              ref: /platform/auth/groups/eng-west
+                          - external: Engineering-US-East
+                            caseSensitive: true
+                            internal:
+                              ref: /platform/auth/groups/eng-east
+                    metadata:
+                      createTime: '2020-02-24T22:55:51.729272Z'
+                      kind: auth-provider
+                      name: ad-dc-1
+                      tags:
+                        - dev
+                        - us-1
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/Internal'
+  '/platform/auth/providers/{providerName}':
+    get:
+      tags:
+        - Authentication Providers
+      summary: Get an Authentication Provider
+      description: >-
+        Returns information about the specified authentication
+        provider.
+      parameters:
+        - name: providerName
+          in: path
+          description: The name of the authentication provider.
+          required: true
+          schema:
+            type: string
+      operationId: getProvider
+      responses:
+        '200':
+          description: >
+            Successfully returned the requested authentication
+            provider.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthProvider'
+              example:
+                currentStatus:
+                  provider:
+                    type: ACTIVE_DIRECTORY
+                    status: CONNECTED_BOUND
+                    domain: 'DC=mydomain,DC=example,DC=com'
+                    defaultLoginDomain: mydomain
+                    connection:
+                      - uri: 'ldap://dc1.mydomain.com'
+                        sslMode: REQUIRE
+                        rawCa: |-
+                          -----BEGIN CERTIFICATE-----
+                            MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+                            [SNIP]
+                            2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+                            rg7hesA=
+                            -----END CERTIFICATE-----
+                    groupSearchFilter: (objectClass=group)
+                    groupMemberAttribute: memberof
+                    userFormat: UPN
+                    bindUser:
+                      type: PASSWORD
+                      username: user@mydomain
+                      password: '********'
+                    pollIntervalSec: 3600
+                    groupCacheTimeSec: 7200
+                    honorStaleGroups: false
+                    filteredGroups:
+                      - >-
+                        CN=Office_Admins_SF,OU=San
+                        Francisco,OU=North America,OU=Acme
+                        Financial
+                      - >-
+                        CN=RM_SF,OU=San Francisco,OU=North
+                        America,OU=Acme Financial
+                      - >-
+                        CN=Sales_Warsaw,OU=Warsaw,OU=Europe,OU=Acme
+                        Financial
+                      - 'CN=ACC_EU,OU=Europe,OU=Acme Financial'
+                    groupMappings:
+                      - external: Engineering-US-West
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-west
+                          links:
+                            rel: /api/v1/platform/auth/groups/eng-west
+                            name: eng-west
+                            displayName: West engineering
+                      - external: Engineering-US-East
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-east
+                          links:
+                            rel: /api/v1/platform/auth/groups/eng-east
+                            name: eng-east
+                            displayName: East engineering
+                desiredState:
+                  provider:
+                    type: ACTIVE_DIRECTORY
+                    domain: 'DC=mydomain,DC=example,DC=com'
+                    defaultLoginDomain: mydomain
+                    connection:
+                      - uri: 'ldap://dc1.mydomain.com'
+                        sslMode: REQUIRE
+                        rawCa: |-
+                          -----BEGIN CERTIFICATE-----
+                            MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+                            [SNIP]
+                            2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+                            rg7hesA=
+                            -----END CERTIFICATE-----
+                    groupSearchFilter: (objectClass=group)
+                    groupMemberAttribute: memberof
+                    userFormat: UPN
+                    bindUser:
+                      type: PASSWORD
+                      username: user@mydomain
+                      password: '********'
+                    pollIntervalSec: 3600
+                    groupCacheTimeSec: 7200
+                    honorStaleGroups: false
+                    filteredGroups:
+                      - >-
+                        CN=Office_Admins_SF,OU=San
+                        Francisco,OU=North America,OU=Acme
+                        Financial
+                      - >-
+                        CN=RM_SF,OU=San Francisco,OU=North
+                        America,OU=Acme Financial
+                      - >-
+                        CN=Sales_Warsaw,OU=Warsaw,OU=Europe,OU=Acme
+                        Financial
+                      - 'CN=ACC_EU,OU=Europe,OU=Acme Financial'
+                    groupMappings:
+                      - external: Engineering-US-West
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-west
+                      - external: Engineering-US-East
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-east
+                metadata:
+                  createTime: '2020-02-24T22:55:51.729272Z'
+                  kind: auth-provider
+                  name: ad-dc-1
+                  tags:
+                    - dev
+                    - us-1
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Internal'
+    patch:
+      tags:
+        - Authentication Providers
+      summary: Update an Authentication Provider
+      description: >
+        Updates the configuration for an existing authentication
+        provider.
+
+
+        > **Note:** You can use PATCH to update one or more
+        specific configurations. Any settings not specified in the
+        request will not be changed.
+      parameters:
+        - name: providerName
+          in: path
+          description: The name of the authentication provider.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: >
+          Contains the desired configuration changes for an
+          authentication provider.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthProvider'
+            example:
+              desiredState:
+                provider:
+                  type: ACTIVE_DIRECTORY
+                  domain: 'DC=mydomain,DC=example,DC=com'
+                  defaultLoginDomain: mydomain
+                  connection:
+                    - uri: 'ldap://dc1.mydomain.com'
+                      sslMode: REQUIRE
+                      rawCa: |-
+                        -----BEGIN CERTIFICATE-----
+                          MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+                          [SNIP]
+                          2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+                          rg7hesA=
+                          -----END CERTIFICATE-----
+                  groupSearchFilter: (objectClass=group)
+                  groupMemberAttribute: memberof
+                  userFormat: UPN
+                  bindUser:
+                    type: PASSWORD
+                    username: user@mydomain
+                    password: passwd1234
+                  pollIntervalSec: 3600
+                  groupCacheTimeSec: 7200
+                  honorStaleGroups: false
+                  groupMappings:
+                    - external: Engineering-US-West
+                      caseSensitive: true
+                      internal:
+                        ref: /platform/auth/groups/eng-west
+                    - external: Engineering-US-East
+                      caseSensitive: true
+                      internal:
+                        ref: /platform/auth/groups/eng-east
+              metadata:
+                kind: auth-provider
+                name: ad-dc-1
+                tags:
+                  - dev
+                  - us-1
+      operationId: partialUpdateProvider
+      responses:
+        '200':
+          description: >
+            Successfully updated the configuration for the
+            authentication provider.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthProvider'
+              example:
+                currentStatus:
+                  provider:
+                    type: ACTIVE_DIRECTORY
+                    status: CONNECTED_BOUND
+                    domain: 'DC=mydomain,DC=example,DC=com'
+                    defaultLoginDomain: mydomain
+                    connection:
+                      - uri: 'ldap://dc1.mydomain.com'
+                        sslMode: REQUIRE
+                        rawCa: |-
+                          -----BEGIN CERTIFICATE-----
+                            MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+                            [SNIP]
+                            2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+                            rg7hesA=
+                            -----END CERTIFICATE-----
+                    groupSearchFilter: (objectClass=group)
+                    groupMemberAttribute: memberof
+                    userFormat: UPN
+                    bindUser:
+                      type: PASSWORD
+                      username: user@mydomain
+                      password: '********'
+                    pollIntervalSec: 3600
+                    groupCacheTimeSec: 7200
+                    honorStaleGroups: false
+                    groupMappings:
+                      - external: Engineering-US-West
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-west
+                          links:
+                            rel: /api/v1/platform/auth/groups/eng-west
+                            name: eng-west
+                            displayName: West engineering
+                      - external: Engineering-US-East
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-east
+                          links:
+                            rel: /api/v1/platform/auth/groups/eng-east
+                            name: eng-east
+                            displayName: East engineering
+                desiredState:
+                  provider:
+                    type: ACTIVE_DIRECTORY
+                    domain: 'DC=mydomain,DC=example,DC=com'
+                    defaultLoginDomain: mydomain
+                    connection:
+                      - uri: 'ldap://dc1.mydomain.com'
+                        sslMode: REQUIRE
+                        rawCa: |-
+                          -----BEGIN CERTIFICATE-----
+                            MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+                            [SNIP]
+                            2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+                            rg7hesA=
+                            -----END CERTIFICATE-----
+                    groupSearchFilter: (objectClass=group)
+                    groupMemberAttribute: memberof
+                    userFormat: UPN
+                    bindUser:
+                      type: PASSWORD
+                      username: user@mydomain
+                      password: '********'
+                    pollIntervalSec: 3600
+                    groupCacheTimeSec: 7200
+                    honorStaleGroups: false
+                    groupMappings:
+                      - external: Engineering-US-West
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-west
+                      - external: Engineering-US-East
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-east
+                metadata:
+                  createTime: '2020-02-24T22:55:51.729272Z'
+                  kind: auth-provider
+                  name: ad-dc-1
+                  tags:
+                    - dev
+                    - us-1
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Internal'
+    put:
+      tags:
+        - Authentication Providers
+      summary: Update an Authentication Provider
+      description: >
+        Updates all of the configurations for an existing
+        authentication provider.
+      parameters:
+        - name: providerName
+          in: path
+          description: The name of the authentication provider.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: >
+          Contains the desired configuration for the
+          authentication provider.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthProvider'
+            example:
+              desiredState:
+                provider:
+                  type: ACTIVE_DIRECTORY
+                  domain: 'DC=mydomain,DC=example,DC=com'
+                  defaultLoginDomain: mydomain
+                  connection:
+                    - uri: 'ldap://dc1.mydomain.com'
+                      sslMode: REQUIRE
+                      rawCa: |-
+                        -----BEGIN CERTIFICATE-----
+                          MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+                          [SNIP]
+                          2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+                          rg7hesA=
+                          -----END CERTIFICATE-----
+                  groupSearchFilter: (objectClass=group)
+                  groupMemberAttribute: memberof
+                  userFormat: UPN
+                  bindUser:
+                    type: PASSWORD
+                    username: user@mydomain
+                    password: passwd1234
+                  pollIntervalSec: 3600
+                  groupCacheTimeSec: 7200
+                  honorStaleGroups: false
+                  groupMappings:
+                    - external: Engineering-US-West
+                      caseSensitive: true
+                      internal:
+                        ref: /platform/auth/groups/eng-west
+                    - external: Engineering-US-East
+                      caseSensitive: true
+                      internal:
+                        ref: /platform/auth/groups/eng-east
+              metadata:
+                kind: auth-provider
+                name: ad-dc-1
+                tags:
+                  - dev
+                  - us-1
+      operationId: updateProvider
+      responses:
+        '200':
+          description: >
+            Successfully updated the configuration for the
+            authentication provider.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthProvider'
+              example:
+                currentStatus:
+                  provider:
+                    type: ACTIVE_DIRECTORY
+                    status: CONNECTED_BOUND
+                    domain: 'DC=mydomain,DC=example,DC=com'
+                    defaultLoginDomain: mydomain
+                    connection:
+                      - uri: 'ldap://dc1.mydomain.com'
+                        sslMode: REQUIRE
+                        rawCa: |-
+                          -----BEGIN CERTIFICATE-----
+                            MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+                            [SNIP]
+                            2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+                            rg7hesA=
+                            -----END CERTIFICATE-----
+                    groupSearchFilter: (objectClass=group)
+                    groupMemberAttribute: memberof
+                    userFormat: UPN
+                    bindUser:
+                      type: PASSWORD
+                      username: user@mydomain
+                      password: '********'
+                    pollIntervalSec: 3600
+                    groupCacheTimeSec: 7200
+                    honorStaleGroups: false
+                    groupMappings:
+                      - external: Engineering-US-West
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-west
+                          links:
+                            rel: /api/v1/platform/auth/groups/eng-west
+                            name: eng-west
+                            displayName: West engineering
+                      - external: Engineering-US-East
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-east
+                          links:
+                            rel: /api/v1/platform/auth/groups/eng-east
+                            name: eng-east
+                            displayName: East engineering
+                desiredState:
+                  provider:
+                    type: ACTIVE_DIRECTORY
+                    domain: 'DC=mydomain,DC=example,DC=com'
+                    defaultLoginDomain: mydomain
+                    connection:
+                      - uri: 'ldap://dc1.mydomain.com'
+                        sslMode: REQUIRE
+                        rawCa: |-
+                          -----BEGIN CERTIFICATE-----
+                            MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+                            [SNIP]
+                            2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+                            rg7hesA=
+                            -----END CERTIFICATE-----
+                    groupSearchFilter: (objectClass=group)
+                    groupMemberAttribute: memberof
+                    userFormat: UPN
+                    bindUser:
+                      type: PASSWORD
+                      username: user@mydomain
+                      password: '********'
+                    pollIntervalSec: 3600
+                    groupCacheTimeSec: 7200
+                    honorStaleGroups: false
+                    groupMappings:
+                      - external: Engineering-US-West
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-west
+                      - external: Engineering-US-East
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-east
+                metadata:
+                  createTime: '2020-02-24T22:55:51.729272Z'
+                  kind: auth-provider
+                  name: ad-dc-1
+                  tags:
+                    - dev
+                    - us-1
+        '201':
+          description: >
+            Successfully created the configuration for the
+            provider.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthProvider'
+              example:
+                currentStatus:
+                  provider:
+                    type: ACTIVE_DIRECTORY
+                    status: CONNECTED_BOUND
+                    domain: 'DC=mydomain,DC=example,DC=com'
+                    defaultLoginDomain: mydomain
+                    connection:
+                      - uri: 'ldap://dc1.mydomain.com'
+                        sslMode: REQUIRE
+                        rawCa: '********'
+                    groupSearchFilter: (objectClass=group)
+                    groupMemberAttribute: memberof
+                    userFormat: UPN
+                    bindUser:
+                      type: PASSWORD
+                      username: user@mydomain
+                      password: '*******'
+                    pollIntervalSec: 3600
+                    groupCacheTimeSec: 7200
+                    honorStaleGroups: false
+                    groupMappings:
+                      - external: Engineering-US-West
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-west
+                          links:
+                            rel: /api/v1/platform/auth/groups/eng-west
+                            name: eng-west
+                            displayName: West engineering
+                      - external: Engineering-US-East
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-east
+                          links:
+                            rel: /api/v1/platform/auth/groups/eng-east
+                            name: eng-east
+                            displayName: East engineering
+                desiredState:
+                  provider:
+                    type: ACTIVE_DIRECTORY
+                    domain: 'DC=mydomain,DC=example,DC=com'
+                    defaultLoginDomain: mydomain
+                    connection:
+                      - uri: 'ldap://dc1.mydomain.com'
+                        sslMode: REQUIRE
+                        rawCa: '********'
+                    groupSearchFilter: (objectClass=group)
+                    groupMemberAttribute: memberof
+                    userFormat: UPN
+                    bindUser:
+                      type: PASSWORD
+                      username: user@mydomain
+                      password: '*******'
+                    pollIntervalSec: 3600
+                    groupCacheTimeSec: 7200
+                    honorStaleGroups: false
+                    groupMappings:
+                      - external: Engineering-US-West
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-west
+                      - external: Engineering-US-East
+                        caseSensitive: true
+                        internal:
+                          ref: /platform/auth/groups/eng-east
+                metadata:
+                  createTime: '2020-02-24T22:55:51.729272Z'
+                  kind: auth-provider
+                  name: ad-dc-1
+                  tags:
+                    - dev
+                    - us-1
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/Internal'
+    delete:
+      tags:
+        - Authentication Providers
+      summary: Delete an Authentication Provider
+      description: Deletes the authentication provider.
+      parameters:
+        - name: providerName
+          in: path
+          description: The name of the authentication provider.
+          required: true
+          schema:
+            type: string
+      operationId: disable
+      responses:
+        '204':
+          description: Successfully deleted the authentication provider.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/Internal'
+components:
+  responses:
+    BadRequest:
+      description: >
+        Bad input parameter, or possibly a bad URI. Check the
+        input for typos and try again.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+    Unauthorized:
+      description: |
+        User authentication cookie is invalid or missing.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            message: No session cookie found in the request header.
+            code: 3463
+    Forbidden:
+      description: |
+        The request failed due to insufficient privileges.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            message: user is not authorized
+            code: 1235
+    Conflict:
+      description: >
+        The request failed due to a conflict with an existing
+        authentication provider.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            message: 'Error creating provider: provider already exists.'
+            code: 3469
+    NotFound:
+      description: |
+        The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            message: 'Error getting provider: provider not found.'
+            code: 3472
+    Internal:
+      description: >
+        The request cannot be processed because of an internal
+        server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+  schemas:
+    ListAuthProviders:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthProvider'
+    AuthProvider:
+      type: object
+      required:
+        - metadata
+        - desiredState
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        currentStatus:
+          $ref: '#/components/schemas/AuthProviderDef'
+        desiredState:
+          $ref: '#/components/schemas/AuthProviderDef'
+    AuthProviderDef:
+      type: object
+      properties:
+        provider:
+          oneOf:
+            - $ref: '#/components/schemas/ActiveDirectory'
+            - $ref: '#/components/schemas/AzureActiveDirectory'
+          discriminator:
+            propertyName: type
+            mapping:
+              ACTIVE_DIRECTORY: '#/components/schemas/ActiveDirectory'
+              AZURE_ACTIVE_DIRECTORY: '#/components/schemas/AzureActiveDirectory'
+          example:
+            provider:
+              type: ACTIVE_DIRECTORY
+              status: CONNECTED_BOUND
+              domain: 'DC=mydomain,DC=example,DC=com'
+              defaultLoginDomain: mydomain
+              connection:
+                - uri: 'ldap://dc1.mydomain.com'
+                  sslMode: REQUIRE
+                  rawCa: |-
+                    -----BEGIN CERTIFICATE-----
+                      MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+                      [SNIP]
+                      2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+                      rg7hesA=
+                      -----END CERTIFICATE-----
+              groupSearchFilter: (objectClass=group)
+              groupMemberAttribute: memberof
+              userFormat: UPN
+              bindUser:
+                type: PASSWORD
+                username: user@mydomain
+                password: '********'
+              pollIntervalSec: 3600
+              groupCacheTimeSec: 7200
+              honorStaleGroups: false
+              filteredGroups:
+                - >-
+                  CN=Office_Admins_SF,OU=San Francisco,OU=North
+                  America,OU=Acme Financial
+                - >-
+                  CN=RM_SF,OU=San Francisco,OU=North
+                  America,OU=Acme Financial
+                - >-
+                  CN=Sales_Warsaw,OU=Warsaw,OU=Europe,OU=Acme
+                  Financial
+                - 'CN=ACC_EU,OU=Europe,OU=Acme Financial'
+              groupMappings:
+                - external: Engineering-US-West
+                  caseSensitive: true
+                  internal:
+                    ref: /platform/auth/groups/eng-west
+                    links:
+                      rel: /api/v1/platform/auth/groups/eng-west
+                      name: eng-west
+                      displayName: West engineering
+                - external: Engineering-US-East
+                  caseSensitive: true
+                  internal:
+                    ref: /platform/auth/groups/eng-east
+                    links:
+                      rel: /api/v1/platform/auth/groups/eng-east
+                      name: eng-east
+                      displayName: East engineering
+    ActiveDirectory:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - ACTIVE_DIRECTORY
+        status:
+          type: string
+          description: >-
+            This field is read only and will only be reflected in
+            currentStatus and ignored in desiredState.
+          enum:
+            - CONNECTED_BOUND
+            - CONNECTED_BIND_FAILED
+            - SSL_CA_FAILURE
+            - CONNECTION_FAILURE
+            - PENDING
+        domain:
+          type: string
+          description: >
+            The LDAP domain to authenticate against. The domain is
+            unique per each configured Active Directory
+            authentication provider. This field cannot be updated.
+          pattern: '^(DC=[^,=<>]+)(,DC=[^,,=<>]+)*$'
+          example: 'DC=mydomain,DC=example,DC=com'
+        defaultLoginDomain:
+          type: string
+          description: >
+            The login domain to use when a user authenticates with
+            only a username rather than specifying DOMAIN\username
+            or username@domain.fqdn.      
+          example: mydomain.mycompany.com
+        groupSearchFilter:
+          type: string
+          description: >
+            The search filter to use when finding users within a
+            root domain.
+          example: (objectClass=group)
+        groupMemberAttribute:
+          type: string
+          description: >
+            The LDAP attribute to use for specifying membership in
+            an AD Group.
+          example: memberof
+        userFormat:
+          type: string
+          enum:
+            - USER_DOMAIN
+            - UPN
+          description: |
+            The username format. 
+
+            - UPN = username@domain
+            - USER_DOMAIN = domain/user
+          example: UPN
+        connection:
+          type: array
+          minItems: 1
+          maxItems: 1
+          items:
+            $ref: '#/components/schemas/AuthConnection'
+        groupMappings:
+          type: array
+          description: |
+            Maps AD Group(s) to NGINX Controller Group(s).
+          items:
+            $ref: '#/components/schemas/GroupMapping'
+        bindUser:
+          $ref: '#/components/schemas/BindUser'
+        pollIntervalSec:
+          type: integer
+          description: >
+            Time, in seconds, between refresh of AD information,
+            including the  organization unit list.
+          minimum: 300
+          default: 3600
+        groupCacheTimeSec:
+          type: integer
+          description: >
+            Time, in seconds, for which the list of organizational
+            units is honored before being considered stale.  
+
+            > This value should be double the configured
+            `pollIntervalSec`.
+          minimum: 600
+          default: 7200
+        honorStaleGroups:
+          type: boolean
+          default: false
+          description: >
+            Controls whether a stale AD Group list should be
+            honored when authorizing and authenticating users.
+        filteredGroups:
+          type: array
+          description: >
+            List of groups in the AD that satifies the
+            `groupSearchFilter` field. This field is read only. 
+          items:
+            type: string
+      required:
+        - type
+    AzureActiveDirectory:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - AZURE_ACTIVE_DIRECTORY
+        status:
+          type: string
+          description: >-
+            This field is read-only, it is reflected in
+            currentStatus and ignored in desiredState.
+          enum:
+            - CONNECTED_BOUND
+            - CONNECTION_FAILURE
+            - PENDING
+        groupFilter:
+          type: string
+          description: >
+            The filter attribute is used to filter groups in an
+            Azure AD tenant. See
+            [here](https://docs.microsoft.com/en-us/graph/query-parameters#filter-parameter)
+            for more details.
+          example: 'groupTypes/any(c:c+eq+''Unified'')'
+        oidcConfig:
+          $ref: '#/components/schemas/OIDCConfig'
+        groupMappings:
+          type: array
+          description: |
+            Maps Azure AD Group(s) to NGINX Controller Group(s).
+          items:
+            $ref: '#/components/schemas/GroupMapping'
+        pollIntervalSec:
+          type: integer
+          description: >
+            Time (sec) interval for refreshing Azure AD
+            information, including the groups and group membership
+            information.
+          minimum: 300
+          default: 3600
+        groupCacheTimeSec:
+          type: integer
+          description: >
+            Time (sec) interval for which the group and group
+            membership information are honored before being
+            considered stale.
+
+            > This value should be double the configured
+            `pollIntervalSec`.
+          minimum: 600
+          default: 7200
+        honorStaleGroups:
+          type: boolean
+          default: false
+          description: >
+            Controls whether a stale Azure AD group membership
+            information is honored or not when authorizing and
+            authenticating users.
+        filteredGroups:
+          type: array
+          description: >
+            List of groups in the Azure AD which satisfy the
+            `groupFilter` field. This field is read-only.
+          items:
+            type: string
+      required:
+        - type
+    AuthConnection:
+      type: object
+      description: >
+        Connection parameters for an external authentication
+        provider.
+      properties:
+        uri:
+          type: string
+          description: |
+            Connection URI. 
+          format: uri
+          pattern: '^ldaps?:\/\/([\w\-]+\.)+([\w\-]*)(:[0-9]+)?$'
+          example: 'ldap://dc1.example.com'
+        sslMode:
+          type: string
+          description: >
+            SSL connection parameters.
+
+            - `PLAIN_TEXT`: (Insecure) Unencrypted connection.
+            Does not require SSL certificates.
+
+            - `REQUIRE`: (Default) Require an SSL connection.
+            Unencrypted connections will fail. The server identity
+            is not verified.
+
+            - `VERIFY_CA`: (Most secure) Verify the certificate
+            authority (CA) of the Active Directory connection. The
+            server is verified by checking the certificate chain
+            up to the root certificate stored on the client.
+
+
+            > **Note**: For Production environments, we strongly
+            advise using `VERIFY_CA` for the SSL mode in order to
+            prevent server spoofing.
+          enum:
+            - PLAIN_TEXT
+            - REQUIRE
+            - VERIFY_CA
+        rawCa:
+          type: string
+          description: Raw Certificate
+          example: |-
+            -----BEGIN CERTIFICATE-----
+              MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+              [SNIP]
+              2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+              rg7hesA=
+              -----END CERTIFICATE-----
+      required:
+        - uri
+        - sslMode
+    GroupMapping:
+      type: object
+      description: >
+        Authentication provider group to NGINX Controller group
+        mapping.
+      properties:
+        caseSensitive:
+          type: boolean
+          description: >-
+            Controls whether or not you want to match the external
+            name exactly or if the match should be
+            case-insensitive.
+          default: false
+        external:
+          type: string
+          description: The name of the external group.
+          example: Engineering-US-West
+        internal:
+          $ref: '#/components/schemas/ResourceRef'
+      required:
+        - external
+        - internal
+    BindUser:
+      oneOf:
+        - $ref: '#/components/schemas/BindUserPassword'
+      discriminator:
+        propertyName: type
+        mapping:
+          PASSWORD: '#/components/schemas/BindUserPassword'
+    BindUserPassword:
+      type: object
+      description: |
+        Credentials used to access data within the AD.
+      properties:
+        type:
+          type: string
+          description: authentication type.
+          enum:
+            - PASSWORD
+        username:
+          type: string
+          minLength: 1
+          description: AD bind username.
+        password:
+          type: string
+          format: password
+          minLength: 1
+          description: AD bind user password.
+      required:
+        - type
+        - username
+        - password
+    OIDCConfig:
+      type: object
+      description: |
+        OpenID Connect config for an external identity provider.
+      properties:
+        providerURI:
+          type: string
+          description: >
+            Identity provider URL. It contains the tenant ID for
+            Azure Identity provider. 
+          format: uri
+          example: >-
+            https://login.microsoftonline.com/d45dfd66-6a3b-40d1-9be0-bf8327d81c56/v2.0
+        clientID:
+          type: string
+          description: >
+            The Application (client) ID that the identity provider
+            assigns to the NGINX Controller app. For Azure
+            identity providers, you can find it in the portal App
+            registrations.
+          example: 781729sd-87b2-4333-9730-338d3a87340b
+        clientSecret:
+          type: string
+          description: >
+            A secret string that the application uses to prove its
+            identity when requesting a token.
+          example: Ic767hk_8anvoip76v
+        scopes:
+          type: array
+          description: >-
+            OpenID Connect Clients use scope values to specify
+            what access privileges are being requested. See
+            [here](https://openid.net/specs/openid-connect-basic-1_0.html#Scopes)
+            for more information.
+          items:
+            type: string
+          default:
+            - openid
+            - email
+            - profile
+        redirectURI:
+          type: string
+          description: >-
+            The redirect URI of NGINX controller, where the
+            identity provider sends authentication responses to.
+            This field is read-only. It is reflected in
+            currentStatus and ignored in desiredState. Set this to
+            be one of the redirect URIs in app registration for
+            NGINX Controller in the identity provider's portal.
+          format: uri
+          example: 'https://54.212.107.157/api/v1/platform/oidc-handler'
+      required:
+        - providerURI
+        - clientID
+        - clientSecret
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          not:
+            type: string
+            enum:
+              - .
+              - ..
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+            - cannot be only `.` or `..`
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    NamedLinks:
+      allOf:
+        - $ref: '#/components/schemas/SelfLinks'
+        - type: object
+          description: >
+            Contains information about the object being referred
+            to.
+
+
+            These are generally details -- like the object name
+            and display name --
+
+            that are useful to a consumer of the API that performs
+            further
+
+            processing. 
+
+
+            This object is only present in responses.
+              
+          properties:
+            name:
+              type: string
+              example: production
+              description: |
+                The name of the linked resource.
+            displayName:
+              type: string
+              example: Production Environment
+              description: A user friendly resource name.
+    ResourceRef:
+      type: object
+      required:
+        - ref
+      properties:
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: |
+            A reference to another NGINX Controller resource.
+        links:
+          $ref: '#/components/schemas/NamedLinks'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'

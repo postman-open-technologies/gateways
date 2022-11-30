@@ -1,0 +1,132 @@
+---
+layout: default
+title: Capabilities
+---
+
+<div class="container" style="padding-top: 70px;">
+	<div class="row align-top">
+		<div class="col-10" style="padding-left: 35px;">
+
+			<h1>Platform Capabilities</h1>
+			{% assign gateways = site.data.gateways | sort %}					  
+			{% assign capabilities = '' %}	
+			{% for gateway in gateways %}								
+				{% for capability in gateway[1].properties.platformCapabilities %}
+					{% if capabilities contains capability %}						
+					{% else %}	
+						{% assign capabilities = capabilities | append: ',' | append: capability %}	
+					{% endif %}	
+				{% endfor %}
+			{% endfor %}
+			{% assign capabilities = capabilities | split: "," | sort %}
+			{% for capability in capabilities %}
+				{% if capability != '' %}
+					- {{ capability }}<br>
+				{% endif %}		
+			{% endfor %}
+
+			<h1>Gateway Capabilities</h1>
+			{% assign gateways = site.data.gateways | sort %}					  
+			{% assign capabilities = '' %}	
+			{% for gateway in gateways %}			
+				<!--<p><strong>{{ gateway[1].properties.name }}</strong></p>-->					
+				{% for capability in gateway[1].properties.gatewayCapabilities %}
+					<!-- {{ capability }}<br> -->
+					{% if capabilities contains capability %}						
+					{% else %}	
+						{% assign capabilities = capabilities | append: ',' | append: capability %}	
+					{% endif %}	
+				{% endfor %}	
+			{% endfor %}
+			{% assign capabilities = capabilities | split: "," | sort %}
+			{% for capability in capabilities %}
+				{% if capability != '' %}
+					- {{ capability }}<br>
+				{% endif %}		
+			{% endfor %}
+			
+			<h1>Custom Code</h1>
+			{% assign gateways = site.data.gateways | sort %}					  
+			{% assign capabilities = '' %}	
+			{% for gateway in gateways %}			
+				<!--<p><strong>{{ gateway[1].properties.name }}</strong></p>-->					
+				{% for capability in gateway[1].properties.customCodeSupport %}
+					<!-- {{ capability }}<br> -->
+					{% if capabilities contains capability %}						
+					{% else %}	
+						{% assign capabilities = capabilities | append: ',' | append: capability %}	
+					{% endif %}	
+				{% endfor %}
+			{% endfor %}
+			{% assign capabilities = capabilities | split: "," | sort %}
+			{% for capability in capabilities %}
+				{% if capability != '' %}
+					- {{ capability }}<br>
+				{% endif %}		
+			{% endfor %}
+			
+			<h1>Upstream Protocols</h1>
+			{% assign gateways = site.data.gateways | sort %}					  
+			{% assign capabilities = '' %}	
+			{% for gateway in gateways %}			
+				<!--<p><strong>{{ gateway[1].properties.name }}</strong></p>-->					
+				{% for capability in gateway[1].properties.upstreamProtocols %}
+					<!-- {{ capability }}<br> -->
+					{% if capabilities contains capability %}						
+					{% else %}	
+						{% assign capabilities = capabilities | append: ',' | append: capability %}	
+					{% endif %}	
+				{% endfor %}
+			{% endfor %}
+			{% assign capabilities = capabilities | split: "," | sort %}
+			{% for capability in capabilities %}
+				{% if capability != '' %}
+					- {{ capability }}<br>
+				{% endif %}		
+			{% endfor %}
+			
+			<h1>Downstream Protocols</h1>
+			{% assign gateways = site.data.gateways | sort %}					  
+			{% assign capabilities = '' %}	
+			{% for gateway in gateways %}			
+				<!--<p><strong>{{ gateway[1].properties.name }}</strong></p>-->					
+				{% for capability in gateway[1].properties.downstreamProtocols %}
+					<!-- {{ capability }}<br> -->
+					{% if capabilities contains capability %}						
+					{% else %}	
+						{% assign capabilities = capabilities | append: ',' | append: capability %}	
+					{% endif %}	
+				{% endfor %}
+			{% endfor %}
+			{% assign capabilities = capabilities | split: "," | sort %}
+			{% for capability in capabilities %}
+				{% if capability != '' %}
+					- {{ capability }}<br>
+				{% endif %}		
+			{% endfor %}
+			
+			<h1>Delivery Models</h1>
+			{% assign gateways = site.data.gateways | sort %}					  
+			{% assign capabilities = '' %}	
+			{% for gateway in gateways %}			
+				<!--<p><strong>{{ gateway[1].properties.name }}</strong></p>-->				
+				{% for capability in gateway[1].properties.deliveryModels %}
+					<!-- {{ capability }}<br> -->
+					{% if capabilities contains capability %}						
+					{% else %}	
+						{% assign capabilities = capabilities | append: ',' | append: capability %}	
+					{% endif %}	
+				{% endfor %}
+			{% endfor %}
+			{% assign capabilities = capabilities | split: "," | sort %}
+			{% for capability in capabilities %}
+				{% if capability != '' %}
+					- {{ capability }}<br>
+				{% endif %}		
+			{% endfor %}			
+		</div>
+	</div>
+	<div class="col-2"></div>	
+</div>
+
+

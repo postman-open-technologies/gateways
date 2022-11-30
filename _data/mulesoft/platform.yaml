@@ -1,0 +1,5875 @@
+openapi: 3.0.1
+info:
+  title: Platform API
+  version: v2
+servers:
+- url: https://anypoint.mulesoft.com/apiplatform/repository/{version}
+paths:
+  /public/apis:
+    get:
+      description: Retrieves a list of APIs.
+      parameters:
+      - name: requireRaml
+        in: query
+        description: Search only those APIs which have a publicly accesible RAML specification.
+        required: true
+        schema:
+          type: boolean
+      - name: offset
+        in: query
+        description: Skip over a number of elements by specifying an offset value
+          for the query.
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: Limit the number of elements on the response.
+        required: true
+        schema:
+          maximum: 250
+          minimum: 1
+          type: integer
+          default: 100
+      - name: sort
+        in: query
+        description: Property to sort by.
+        required: true
+        schema:
+          type: string
+      - name: ascending
+        in: query
+        description: Order for sorting.
+        required: true
+        schema:
+          type: boolean
+      - name: query
+        in: query
+        description: Search criteria.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations:
+    x-amf-description: Organizations are the container entity for all API Portal-related
+      resources.
+  /organizations/active:
+    get:
+      description: Get the active organization.
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}:
+    get:
+      description: Get the organization.
+      parameters:
+      - name: extended
+        in: query
+        description: Obtain extended information from the organization.
+        required: true
+        schema:
+          type: boolean
+      - name: resolveTheme
+        in: query
+        description: Resolves the theme inheritance.
+        required: true
+        schema:
+          type: boolean
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: Successful.
+          content: {}
+        400:
+          description: Bad Request.
+          content: {}
+        500:
+          description: An unknown error occurred.
+          content: {}
+    put:
+      description: Update the organization.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: Successful.
+          content: {}
+        400:
+          description: Bad Request.
+          content: {}
+        500:
+          description: An unknown error occurred.
+          content: {}
+      x-codegen-request-body-name: generated
+    delete:
+      description: Delete the organization.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        204:
+          description: Organization deleted.
+          content: {}
+    x-amf-description: The organization's data.
+  /organizations/{organizationId}/migration-mapping:
+    get:
+      description: Get all api version migration mappings in CSV format. This is for
+        setting up the Crowd upgrade.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/permissions:
+    get:
+      description: Returns a list of elements.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    x-amf-description: A list of available permissions.
+  /organizations/{organizationId}/alerts:
+    get:
+      description: Gets a collection of alerts.
+      parameters:
+      - name: apiVersionId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: tierId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: lastModifiedSince
+        in: query
+        description: |
+          Return items which have been modified since the specified timestamp
+        required: true
+        schema:
+          minimum: 0
+          type: integer
+      - name: alertId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: query
+        in: query
+        description: Search criteria.
+        required: true
+        schema:
+          type: string
+      - name: policyId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Skip over a number of elements by specifying an offset value
+          for the query.
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          default: 0
+      - name: apiId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: ascending
+        in: query
+        description: Order for sorting.
+        required: true
+        schema:
+          type: boolean
+      - name: environmentId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: severity
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: sort
+        in: query
+        description: Property to sort by.
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Limit the number of elements on the response.
+        required: true
+        schema:
+          maximum: 250
+          minimum: 1
+          type: integer
+          default: 100
+      - name: active
+        in: query
+        required: true
+        schema:
+          type: boolean
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: Successfully retrieved alert definitions.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  value:
+                    total: 1234
+                    data:
+                    - apiVersion:
+                        name: My First API
+                        id: 12345
+                        apiId: 67890
+                      name: My First API's Request Count Alert
+                      severity: warning
+                      recipients:
+                      - role: Api Version Owner
+                      - userId: abcde-fghij-klmno
+                        name: Jane Doe
+                        email: jane.doe@example.com
+                      period:
+                        duration:
+                          count: 1
+                          weight: HOURS
+                        repeat: 4
+                      type: requestCount
+                      condition:
+                        aggregate: count
+                        operator: GREATER_THAN
+                        value: 1000
+                    - apiVersion:
+                        name: My First API
+                        id: 12345
+                        apiId: 67890
+                      name: My First API's Request Count Alert
+                      severity: warning
+                      recipients:
+                      - role: Api Version Owner
+                      - userId: abcde-fghij-klmno
+                        name: Jane Doe
+                        email: jane.doe@example.com
+                      period:
+                        duration:
+                          count: 1
+                          weight: HOURS
+                        repeat: 4
+                      type: requestCount
+                      condition:
+                        aggregate: count
+                        operator: GREATER_THAN
+                        value: 1000
+          x-amf-mediaType: application/json
+    post:
+      description: Creates a new element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: The new element has been successfully created.
+          content: {}
+      x-codegen-request-body-name: generated
+  /organizations/{organizationId}/environments:
+    get:
+      description: Returns a list of elements.
+      parameters:
+      - name: withCloudhubPermissions
+        in: query
+        description: Add to each environment the user's permissions in CloudHub
+        required: true
+        schema:
+          type: boolean
+          default: true
+      - name: all
+        in: query
+        description: Retrieve all environments, without filtering by the user's permissions.
+        required: true
+        schema:
+          type: boolean
+          default: false
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    x-amf-description: A list of available environments to deploy to.
+  /organizations/{organizationId}/environments/default:
+    get:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 80139f69-2845-46fa-9217-d9fe0171030f
+                  name: QA
+                  organizationId: f0c9b011-980e-4928-9430-e60e3a97c043
+                  isProduction: false
+          x-amf-mediaType: application/json
+    x-amf-description: The default environment. This is defined in core services per
+      organization.
+  /organizations/{organizationId}/environments/{environmentId}/apis/{apiId}/versions/{apiVersionId}/alerts:
+    get:
+      description: Returns a list of elements.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: environmentId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Successfully retrieved an API Version's alert definitions.
+          content: {}
+    post:
+      description: Creates a new element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: environmentId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/schema'
+        required: false
+      responses:
+        200:
+          description: Successfully created alert definition.
+          content: {}
+        201:
+          description: The new element has been successfully created.
+          content: {}
+      x-codegen-request-body-name: generated
+  /organizations/{organizationId}/environments/{environmentId}/apis/{apiId}/versions/{apiVersionId}/alerts/{alertId}:
+    get:
+      description: Gets an alert.
+      parameters:
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: alertId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: environmentId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: Successfully retrieved alert definition.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schema_1'
+          x-amf-mediaType: application/json
+        401:
+          description: Authentication requirements not fulfilled.
+          content: {}
+        403:
+          description: Insufficient permissions.
+          content: {}
+        404:
+          description: Specified alert not found.
+          content: {}
+    delete:
+      description: Deletes the specified alert definition.
+      parameters:
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: alertId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: environmentId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        204:
+          description: Successfully deleted alert definition.
+          content: {}
+        401:
+          description: Authentication requirements not fulfilled.
+          content: {}
+        403:
+          description: Insufficient permissions.
+          content: {}
+        404:
+          description: alert not found.
+          content: {}
+    patch:
+      description: Updates a alert.
+      parameters:
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: alertId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: environmentId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/schema_2'
+        required: false
+      responses:
+        200:
+          description: Successfully updated alert definition.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  value:
+                    type: api-request-count
+                    apiAlertsVersion: 1.0.0
+                    api:
+                      name: My First API
+                      id: 22
+                    apiVersion:
+                      name: First version
+                      id: 77
+                    enabled: true
+                    resources:
+                    - foo-api-version-id
+                    name: My First API's Request Count Alert
+                    severity: WARNING
+                    recipients:
+                    - type: role
+                      value: API_VERSION_OWNER
+                    - type: user
+                      value: foo-user-id
+                    - type: email
+                      value: foo_email@example.com
+                    period:
+                      duration:
+                        count: 1
+                        weight: HOURS
+                      repeat: 4
+                    condition:
+                      resourceType: api-version
+                      aggregate: COUNT
+                      operator: GREATER_THAN
+                      value: 1000
+                      filter:
+                      - property: apiVersionId
+                        operator: EQUAL
+                        values:
+                        - foo-api-version-id
+          x-amf-mediaType: application/json
+        400:
+          description: Invalid alert payload.
+          content: {}
+        401:
+          description: Authentication requirements not fulfilled.
+          content: {}
+        403:
+          description: Insufficient permissions.
+          content: {}
+        404:
+          description: Specified alert not found.
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: An alert Item
+  /organizations/{organizationId}/theme:
+    put:
+      description: Update the organization theme.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+  /organizations/{organizationId}/theme/default:
+    get:
+      description: Get the default theme for an organization.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/portals/terms:
+    get:
+      description: Gets portal terms set for the organization.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    put:
+      description: Create portal terms for the organization.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    delete:
+      description: Deletes portal terms for the organization.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        204:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/portals/redirectUri:
+    put:
+      description: Update redirect uri of the list of portals for the organization
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+  /organizations/{organizationId}/apis:
+    get:
+      description: Retrieves a list of APIs.
+      parameters:
+      - name: query
+        in: query
+        description: Search criteria.
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Skip over a number of elements by specifying an offset value
+          for the query.
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          default: 0
+      - name: filters
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: ascending
+        in: query
+        description: Order for sorting.
+        required: true
+        schema:
+          type: boolean
+      - name: requirePortal
+        in: query
+        required: true
+        schema:
+          type: boolean
+      - name: sort
+        in: query
+        description: Property to sort by.
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Limit the number of elements on the response.
+        required: true
+        schema:
+          maximum: 250
+          minimum: 1
+          type: integer
+          default: 100
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    post:
+      description: Creates an API.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: The new element has been successfully created.
+          content: {}
+      x-amf-requestPayloads:
+      - mediaType: multipart/form-data
+        schema: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: A collection of APIs.
+  /organizations/{organizationId}/apis/by-name:
+    get:
+      description: |
+        Returns a single API that matches the passed-in API name.
+        Returns null if no match is found.
+      parameters:
+      - name: apiName
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/apis/versions:
+    post:
+      description: Create an API Version from an Exchange Spec. Only available after
+        the Crowd upgrade.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/schema_3'
+        required: false
+      responses:
+        201:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  apiId: 26
+                  assetVersion: 1.0.0
+                  productVersion: v1
+                  name: unclassified api version from GAV
+                  order: 1
+                  audit:
+                    created:
+                      date: 2017-09-19T21:27:47.177Z
+                    updated: {}
+                  masterOrganizationId: f0c9b011-980e-4928-9430-e60e3a97c043
+                  organizationId: f0c9b011-980e-4928-9430-e60e3a97c043
+                  id: 97
+                  groupId: f0c9b011-980e-4928-9430-e60e3a97c043
+                  assetId: api-test
+                  tags: []
+          x-amf-mediaType: application/json
+      x-codegen-request-body-name: generated
+  /organizations/{organizationId}/apis/versions/by-endpoint:
+    get:
+      description: Returns a list of API versions for a given list of endpoints.
+      parameters:
+      - name: uris
+        in: query
+        required: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/apis/versions/by-name:
+    get:
+      description: |
+        Returns a single API that matches the passed-in API name
+        and API version name. Returns null if no match is found.
+      parameters:
+      - name: apiName
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: versionName
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/apis/versions/tiers:
+    get:
+      description: |
+        Returns permitted SLA tiers within an organization.
+        It means every SLA tier that belongs to API version requesting user has access to.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/apis/versions/contracts/applications:
+    get:
+      description: |
+        Returns permitted applications within an organization.
+        It means every applications that has a contract with an API version requesting user has access to.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/apis/{apiId}:
+    get:
+      description: Returns an API and all its versions.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    delete:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        204:
+          description: ""
+          content: {}
+    patch:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: An API.
+  /organizations/{organizationId}/apis/{apiId}/portals:
+    get:
+      description: Returns a collection of API portals.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    x-amf-description: A collection of API portals.
+  /organizations/{organizationId}/apis/{apiId}/permissions:
+    post:
+      description: Grant a user view access to this API.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: The new element has been successfully created.
+          content: {}
+      x-codegen-request-body-name: generated
+  /organizations/{organizationId}/apis/{apiId}/versions:
+    post:
+      description: Creates an API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: The new element has been successfully created.
+          content: {}
+      x-amf-requestPayloads:
+      - mediaType: multipart/form-data
+        schema: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: A collection of API versions.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}:
+    get:
+      description: Returns an instance of a single element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    put:
+      description: Updates a single element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    delete:
+      description: Deletes the instance of the element specified.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        204:
+          description: The element has been deleted successfully.
+          content: {}
+    patch:
+      description: Patches a single element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: An API version.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/classify:
+    post:
+      description: (Only avaliable after the Crowd upgrade) Moves an API Version from
+        the unclassified environment into a specified environment.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/schema_4'
+        required: false
+      responses:
+        201:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  audit:
+                    created:
+                      date: 2017-09-01T18:34:50.783Z
+                    updated:
+                      date: 2017-09-11T14:49:53.257Z
+                  masterOrganizationId: f0c9b011-980e-4928-9430-e60e3a97c043
+                  organizationId: f0c9b011-980e-4928-9430-e60e3a97c043
+                  id: 25
+                  apiId: 5
+                  portalId: 11
+                  name: dolorem 25
+                  instanceLabel: my-instance-label
+                  groupId: f0c9b011-980e-4928-9430-e60e3a97c043
+                  assetId: api-test
+                  assetVersion: 1.0.0
+                  productVersion: v1
+                  description: accusamus dolorem et rerum placeat libero doloremque
+                    id quia vitae illo et suscipit sed nam ipsa qui in eum reiciendis
+                    incidunt corporis est iusto voluptas magnam pariatur adipisci
+                    fugiat voluptatibus odio aut sed culpa dignissimos sit quis quo
+                    est corrupti omnis quaerat voluptatum enim asperiores voluptatem
+                    exercitationem et accusantium illum
+                  tags:
+                  - accusantium
+                  - voluptatem
+                  - dolores
+                  - hic
+                  - nostrum
+                  - quia
+                  - aut
+                  - alias
+                  - in
+                  - qui
+                  order: 5
+                  rootFileId: 23
+                  deprecated: false
+                  environmentId: 2ba4f3f8-0d26-49f6-8fd5-ea508abbb7ea
+                  isPublic: false
+                  termsDate: 2017-09-08T19:41:01.096Z
+          x-amf-mediaType: application/json
+        400:
+          description: ""
+          content: {}
+        409:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/export:
+    get:
+      description: Exports an API Version.
+      parameters:
+      - name: portal
+        in: query
+        description: Include portal.
+        required: true
+        schema:
+          type: boolean
+      - name: files
+        in: query
+        description: Include definition files.
+        required: true
+        schema:
+          type: boolean
+      - name: slaTiers
+        in: query
+        description: Include SLA tiers.
+        required: true
+        schema:
+          type: boolean
+      - name: portalAttachments
+        in: query
+        description: Include portal attachments.
+        required: true
+        schema:
+          type: boolean
+      - name: endpoint
+        in: query
+        description: Include endpoint definition.
+        required: true
+        schema:
+          type: boolean
+      - name: portalFiles
+        in: query
+        description: Include portal images.
+        required: true
+        schema:
+          type: boolean
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/zip
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/users:
+    get:
+      description: Search for users.
+      parameters:
+      - name: search
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: includeCurrent
+        in: query
+        description: Whether to include the currently logged-in user in the search
+          results or not.
+        required: true
+        schema:
+          type: boolean
+      - name: offset
+        in: query
+        description: Offset on the amount of assets (each of which has all its apis)
+        required: true
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: Limit on the amount of assets (each of which has all its apis)
+        required: true
+        schema:
+          type: integer
+          default: 25
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    x-amf-description: Proxy for core services that return users, with exception of
+      API OWNER role and the current user.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/users/by-roles:
+    get:
+      description: Search for users who match a specific set of roles.
+      parameters:
+      - name: API_VERSION_OWNER
+        in: query
+        description: Context params for the API VERSION OWNER role.
+        required: true
+        schema:
+          type: string
+      - name: PORTAL_ACCESS
+        in: query
+        description: Context params for the PORTAL ACCESS role.
+        required: true
+        schema:
+          type: string
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    x-amf-description: |
+      Proxy for core services that return users for a given set of roles and context parameters.
+      Users are returned with an extra "roles" property containing the core services id of the subset of passed-in roles of which they are a member.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/users/owners:
+    get:
+      description: Return all owners of an API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/permissions:
+    post:
+      description: Grant a user admin access to this API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    delete:
+      description: Revoke a user's admin access to this API version.
+      parameters:
+      - name: userId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        204:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/migration-mapping:
+    get:
+      description: Get the api version migration mapping of an API version
+      parameters:
+      - name: apiVersionId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  masterOrganizationId: 9881ab9d-e73a-47cd-8105-d0b5f1a27fa1
+                  organizationId: 9881ab9d-e73a-47cd-8105-d0b5f1a27fa1
+                  id: 4399
+                  apiVersionId: 116409
+                  apiName: newName
+                  apiVersionName: newVersion
+                  migratePortal: true
+                  crowdOneAccount: false
+          x-amf-mediaType: application/json
+    put:
+      description: Update a migration mapping of an API version
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                apiName: newName
+                apiVersionName: newVersion
+                migratePortal: true
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    post:
+      description: Create a migration mapping for an API version
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                apiName: newName
+                apiVersionName: newVersion
+                migratePortal: true
+        required: false
+      responses:
+        201:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: This is for setting up for the Crowd upgrade.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/portal:
+    get:
+      description: Obtain the portal associated with the API version.
+      parameters:
+      - name: resolveTheme
+        in: query
+        description: Resolves theme inheritance.
+        required: true
+        schema:
+          type: boolean
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    post:
+      description: Create a portal and associates it with an API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    patch:
+      description: Create a portal and associates it with an API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/portal/permissions:
+    post:
+      description: Grant a user view access to this portal.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    delete:
+      description: Revoke a user's view access to portal.
+      parameters:
+      - name: userId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        204:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/portal/redirectUri:
+    put:
+      description: Update redirec uri for a portal
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/portal/pages:
+    post:
+      description: Creates a new element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: The new element has been successfully created.
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: A collection of portal pages.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/portal/pages/{pageId}:
+    put:
+      description: Update an existing page.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: pageId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    delete:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: pageId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        204:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/portal/pages/{pageId}/widgets:
+    get:
+      description: Returns all content widgets of a page.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: pageId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    patch:
+      description: Updates the collection of widgets.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: pageId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/portal/theme:
+    put:
+      description: Update the portal theme.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/portal/files:
+    post:
+      description: Upload an api portal file.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: The new element has been successfully created.
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: A collection of portal files.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/portal/files/{fileId}:
+    get:
+      description: Gets the portal file.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: fileId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    delete:
+      description: Removes the Portal file.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: fileId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        204:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/portal/files/{fileId}/{fileName}:
+    get:
+      description: Same as parent get but allows to set a file name in the content-disposition
+        header for downloading in a browser environment.
+      parameters:
+      - name: fileId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: fileName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/addRootRaml:
+    post:
+      description: Adds the root RAML for this API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/definition:
+    get:
+      description: Gets the RAML SPEC.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    x-amf-description: The fully resolved RAML spec for this version of the API.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/endpoint:
+    get:
+      description: Returns the endpoint associated with the API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: Successful.
+          content: {}
+        400:
+          description: Bad request.
+          content: {}
+        404:
+          description: No endpoint found for this API version.
+          content: {}
+    put:
+      description: Updates the endpoint associated with the API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: The endpoint has been updated.
+          content: {}
+        409:
+          description: The endpoint URL already exists.
+          content: {}
+      x-codegen-request-body-name: generated
+    post:
+      description: Creates an endpoint for the API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: The endpoint has been created.
+          content: {}
+        400:
+          description: Bad request.
+          content: {}
+        409:
+          description: The endpoint URL already exists.
+          content: {}
+      x-codegen-request-body-name: generated
+    delete:
+      description: Deletes the endpoint associated with the API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        204:
+          description: The endpoint has been succesfully deleted.
+          content: {}
+    patch:
+      description: Updates the endpoint associated with the API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: The endpoint associated with the API version.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/endpoint/active:
+    post:
+      description: Records activity for an API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        201:
+          description: The API version activity has been recorded.
+          content: {}
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/files:
+    get:
+      description: Returns a list of elements.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    post:
+      description: Creates a new element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: The new element has been successfully created.
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: A collection of API version RAML files and directories.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/files/export:
+    get:
+      description: Exports all files in the filesystem as a ZIP file.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/zip
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/files/{apiVersionFileId}:
+    get:
+      description: Obtain a RAML file (or directory).
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionFileId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    put:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionFileId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    delete:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionFileId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        204:
+          description: ""
+          content: {}
+    x-amf-description: An API version RAML file (or directory).
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/policies:
+    get:
+      description: Returns a list of elements.
+      parameters:
+      - name: standalone
+        in: query
+        required: true
+        schema:
+          type: boolean
+      - name: version
+        in: query
+        required: true
+        schema:
+          pattern: ^v\d+(.\d+)?(.\d+)?$
+          type: string
+          default: v1
+      - name: fullInfo
+        in: query
+        required: true
+        schema:
+          type: boolean
+          default: true
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: if-modified-since
+        in: header
+        description: Last modification date (EPOC)
+        schema:
+          type: number
+      responses:
+        200:
+          description: ""
+          content: {}
+        304:
+          description: ""
+          content: {}
+    post:
+      description: Creates a new element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: The new element has been successfully created.
+          content: {}
+      x-codegen-request-body-name: generated
+    patch:
+      description: Updates multiple policies. Currently, only updates in order field
+        are supported.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+              - id: 51
+                order: 1
+              - id: 63
+                order: 2
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+        400:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: A collection of API version policies.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/policies/{policyId}:
+    delete:
+      description: Unapplies a policy.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: policyId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        204:
+          description: ""
+          content: {}
+    patch:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: policyId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: An API version policy.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/policies/{policyId}/disable:
+    post:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: policyId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        201:
+          description: ""
+          content: {}
+        400:
+          description: ""
+          content: {}
+        404:
+          description: ""
+          content: {}
+    x-amf-description: Disables an API version policy.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/policies/{policyId}/enable:
+    post:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: policyId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        201:
+          description: ""
+          content: {}
+        400:
+          description: ""
+          content: {}
+        404:
+          description: ""
+          content: {}
+    x-amf-description: Enables an API version policy.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/tags/{tag}:
+    post:
+      description: Adds a tag to an API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: tag
+        in: path
+        required: true
+        schema:
+          maxLength: 150
+          type: string
+      responses:
+        201:
+          description: ""
+          content: {}
+    delete:
+      description: Removes a tag from an API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: tag
+        in: path
+        required: true
+        schema:
+          maxLength: 150
+          type: string
+      responses:
+        204:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/tiers:
+    get:
+      description: Retrieves a list of tiers for the supplied api version.
+      parameters:
+      - name: query
+        in: query
+        description: Search criteria.
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Skip over a number of elements by specifying an offset value
+          for the query.
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          default: 0
+      - name: ascending
+        in: query
+        description: Order for sorting.
+        required: true
+        schema:
+          type: boolean
+      - name: sort
+        in: query
+        description: Property to sort by.
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Limit the number of elements on the response.
+        required: true
+        schema:
+          maximum: 250
+          minimum: 1
+          type: integer
+          default: 100
+      - name: active
+        in: query
+        description: Retrieve only active tiers if set to true.
+        required: true
+        schema:
+          type: boolean
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    post:
+      description: Creates a sla tier for the API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: The new element has been successfully created.
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: Manages API version tiers.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/tiers/{tierId}:
+    put:
+      description: Update a tier associated with an API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: tierId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    delete:
+      description: Delete a tier that has no active applications.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: tierId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        204:
+          description: ""
+          content: {}
+    x-amf-description: A particular tier associated with the API version.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/contracts:
+    get:
+      description: Retrieves a list of applications with contracts with the API version.
+      parameters:
+      - name: includeExtraRedirections
+        in: query
+        required: true
+        schema:
+          type: boolean
+      - name: query
+        in: query
+        description: Search criteria.
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Skip over a number of elements by specifying an offset value
+          for the query.
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          default: 0
+      - name: coreServicesId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: status
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: ascending
+        in: query
+        description: Order for sorting.
+        required: true
+        schema:
+          type: boolean
+      - name: sort
+        in: query
+        description: Property to sort by.
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Limit the number of elements on the response.
+        required: true
+        schema:
+          maximum: 250
+          minimum: 1
+          type: integer
+          default: 100
+      - name: includeExtraApplicationData
+        in: query
+        required: true
+        schema:
+          type: boolean
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    x-amf-description: Contracts associated with the API version.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/contracts/{contractId}:
+    get:
+      description: Retrieves a specific contract for the API version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    delete:
+      description: Deletes the contract.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        204:
+          description: ""
+          content: {}
+    patch:
+      description: Patches contract conditions.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: A particular contract associated with the API version.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/contracts/{contractId}/approveTierChange:
+    post:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: ""
+          content: {}
+    x-amf-description: Approves contract tier change request.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/contracts/{contractId}/approve:
+    post:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: ""
+          content: {}
+    x-amf-description: Approves the contract.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/contracts/{contractId}/reject:
+    post:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: ""
+          content: {}
+    x-amf-description: Rejects the contract.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/contracts/{contractId}/rejectTierChange:
+    post:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: ""
+          content: {}
+    x-amf-description: Rejects contract tier change request.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/contracts/{contractId}/restore:
+    post:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: ""
+          content: {}
+    x-amf-description: Restores contract.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/contracts/{contractId}/revoke:
+    post:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: ""
+          content: {}
+    x-amf-description: Revokes contract.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/proxy:
+    get:
+      description: Gets a proxy.
+      parameters:
+      - name: gatewayVersion
+        in: query
+        required: true
+        schema:
+          type: string
+          default: 3.8.4
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/zip
+    x-amf-description: Gets a proxy.
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/proxy/deployment:
+    post:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    patch:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/proxy/deployment/status:
+    get:
+      description: Retrieves the deployment details of a version.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/apis/{apiId}/versions/{apiVersionId}/gateway-versions:
+    get:
+      description: Retrieves the gateway versions compatible
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    x-amf-description: Gets the gateway versions compatible for the API version, based
+      on the RAML version tag specified on the root RAML file.
+  /organizations/{organizationId}/policy-templates:
+    get:
+      description: Retrieve a list of policy templates.
+      parameters:
+      - name: version
+        in: query
+        required: true
+        schema:
+          pattern: ^v\d+(.\d+)?(.\d+)?$
+          type: string
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: Successful.
+          content: {}
+        400:
+          description: Bad Request.
+          content: {}
+        406:
+          description: The requested accept type is not supported.
+          content: {}
+        500:
+          description: An unknown error occurred.
+          content: {}
+    x-amf-description: |
+      Policy Templates are the basis for creating new policies.
+      The platform provides out of the box with several policies and new
+      ones can be added by MuleSoft Support Team if needed.
+  /organizations/{organizationId}/policy-templates/{policyTemplateId}:
+    get:
+      description: |
+        Retrieve specific details from the policy template, including the full
+        XML that is being injected as well as all of its configuration parameters.
+      parameters:
+      - name: version
+        in: query
+        required: true
+        schema:
+          pattern: ^v\d+(.\d+)?(.\d+)?$
+          type: string
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: policyTemplateId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Successful.
+          content: {}
+        400:
+          description: Bad Request.
+          content: {}
+        404:
+          description: There is no policy template defined under the specified id.
+          content: {}
+        406:
+          description: The requested accept type is not supported.
+          content: {}
+        500:
+          description: An unknown error occurred.
+          content: {}
+  /organizations/{organizationId}/custom-policy-templates:
+    get:
+      description: Retrieves a list of custom policy templates.
+      parameters:
+      - name: query
+        in: query
+        description: Search criteria.
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Skip over a number of elements by specifying an offset value
+          for the query.
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          default: 0
+      - name: ascending
+        in: query
+        description: Order for sorting.
+        required: true
+        schema:
+          type: boolean
+      - name: sort
+        in: query
+        description: Property to sort by.
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Limit the number of elements on the response.
+        required: true
+        schema:
+          maximum: 250
+          minimum: 1
+          type: integer
+          default: 100
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    post:
+      description: Creates a new custom policy.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: The new element has been successfully created.
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: |
+      Custom Policy Templates are the basis for creating new policies.
+      The platform provides out of the box with several policies and new
+      ones can be added using this API.
+  /organizations/{organizationId}/custom-policy-templates/{customPolicyTemplateId}:
+    get:
+      description: Returns an instance of a single element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: customPolicyTemplateId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    put:
+      description: Updates a single element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: customPolicyTemplateId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    delete:
+      description: Deletes the instance of the element specified.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: customPolicyTemplateId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        204:
+          description: The element has been deleted successfully.
+          content: {}
+    patch:
+      description: Patches a single element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: customPolicyTemplateId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: A custom policy template.
+  /organizations/{organizationId}/custom-policy-templates/{customPolicyTemplateId}/configuration:
+    get:
+      description: The XML configuration for the custom policy template.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: customPolicyTemplateId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/xml
+  /organizations/{organizationId}/custom-policy-templates/{customPolicyTemplateId}/definition:
+    get:
+      description: The YAML definition for the custom policy template.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: customPolicyTemplateId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/yaml
+  /organizations/{organizationId}/portals:
+    get:
+      description: Returns a list of elements.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    post:
+      description: Creates a new element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: The new element has been successfully created.
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: A collection of API portals within organization.
+  /organizations/{organizationId}/users:
+    get:
+      description: Search for users
+      parameters:
+      - name: search
+        in: query
+        description: The search string to query users for.
+        required: true
+        schema:
+          type: string
+      - name: includeCurrent
+        in: query
+        description: Whether to include the currently logged-in user in the search
+          results or not.
+        required: true
+        schema:
+          type: boolean
+      - name: offset
+        in: query
+        description: Offset on the amount of assets (each of which has all its apis)
+        required: true
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: Limit on the amount of assets (each of which has all its apis)
+        required: true
+        schema:
+          type: integer
+          default: 25
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+          x-amf-mediaType: application/json
+    x-amf-description: |
+      Proxy for core services that return organization users.
+  /organizations/{organizationId}/applications:
+    get:
+      description: Retrieves a list of applications.
+      parameters:
+      - name: targetAdminSite
+        in: query
+        description: Retrieve applications with all the information needed for the
+          admin site.
+        required: true
+        schema:
+          type: boolean
+      - name: query
+        in: query
+        description: Search criteria.
+        required: true
+        schema:
+          type: string
+      - name: includeContractsForApiVersion
+        in: query
+        description: This field is used to filter by API version.
+        required: true
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        description: Skip over a number of elements by specifying an offset value
+          for the query.
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          default: 0
+      - name: ascending
+        in: query
+        description: Order for sorting.
+        required: true
+        schema:
+          type: boolean
+      - name: sort
+        in: query
+        description: Property to sort by.
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Limit the number of elements on the response.
+        required: true
+        schema:
+          maximum: 250
+          minimum: 1
+          type: integer
+          default: 100
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    post:
+      description: Creates a new application.
+      parameters:
+      - name: apiVersionId
+        in: query
+        description: |
+          Used to associate the application with the IDP (Identity Provider) configured on the api instance.
+          This parameter is not needed when the organization is not fully migrated to crowd or when
+          the organization does not use a client provider.
+        schema:
+          minimum: 1
+          type: integer
+      - name: groupInstanceId
+        in: query
+        description: |
+          Used to associate the application with the IDP (Identity Provider) configured on the api instances of the group instance.
+          This parameter is not needed when the organization is not fully migrated to crowd or when
+          the organization does not use a client provider.
+        schema:
+          minimum: 1
+          type: integer
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: The new application has been successfully created.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  redirectUri:
+                  - http://123.123.123.123:8080/api/v1
+                  name: App name
+                  description: App Description
+                  url: http://123.123.123.123:8080/api/v2
+                  coreServicesId: d7eed6c45caa453ca763ba96b22e1bea
+                  clientId: d7eed6c45caa453ca763ba96b22e1bea
+                  clientSecret: 53899407a628417d83ee480A099Bfc06
+                  audit:
+                    created:
+                      date: 2017-08-23T14:18:25.504Z
+                    updated: {}
+                  masterOrganizationId: 40fbc081-bb0d-4aff-9fb7-f3a48fdeb958
+                  grantTypes:
+                  - password
+                  - implicit
+                  - client_credentials
+                  - authorization_code
+                  - refresh_token
+                  id: 9
+          x-amf-mediaType: application/json
+        400:
+          description: The organization is federated and the apiVersionId query parameter
+            is missing.
+          content: {}
+        409:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: A collection of applications that consume APIs via contracts.
+  /organizations/{organizationId}/applications/{applicationId}:
+    get:
+      description: Returns an instance of a single element.
+      parameters:
+      - name: ignoreOwners
+        in: query
+        description: Retrieve application with or without owners information.
+        required: true
+        schema:
+          type: boolean
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: applicationId
+        in: path
+        description: Could be an API Manager application ID or a Core Services client
+          ID.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    put:
+      description: Updates a single element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: applicationId
+        in: path
+        description: Could be an API Manager application ID or a Core Services client
+          ID.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    delete:
+      description: Deletes the instance of the element specified.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: applicationId
+        in: path
+        description: Could be an API Manager application ID or a Core Services client
+          ID.
+        required: true
+        schema:
+          type: string
+      responses:
+        204:
+          description: The element has been deleted successfully.
+          content: {}
+    patch:
+      description: Patches a single element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: applicationId
+        in: path
+        description: Could be an API Manager application ID or a Core Services client
+          ID.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: An application.
+  /organizations/{organizationId}/applications/{applicationId}/secret/reset:
+    post:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: applicationId
+        in: path
+        description: Could be an API Manager application ID or a Core Services client
+          ID.
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: ""
+          content: {}
+    x-amf-description: Resets client secret for application.
+  /organizations/{organizationId}/applications/{applicationId}/party-ids:
+    get:
+      description: Retrieves a list of Party Ids for a specific api version.
+      parameters:
+      - name: apiVersionId
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: applicationId
+        in: path
+        description: Could be an API Manager application ID or a Core Services client
+          ID.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    x-amf-description: Party Ids associated with the application.
+  /organizations/{organizationId}/applications/{applicationId}/owners:
+    post:
+      description: Adds an owner to an existing application.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: applicationId
+        in: path
+        description: Could be an API Manager application ID or a Core Services client
+          ID.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: 36d6f025-cdd9-4c06-9320-7dccb1f13db2
+        required: false
+      responses:
+        201:
+          description: ""
+          content: {}
+        404:
+          description: The application cannot be found.
+          content: {}
+      x-codegen-request-body-name: generated
+  /organizations/{organizationId}/applications/{applicationId}/owners/{userId}:
+    delete:
+      description: Removes an owner from an existing application.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: applicationId
+        in: path
+        description: Could be an API Manager application ID or a Core Services client
+          ID.
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        204:
+          description: ""
+          content: {}
+        404:
+          description: The application cannot be found.
+          content: {}
+  /organizations/{organizationId}/applications/{applicationId}/contracts:
+    get:
+      description: Retrieves a list of applications with contracts with the application.
+      parameters:
+      - name: query
+        in: query
+        description: Search criteria.
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Skip over a number of elements by specifying an offset value
+          for the query.
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          default: 0
+      - name: ascending
+        in: query
+        description: Order for sorting.
+        required: true
+        schema:
+          type: boolean
+      - name: sort
+        in: query
+        description: Property to sort by.
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Limit the number of elements on the response.
+        required: true
+        schema:
+          maximum: 250
+          minimum: 1
+          type: integer
+          default: 100
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: applicationId
+        in: path
+        description: Could be an API Manager application ID or a Core Services client
+          ID.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    post:
+      description: Creates new contract between an API version and the application.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: applicationId
+        in: path
+        description: Could be an API Manager application ID or a Core Services client
+          ID.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: The new element has been successfully created.
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: Contracts associated with the application.
+  /organizations/{organizationId}/applications/{applicationId}/contracts/{contractId}:
+    patch:
+      description: Patches contract conditions.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: applicationId
+        in: path
+        description: Could be an API Manager application ID or a Core Services client
+          ID.
+        required: true
+        schema:
+          type: string
+      - name: contractId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: A particular contract associated with the application.
+  /organizations/{organizationId}/contracts:
+    get:
+      parameters:
+      - name: apiVersionId
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: coreServicesId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/deployment-targets:
+    get:
+      parameters:
+      - name: environmentId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    x-amf-description: A collection of deploy targets for Hybrid deploymentTargets.
+  /organizations/{organizationId}/bundles:
+    post:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: ""
+          content: {}
+      x-amf-requestPayloads:
+      - mediaType: application/x-gzip
+        schema: {}
+      x-codegen-request-body-name: generated
+  /organizations/{organizationId}/public/theme/logo:
+    get:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/public/theme/favicon:
+    get:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/public/permissions:
+    get:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    x-amf-description: A list of available permissions.
+  /organizations/{organizationId}/public/portals:
+    get:
+      description: Returns a list of elements.
+      parameters:
+      - name: query[tags]
+        in: query
+        description: |
+          A list of keywords for matching API version tags in a search. Used in conjunction with other 'query[xxx]' to perform advanced search. Note: when any of 'query[xxx]' is used, the query parameter 'query' would be disregarded.
+        required: true
+        schema:
+          type: string
+      - name: requireRaml
+        in: query
+        required: true
+        schema:
+          type: boolean
+      - name: query
+        in: query
+        description: Search criteria.
+        required: true
+        schema:
+          type: string
+      - name: query[name]
+        in: query
+        description: |
+          A list of keywords for matching API name in a search. Used in conjunction with other 'query[xxx]' to perform advanced search. Note: when any of 'query[xxx]' is used, the query parameter 'query' would be disregarded.
+        required: true
+        schema:
+          type: string
+      - name: query[version]
+        in: query
+        description: |
+          A list of keywords for matching API version name in a search. Used in conjunction with other 'query[xxx]' to perform advanced search. Note: when any of 'query[xxx]' is used, the query parameter 'query' would be disregarded.
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Skip over a number of elements by specifying an offset value
+          for the query.
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+          default: 0
+      - name: deep
+        in: query
+        description: |
+          A boolean value that, when set, would cause the search be perform on the organization associated with 'organizationId' param, as well as all the sub-organizations under it - as long as the login user has permission to view the content.
+        required: true
+        schema:
+          type: boolean
+      - name: ascending
+        in: query
+        description: Order for sorting.
+        required: true
+        schema:
+          type: boolean
+      - name: query[description]
+        in: query
+        description: |
+          A list of keywords for matching API version description in a search. Used in conjunction with other 'query[xxx]' to perform advanced search. Note: when any of 'query[xxx]' is used, the query parameter 'query' would be disregarded.
+        required: true
+        schema:
+          type: string
+      - name: organizationId
+        in: query
+        description: |
+          The organization ID that the search should be run in. If not provided, search would be performed within the organization which the login user is under.
+        required: true
+        schema:
+          type: string
+      - name: sort
+        in: query
+        description: Property to sort by.
+        required: true
+        schema:
+          type: string
+      - name: query[matchAll]
+        in: query
+        description: |
+          A boolean value that determines how other 'query[xxx]' values should work together in an advanced search When 'matchAll' is true, all other 'query[xxx]' would be chained with an 'AND' when performing a search, otherwise they are chained with an 'OR' Note: when any of 'query[xxx]' is used, the query parameter 'query' would be disregarded.
+        required: true
+        schema:
+          type: boolean
+      - name: limit
+        in: query
+        description: Limit the number of elements on the response.
+        required: true
+        schema:
+          maximum: 250
+          minimum: 1
+          type: integer
+          default: 100
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    post:
+      description: Creates a new element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        201:
+          description: The new element has been successfully created.
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: |
+      A collection of API portals within organization.
+      When performing a search by passing in 'query=foo' as a string, it is equivalent to passing in the following combination: 'query[name]=foo&query[version]=foo&query[description]=foo&query[tags]=foo&query[matchAll]=false'.
+  /organizations/{organizationId}/public/portals/{portalId}/theme/logo:
+    get:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: portalId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/public/portals/{portalId}/theme/favicon:
+    get:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: portalId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/public/portals/terms:
+    get:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    x-amf-description: Portal terms for the organization.
+  /organizations/{organizationId}/public/portals/terms/acceptance:
+    get:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    x-amf-description: Accepted portal terms for current user.
+  /organizations/{organizationId}/public/portals/terms/{portalTermsId}/acceptance:
+    post:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: portalTermsId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        201:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/public/apis/{apiId}:
+    get:
+      description: Returns an instance of a single element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    put:
+      description: Updates a single element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    delete:
+      description: Deletes the instance of the element specified.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        204:
+          description: The element has been deleted successfully.
+          content: {}
+    patch:
+      description: Patches a single element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: An API.
+  /organizations/{organizationId}/public/apis/{apiId}/versions/{apiVersionId}:
+    get:
+      description: Returns an instance of a single element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    put:
+      description: Updates a single element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    delete:
+      description: Deletes the instance of the element specified.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        204:
+          description: The element has been deleted successfully.
+          content: {}
+    patch:
+      description: Patches a single element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: An API version.
+  /organizations/{organizationId}/public/apis/{apiId}/versions/{apiVersionId}/portal:
+    get:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/public/apis/{apiId}/versions/{apiVersionId}/portal/pages/{pageId}/widgets:
+    get:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: pageId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/public/apis/{apiId}/versions/{apiVersionId}/portal/files/{fileId}:
+    get:
+      description: Retrieve the file by file id. Content-type will be set based on
+        the content-type originally received.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: fileId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Successful.
+          content: {}
+        404:
+          description: Not Found.
+          content: {}
+  /organizations/{organizationId}/public/apis/{apiId}/versions/{apiVersionId}/portal/files/{fileId}/{fileName}:
+    get:
+      description: Same as parent get but allows to set a file name in the content-disposition
+        header for downloading in a browser environment.
+      parameters:
+      - name: fileId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: fileName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/public/apis/{apiId}/versions/{apiVersionId}/tiers:
+    get:
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+  /organizations/{organizationId}/public/apis/{apiId}/versions/{apiVersionId}/definition:
+    get:
+      description: Gets the RAML SPEC.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    put:
+      description: Updates a single element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    delete:
+      description: Deletes the instance of the element specified.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        204:
+          description: The element has been deleted successfully.
+          content: {}
+    patch:
+      description: Patches a single element.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ""
+          content: {}
+      x-codegen-request-body-name: generated
+    x-amf-description: The fully resolved RAML spec for this version of the API.
+  /organizations/{organizationId}/public/apis/{apiId}/versions/{apiVersionId}/files:
+    get:
+      description: Redirect to the root RAML file.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        302:
+          description: Temporary redirect to the root RAML file.
+          content: {}
+        404:
+          description: No RAML file found.
+          content: {}
+    x-amf-description: Serves RAML files for the portal.
+  /organizations/{organizationId}/public/apis/{apiId}/versions/{apiVersionId}/files/root:
+    get:
+      description: Retrieve the root RAML file contents.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        302:
+          description: Temporary redirect to the root RAML file.
+          content: {}
+        404:
+          description: Not Found.
+          content: {}
+  /organizations/{organizationId}/public/apis/{apiId}/versions/{apiVersionId}/files/{+fileName}:
+    get:
+      description: Retrieve the RAML contents by file name.
+      parameters:
+      - name: organizationId
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+          type: string
+      - name: apiId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: apiVersionId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      - name: +fileName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Successful.
+          content: {}
+        404:
+          description: Not Found.
+          content: {}
+  /policies: {}
+  /policies/{policyId}:
+    get:
+      parameters:
+      - name: policyId
+        in: path
+        required: true
+        schema:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+      responses:
+        200:
+          description: ""
+          content: {}
+    x-amf-description: A policy.
+  /ch-domains/{domainName}:
+    get:
+      parameters:
+      - name: domainName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: ""
+          content: {}
+    x-amf-description: Returns information about the availability desired CH domain.
+  /gateway-versions:
+    get:
+      description: Retrieves a list of gateway versions.
+      responses:
+        200:
+          description: ""
+          content: {}
+    x-amf-description: A collection of supported gateway versions.
+components:
+  schemas:
+    schema:
+      type: object
+    schema_1:
+      required:
+      - api
+      - apiAlertsVersion
+      - apiVersion
+      - condition
+      - enabled
+      - name
+      - period
+      - recipients
+      - severity
+      type: object
+      properties:
+        apiAlertsVersion:
+          type: string
+          enum:
+          - 1.0.0
+        name:
+          maxLength: 255
+          minLength: 1
+          type: string
+        api:
+          required:
+          - id
+          - name
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              maxLength: 64
+              minLength: 1
+              type: string
+        apiVersion:
+          required:
+          - id
+          - name
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              maxLength: 150
+              minLength: 1
+              type: string
+        enabled:
+          type: boolean
+        severity:
+          type: string
+          enum:
+          - INFO
+          - WARNING
+          - CRITICAL
+        recipients:
+          minItems: 1
+          type: array
+          items:
+            required:
+            - type
+            - value
+            type: object
+            properties:
+              firstName:
+                type: string
+              lastName:
+                type: string
+              type:
+                type: object
+              value:
+                maxLength: 254
+                type: string
+        period:
+          required:
+          - duration
+          - repeat
+          type: object
+          properties:
+            duration:
+              required:
+              - count
+              - weight
+              type: object
+              properties:
+                count:
+                  minimum: 1
+                  type: integer
+                weight:
+                  type: object
+            repeat:
+              minimum: 1
+              type: integer
+        condition:
+          required:
+          - aggregate
+          - operator
+          - value
+          type: object
+          properties:
+            aggregate:
+              type: object
+            operator:
+              type: object
+            value:
+              minimum: 0
+              type: integer
+            resourceType:
+              type: object
+            filter:
+              type: array
+              items:
+                type: object
+                properties:
+                  property:
+                    type: string
+                  operator:
+                    type: object
+    schema_2:
+      type: object
+      properties:
+        apiAlertsVersion:
+          type: string
+          enum:
+          - 1.0.0
+        name:
+          type: string
+        enabled:
+          type: boolean
+        severity:
+          type: string
+          enum:
+          - INFO
+          - WARNING
+          - CRITICAL
+        recipients:
+          minItems: 1
+          type: array
+          items:
+            required:
+            - type
+            - value
+            type: object
+            properties:
+              type:
+                type: object
+              value:
+                type: string
+        period:
+          type: object
+          properties:
+            duration:
+              type: object
+              properties:
+                count:
+                  type: integer
+                weight:
+                  type: object
+            repeat:
+              type: integer
+        condition:
+          type: object
+          properties:
+            aggregate:
+              type: object
+            operator:
+              type: object
+            value:
+              type: integer
+    schema_3:
+      required:
+      - name
+      - spec
+      type: object
+      properties:
+        spec:
+          required:
+          - assetId
+          - groupId
+          - version
+          type: object
+          properties:
+            groupId:
+              maxLength: 256
+              minLength: 1
+              type: string
+            assetId:
+              maxLength: 256
+              minLength: 1
+              type: string
+            version:
+              maxLength: 256
+              minLength: 1
+              type: string
+        name:
+          maxLength: 150
+          minLength: 1
+          type: string
+      example:
+        name: unclassified api version from GAV
+        spec:
+          groupId: f0c9b011-980e-4928-9430-e60e3a97c043
+          assetId: api-test
+          version: 1.0.0
+    schema_4:
+      allOf:
+      - required:
+        - environmentId
+        type: object
+        properties:
+          instanceLabel:
+            type: object
+            x-amf-union:
+            - type: string
+              minLength: 1
+              maxLength: 255
+            - type: null
+          environmentId:
+            maxLength: 255
+            minLength: 1
+            type: string

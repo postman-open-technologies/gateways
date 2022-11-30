@@ -1,0 +1,338 @@
+---
+openapi: "3.0.1"
+info:
+  title: "Collections API"
+  description: "Collections enable you to group API proxies, targets, or developer\
+    \ apps and set up appropriate threshold values for all members of the group to\
+    \ diagnose issues faster. For more information, see <a href=\"https://docs.apigee.com/api-monitoring/collections-api\"\
+    >Manage collections using the API</a>.\n"
+  version: "1.0"
+servers:
+- url: "https://apimonitoring.enterprise.apigee.com"
+security:
+- OAuth: []
+paths:
+  /collections:
+    get:
+      tags:
+      - "API Montoring"
+      summary: "List collections"
+      operationId: "listCollections"
+      description: "Lists collections in an organization.\nYou can filter the list\
+        \ of returned collections by the Edge environment, collection type, collection\
+        \ name, and collection members.\n\n**Note**: Edge imposes a quota on this\
+        \ API. You can call this API at most **six times per minute**.\n\nFor more\
+        \ information and examples of this API, see <a href=\"https://docs.apigee.com/api-monitoring/collections-api\"\
+        >Manage collections using the API</a>."
+      parameters:
+      - $ref: "#/components/parameters/org"
+      - $ref: "#/components/parameters/env"
+      - $ref: "#/components/parameters/name"
+      - $ref: "#/components/parameters/type"
+      - $ref: "#/components/parameters/member"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Collections"
+    post:
+      tags:
+      - "API Montoring"
+      summary: "Create a collection"
+      operationId: "createCollection"
+      description: "Creates a collection. \n\n\n**Notes**: \n\n* You can add a maximum\
+        \ of **20 items** to a collection.\n* Edge imposes a quota on this API. You\
+        \ can call this API at most **six times per minute**.\n\n\nFor more information\
+        \ and examples of this API, see <a href=\"https://docs.apigee.com/api-monitoring/collections-api\"\
+        >Manage collections using the API</a>.\n"
+      requestBody:
+        description: "Collection details.\n"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Collection"
+        required: true
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Collection"
+              example:
+                uuid: "<uuid>"
+                organization: "myorg"
+                environment: "prod"
+                name: "Critical APIs"
+                type: "proxy"
+                members:
+                - "proxy1"
+                - "proxy2"
+                description: "My collection for critical APIs"
+                updatedAt: "2018-08-08T17:46:50Z"
+                updatedBy: "ahamilton@example.com"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-codegen-request-body-name: "collection"
+  /collections/{collection_id}:
+    get:
+      tags:
+      - "API Montoring"
+      summary: "Get a collection"
+      operationId: "getCollection"
+      description: "Gets a collection.\n\n**Note**: Edge imposes a quota on this API.\
+        \ You can call this API at most **six times** per minute.\n\nFor more information\
+        \ and examples of this API, see <a href=\"https://docs.apigee.com/api-monitoring/collections-api\"\
+        >Manage collections using the API</a>."
+      parameters:
+      - $ref: "#/components/parameters/collection_id"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Collection"
+              example:
+                uuid: "<uuid>"
+                organization: "myorg"
+                environment: "prod"
+                name: "Critical APIs"
+                type: "proxy"
+                members:
+                - "proxy1"
+                - "proxy2"
+                description: "My collection for critical APIs"
+                updatedAt: "2018-08-08T17:46:50Z"
+                updatedBy: "ahamilton@example.com"
+    delete:
+      tags:
+      - "API Montoring"
+      summary: "Delete a collection"
+      operationId: "deleteCollection"
+      description: "Deletes a collection.\n\n**Notes**: \n\n* Edge imposes a quota\
+        \ on this API. You can call this API at most **six times** per minute.\n*\
+        \ **This API cannot be executed using the Try this API panel**.\n\nFor more\
+        \ information and examples of this API, see <a href=\"https://docs.apigee.com/api-monitoring/collections-api\"\
+        >Manage collections using the API</a>."
+      parameters:
+      - $ref: "#/components/parameters/collection_id"
+      - $ref: "#/components/parameters/Content-type"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Delete"
+              example:
+                uuid: "<uuid>"
+                organization: "myorg"
+                environment: "prod"
+                name: "Critical APIs"
+                type: "proxy"
+                members:
+                - "proxy1"
+                - "proxy2"
+                description: "My collection for critical APIs"
+                updatedAt: "2018-08-08T17:46:50Z"
+                updatedBy: "ahamilton@example.com"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      tags:
+      - "API Montoring"
+      summary: "Update a collection"
+      operationId: "updateCollection"
+      description: "Updates a collection. \nYou must specify the organization in the\
+        \ JSON payload but all other properties are optional. \n\n**Notes**: \n\n\
+        * You cannot change the organization, environment, or collection type when\
+        \ updating the collection.\n* Edge imposes a quota on this API. You can call\
+        \ this API at most **six times per minute**.\n* **This API cannot be executed\
+        \ using the Try this API panel**.\n\nFor more information and examples of\
+        \ this API, see <a href=\"https://docs.apigee.com/api-monitoring/collections-api\"\
+        >Manage collections using the API</a>."
+      parameters:
+      - name: "collection_id"
+        in: "path"
+        description: "Valid collection ID. Use the <a href=\"/docs/collections-api/1/routes/collections/get\"\
+          >Get collections API</a> to get a list of collection IDs."
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        description: "Collection object that is being updated\n"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Collection"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Collection"
+              example:
+                uuid: "<uuid>"
+                organization: "myorg"
+                environment: "prod"
+                name: "Critical APIs"
+                type: "proxy"
+                members:
+                - "proxy1"
+                - "proxy2"
+                description: "My collection for critical APIs"
+                updatedAt: "2018-08-08T17:46:50Z"
+                updatedBy: "ahamilton@example.com"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  securitySchemes:
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)"
+  parameters:
+    org:
+      name: "org"
+      in: "query"
+      description: "Organization name."
+      required: true
+      schema:
+        type: "string"
+    env:
+      name: "env"
+      in: "query"
+      description: "Environment name."
+      required: false
+      schema:
+        type: "string"
+    name:
+      name: "name"
+      in: "query"
+      description: "Collection name."
+      required: false
+      schema:
+        type: "string"
+    type:
+      name: "type"
+      in: "query"
+      description: "Type of collection. Valid values include: `proxy`, `target`, or\
+        \ `developerApp`. By default, all collection types are returned."
+      required: false
+      schema:
+        type: "string"
+    member:
+      name: "member"
+      in: "query"
+      description: "Name of the API proxy, target, or developer app that is a member\
+        \ of the collection for which you want to list details."
+      schema:
+        type: "string"
+    collection_id:
+      name: "collection_id"
+      in: "path"
+      description: "Valid collection ID."
+      required: true
+      schema:
+        type: "string"
+    Content-type:
+      name: "Content-type"
+      in: "header"
+      description: "Content-type header"
+      required: true
+      schema:
+        type: "string"
+  schemas:
+    Collections:
+      type: "array"
+      description: "`proxy`, `target` or `developerApp` collections."
+      items:
+        $ref: "#/components/schemas/Collection"
+    Collection:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+          description: "Name of the collection. Required when creating a collection."
+          example: "LowTraffic"
+        organization:
+          type: "string"
+          description: "Organization name. Required when creating a collection; cannot\
+            \ be updated."
+          example: "myOrg"
+        environment:
+          type: "string"
+          description: "Environment name. Required when creating a collection; cannot\
+            \ be updated."
+          example: "test"
+        description:
+          type: "string"
+          description: "Description of the collection. Required when creating a collection."
+          example: "Collection of Low Traffic targets"
+        type:
+          type: "string"
+          description: "Type of collection. Valid values include `proxy`, `target`,\
+            \ or `developerApp`. Required when creating a collection; cannot be updated."
+          example: "target"
+        members:
+          type: "array"
+          description: "API proxy, target, or develoer app members belonging to the\
+            \ collection. Required when creating a collection."
+          example:
+          - "Target123"
+          - "Target345"
+          items:
+            type: "string"
+        updatedAt:
+          type: "string"
+          description: "Output only. Time the condition was updated.\n"
+          format: "iso8601"
+          example: "2017-10-12T23:19:09Z"
+        updatedBy:
+          type: "string"
+          description: "Output only. Email address of the user that created or last\
+            \ modified the collection.\n"
+          format: "email"
+          example: "user@example.com"
+        uuid:
+          type: "string"
+          description: "Collection ID."
+          example: "1ae31238-6469-11e8-adc0-fa7ae01bbebc"
+      description: "Collection details."
+    Error:
+      type: "object"
+      properties:
+        errorCode:
+          type: "integer"
+        status:
+          type: "integer"
+          description: "HTTP status code\n"
+          example: 500
+        message:
+          type: "string"
+    Delete:
+      type: "object"
+      properties:
+        status:
+          type: "integer"
+          description: "HTTP status code"
+          example: 200

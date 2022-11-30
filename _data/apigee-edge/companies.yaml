@@ -1,0 +1,417 @@
+openapi: 3.0.0
+servers:
+- url: https://api.enterprise.apigee.com/v1
+info:
+  title: Companies API
+  description: >-
+    Manage companies in an organization.
+
+
+    A company is a collection of developers managed as a single entity. A company can be any grouping that is appropriate to your organization, for example, business unit, product line, or division. Grouping developers into companies is useful when your goal is to work with multiple developers associated under a single corporate entity for billing purposes, for example.
+
+
+    Companies are optional. It not required that the developers in your organization are associated with a company. Note that a developer is always a single entity, uniquely identified by the email element.
+  version: '1.0'
+security:
+- Basic: []
+- OAuth: []
+paths:
+  "/organizations/{org_name}/companies":
+    post:
+      tags: ["Company"]
+      summary: Create company
+      description: >-
+        Creates a company in an organization.
+
+
+        The company is always created with a status of `active`. To set the status explicitly, see <a href="/docs/companies/1/routes/organizations/%7Borg_name%7D/companies/%7Bcompany_name%7D/put">Update a company</a>.
+
+
+        To set the company's billing type (`PREPAID` or `POSTPAID`), make sure the organization profile is configured to support your setting (for example, set to accept `BOTH`). See <a href="https://docs.apigee.com/monetization/content/edit-organization-profile">Edit the organization profile</a>.
+
+
+        For a list of attributes that are supported for monetization, see <a href="https://docs.apigee.com/api-platform/publish/adding-developers-your-api-product#monetization-attributes">Configuring monetization attibutes</a>.
+      operationId: 'createCompany'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+              example:
+                apps: []
+                name: altostrat
+                displayName: Altostrat
+                organization: myorg
+                status: active
+                attributes:
+                - name: ADMIN_EMAIL
+                  value: admin@example.com
+                - name: MINT_BILLING_TYPE
+                  value: POSTPAID
+                createdAt: 1395455596595
+                createdBy: admin@altostrat.com
+                lastModifiedAt: 1395455596595
+                lastModifiedBy: admin@altostrat.com
+        '400':
+          description: Bad request
+      requestBody:
+        description: Company configuration.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyRequest'
+            example:
+              name: altostrat
+              displayName: Altostrat
+              attributes:
+              - name: ADMIN_EMAIL
+                value: admin@example.com
+              - name: MINT_BILLING_TYPE
+                value: POSTPAID
+    get:
+      tags: ["Company"]
+      summary: List companies
+      description: >-
+        Lists all companies in an organization. Optionally, you can return an expanded list of companies, displaying a full profile for each company in the organization.
+
+
+        **With Apigee Edge for Public Cloud**:
+
+        * The maximum number of companies returned is **1000**.
+
+        * You can paginate the list of companies returned using the `startKey` and `count` query parameters
+      operationId: 'listCompanies'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/expand'
+      - $ref: '#/components/parameters/startKey'
+      - $ref: '#/components/parameters/count'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: array
+                  items:
+                    type: string
+                - $ref: '#/components/schemas/Companies'
+              example:
+              - company
+              - company2
+        '400':
+          description: Bad request
+  "/organizations/{org_name}/companies/{company_name}":
+    get:
+      tags: ["Company"]
+      summary: Get company details
+      description: Gets company details.
+      operationId: 'getCompany'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/company_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+              example:
+                apps: []
+                name: altostrat
+                displayName: Altostrat
+                organization: myorg
+                status: active
+                attributes:
+                - name: ADMIN_EMAIL
+                  value: admin@example.com
+                - name: MINT_BILLING_TYPE
+                  value: POSTPAID
+                createdAt: 1395455596595
+                createdBy: admin@altostrat.com
+                lastModifiedAt: 1395455596595
+                lastModifiedBy: admin@altostrat.com
+        '400':
+          description: Bad request
+    delete:
+      tags: ["Company"]
+      summary: Delete company
+      description: Deletes a company.
+      operationId: 'deleteCompany'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/company_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+              example:
+                apps: []
+                name: altostrat
+                displayName: Altostrat
+                organization: myorg
+                status: active
+                attributes:
+                - name: ADMIN_EMAIL
+                  value: admin@example.com
+                - name: MINT_BILLING_TYPE
+                  value: POSTPAID
+                createdAt: 1395455596595
+                createdBy: admin@altostrat.com
+                lastModifiedAt: 1395455596595
+                lastModifiedBy: admin@altostrat.com
+        '400':
+          description: Bad request
+    put:
+      tags: ["Company"]
+      summary: Update a company.
+      description: >-
+        Updates an existing company.
+
+
+        Send the complete company record as a payload with any changes you want to make. For a list of attributes that are supported for monetization, see <a href="https://docs.apigee.com/api-platform/publish/adding-developers-your-api-product#monetization-attributes">Configuring monetization attibutes</a>.
+
+
+        To update the status of a company, set the `action` query parameter to `active` or `inactive` and `Content-type` to `application/octet-stream`. If you set the status to `inactive`, you cannot access the developers and apps associated with the company. In this case, the API returns a `204: No Content` status.
+
+
+        **Notes**:
+
+        * You cannot update the status of a company by passing the value in the request body.
+
+        * Currently, updating the status of a company cannot be executed using the **Try this API panel**.
+
+
+        If you want to change the company's billing type (`PREPAID` or `POSTPAID`), make sure the organization profile is configured to support your setting (for example, set to accept `BOTH`). See <a href="https://docs.apigee.com/monetization/content/edit-organization-profile">Edit the organization profile</a>.
+      operationId: 'updateCompany'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/company_name'
+      - $ref: '#/components/parameters/action'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+              example:
+                apps: []
+                name: altostrat
+                displayName: Altostrat
+                organization: myorg
+                status: active
+                attributes:
+                - name: ADMIN_EMAIL
+                  value: admin@example.com
+                - name: MINT_BILLING_TYPE
+                  value: POSTPAID
+                createdAt: 1395455596595
+                createdBy: admin@altostrat.com
+                lastModifiedAt: 1395455596595
+                lastModifiedBy: admin@altostrat.com
+        '204':
+          description: No Content (status update)
+        '400':
+          description: Bad request
+      requestBody:
+        description: Updated company configuration.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyRequest'
+            example:
+              name: altostrat
+              displayName: Altostrat
+              attributes:
+              - name: ADMIN_EMAIL
+                value: admin@example.com
+              - name: MINT_BILLING_TYPE
+                value: POSTPAID
+components:
+  securitySchemes:
+    Basic:
+      type: http
+      scheme: basic
+      description: >-
+        Multi-factor authentication is not supported.
+    OAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: >-
+        For OAuth, enter the following in the Key field: Bearer %your-token%
+        (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)
+  parameters:
+    org_name:
+      in: path
+      name: org_name
+      required: true
+      schema:
+        type: string
+      description: Organization name.
+    company_name:
+      in: path
+      name: company_name
+      required: true
+      schema:
+        type: string
+      description: Company name.
+    action:
+      in: query
+      name: action
+      required: false
+      schema:
+        type: string
+      description: >-
+        Set to `active` or `inactive`.
+    expand:
+      in: query
+      name: expand
+      required: false
+      schema:
+        type: boolean
+      description: >-
+        Flag that specifies whether to expand details. Set to `true` to expand details. Defaults to `false`.
+    count:
+      in: query
+      name: count
+      required: false
+      schema:
+        type: string
+      description: >-
+        **Apigee Edge for Public Cloud only**: Number of companies to return in the list. The maximum limit is **1000**. Use with the `startkey` to provide more targeted filtering.
+    startKey:
+      in: query
+      name: startKey
+      required: false
+      schema:
+        type: string
+      description: >-
+        **Apigee Edge for Public Cloud only**. Name of the company from which to start displaying the list of companies.
+
+
+        For example, if the an unfiltered list returns:
+
+
+        ```
+
+        company1
+
+        company2
+
+        company3
+
+        ```
+
+
+        If your `startKey` is `company1`, the returned list will be:
+
+
+        ```
+
+        company2
+
+        company3
+
+        ```
+  schemas:
+    Companies:
+      description: List of companies.
+      type: object
+      properties:
+        company:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+    Company:
+      description: Company.
+      type: object
+      properties:
+        apps:
+          type: array
+          description: Output only. Apps associated with the company.
+          items:
+            type: string
+        name:
+          description: >-
+            Name of the company. Required when creating a company.
+
+            **Notes**:
+
+            * Company names must use a unique sequence of characters, regardless of case. For example, if you create a company named `CompanyA` and subsequently attempt to create a company named `companya`, an error is thrown.
+
+            * Do not set the company name to `0` (number or string). This value is not supported and will cause unexpected results.
+
+            See <a href="https://docs.apigee.com/api-platform/reference/naming-guidelines">naming restrictions</a>.
+          type: string
+        displayName:
+          type: string
+          description: >-
+            Display name for the company.
+        organization:
+          type: string
+          description: Output only. Organization name.
+        status:
+          type: string
+          description: Output only. Status of the company. Valid values are `active` or `inactive`. Defaults to `active` when creating the company. To change the value, see Update a company.
+        attributes:
+          type: array
+          description: >-
+            Name/value formatted attributes used to extend the default company profile.
+
+            **Note**: With Apigee Edge for Public Cloud, the custom attribute limit is 18.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name of the attribute.
+              value:
+                type: string
+                description: Value of the attribute.
+        createdAt:
+          description: Output only. Time when the company was last modified in seconds since epoch.
+          type: integer
+        lastModifiedAt:
+          description: Output only. Time when the company was last modified in seconds since epoch.
+          type: integer
+        lastModifiedBy:
+          description: Output only. Email address of developer that last modified the company.
+          type: string
+    CompanyRequest:
+      description: Company.
+      type: object
+      properties:
+        name:
+          description: >-
+            Name of the company. See <a href="https://docs.apigee.com/api-platform/reference/naming-guidelines">naming restrictions</a>. Required when creating a company.
+          type: string
+        displayName:
+          type: string
+          description: >-
+            Display name for the company.
+        attributes:
+          type: array
+          description: >-
+            Name/value formatted attributes used to extend the default company profile.
+
+            **Note**: With Apigee Edge for Public Cloud, the custom attribute limit is 18.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name of the attribute.
+              value:
+                type: string
+                description: Value of the attribute.

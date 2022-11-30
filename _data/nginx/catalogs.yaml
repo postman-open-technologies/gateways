@@ -1,0 +1,562 @@
+openapi: 3.0.0
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+info:
+  description: >-
+    Use the Catalogs API to find out about the Metrics and
+    Dimensions that you can use to refine your Analytics data
+    queries.
+  version: v1
+  title: Catalogs API
+paths:
+  /analytics/catalogs/metrics:
+    get:
+      tags:
+        - Catalogs
+      summary: List the Metrics Catalog
+      operationId: listMetricsDescriptions
+      description: >
+        Lists all of the Metric resources in the Catalog.
+
+
+        The Metrics Catalog contains the definitions for all of
+        the available NGINX and NGINX Controller Agent metrics.
+
+        You can use the Catalogs API to find information about the
+        available Metrics, then use those Metrics to refine your
+        Analytics data queries.
+      responses:
+        '200':
+          description: Successfully returned the Metrics Catalog list.
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/ListMetricsDescriptionsResponse
+  '/analytics/catalogs/metrics/{metricName}':
+    get:
+      tags:
+        - Catalogs
+      summary: Get a Metric Description
+      operationId: getMetricDescription
+      description: |
+        Gets the description of the specified Metric.
+      parameters:
+        - in: path
+          name: metricName
+          description: Name of the Metric resource.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully returned the requested Metric resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricDescriptionResponse'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: The specified Metric resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /analytics/catalogs/dimensions:
+    get:
+      tags:
+        - Catalogs
+      summary: List the Dimensions Catalog
+      operationId: listDimensionsDescriptions
+      description: >
+        Lists all of the Dimension resources in the Catalog.
+
+
+        Dimensions provide a means of refining the data returned
+        by metrics and events queries.
+
+        You can use the List Dimensions Catalog endpoint to find
+        out what Dimensions are available.
+
+        Then, use the Get a Dimension endpoint to find out more
+        about a specific dimension.
+      responses:
+        '200':
+          description: >-
+            Successfully returned the requested Dimension
+            resource.
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/ListDimensionsDescriptionsResponse
+  '/analytics/catalogs/dimensions/{dimensionName}':
+    get:
+      tags:
+        - Catalogs
+      summary: Get a Dimension Description
+      operationId: getDimensionDescription
+      description: |
+        Gets the description of the specified Dimension resource.
+      parameters:
+        - in: path
+          name: dimensionName
+          description: Name of the Dimension
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: >-
+            Successfully returned the requested Dimension
+            resource.
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/GetDimensionDescriptionResponse
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: The specified Dimension resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+components:
+  schemas:
+    ListMetricsDescriptionsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetricDescriptionRecord'
+    MetricDescriptionResponse:
+      $ref: '#/components/schemas/MetricDescriptionRecord'
+    MetricDescriptionRecord:
+      type: object
+      required:
+        - metadata
+        - currentStatus
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        currentStatus:
+          $ref: '#/components/schemas/MetricDescription'
+    MetricDescription:
+      type: object
+      description: The information record for a Metrics Catalog resource.
+      properties:
+        name:
+          type: string
+          example: nginx.http.request.bytes_sent
+        description:
+          type: string
+          example: Number of bytes sent to clients.
+        unit:
+          type: string
+          example: bytes
+        aggregations:
+          type: array
+          items:
+            type: string
+            enum:
+              - AVG
+              - COUNT
+              - SUM
+              - MAX
+              - MIN
+          example:
+            - AVG
+            - SUM
+        type:
+          type: string
+          enum:
+            - counter
+            - gauge
+            - incremental
+          example: incremental
+        categories:
+          type: array
+          items:
+            type: string
+          example:
+            - nginx
+            - apimgmt_environment
+            - apimgmt_definition
+            - apimgmt_entry_point
+          description: >-
+            An array of freeform strings containing the
+            category(ies) of a Metrics Catalog resource.
+        dimensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceRef'
+          description: >-
+            An array of the Dimensions that apply to a Metrics
+            Catalog resource.
+    ListDimensionsDescriptionsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DimensionDescriptionRecord'
+    GetDimensionDescriptionResponse:
+      $ref: '#/components/schemas/DimensionDescriptionRecord'
+    DimensionDescriptionRecord:
+      type: object
+      required:
+        - metadata
+        - currentStatus
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        currentStatus:
+          $ref: '#/components/schemas/DimensionDescription'
+    DimensionDescription:
+      type: object
+      description: The information record for a Dimensions Catalog resource.
+      properties:
+        name:
+          type: string
+          example: instance
+        description:
+          type: string
+          example: Instance name.
+        type:
+          type: string
+          enum:
+            - string
+            - int
+            - list
+          example: string
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceRef'
+          description: >-
+            An array of the Metrics that the Dimensions resource
+            applies to.
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          not:
+            type: string
+            enum:
+              - .
+              - ..
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+            - cannot be only `.` or `..`
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    NamedLinks:
+      allOf:
+        - $ref: '#/components/schemas/SelfLinks'
+        - type: object
+          description: >
+            Contains information about the object being referred
+            to.
+
+
+            These are generally details -- like the object name
+            and display name --
+
+            that are useful to a consumer of the API that performs
+            further
+
+            processing. 
+
+
+            This object is only present in responses.
+              
+          properties:
+            name:
+              type: string
+              example: production
+              description: |
+                The name of the linked resource.
+            displayName:
+              type: string
+              example: Production Environment
+              description: A user friendly resource name.
+    ResourceRef:
+      type: object
+      required:
+        - ref
+      properties:
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: |
+            A reference to another NGINX Controller resource.
+        links:
+          $ref: '#/components/schemas/NamedLinks'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'

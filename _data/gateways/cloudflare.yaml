@@ -1,0 +1,87 @@
+---
+class:
+  - gateway
+
+properties:
+  name: CloudFlare
+  provider: CloudFlare
+  slug: cloudflare
+  rating: 1
+  license: Proprietary
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    At Cloudflare, we know APIs make the world go around. That is why we make our massive global network your API gateway. With API discovery, integrated API management and analytics, and layered API defenses, Cloudflare ensures APIs drive business success like never before.
+  platformCapabilities:
+    - Gateway
+    - Analytics
+    - Threat Protection
+  gatewayCapabilities:
+    - Custom Code Execution
+    - Mediation
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+  downstreamProtocols:
+    - HTTP/1.1
+  deliveryModels:
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Spike Control
+        - Throttling
+        - Traffic Optimization
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - Transformation Rules
+        - URL Rewriting
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - JWT Validation
+        - JWT authorizers
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+        - OWASP Top 10
+        - WAF
+    - category: Extensions
+      capabilities: 
+        - HTTP Callout
+        - HTTP integrations
+        - Serverless           
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://www.cloudflare.com/products/api-gateway/
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://www.cloudflare.com/products/api-gateway/
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/cloudflare.png     

@@ -1,0 +1,100 @@
+---
+class:
+  - gateway
+
+properties:
+  name: App42
+  provider: App42
+  slug: app42
+  rating: 2
+  license: Proprietary
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    ShepHertz helps enterprises in their digital transformation journey by providing multiple solutions as one single platform. The platform not only provides APIs to build Omni-Channel Apps but also provides Actionable Big Data solution (Marketing Automation & Lead/Campaign Management) to grow their digital properties by increasing user acquisition, engagement, retention & conversion.
+  platformCapabilities:
+    - Design
+    - Gateway
+    - Analytics
+    - Portal
+    - Documentation
+    - Monetization
+    - Monitoring
+    - Testing
+    - SDK
+  gatewayCapabilities:
+    - Custom Code Execution
+    - Mediation
+    - Traffic Management
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+    - SOAP
+  downstreamProtocols:
+    - HTTP/1.1
+    - SOAP
+  deliveryModels:
+    - Customer Managed (Cloud)
+    - Customer Managed (On-Premises)
+    - Hybrid
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Cache Eviction
+        - Cache Invalidation
+        - Cache Lookup
+        - Cache Population
+        - Cache Storage
+        - Cache Target Response
+        - Cache Validation
+        - Conditional Routing
+        - Content-Based Routing
+        - Pre Processing
+        - Post Processing        
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Throttling
+        - Traffic Optimization
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - AWS IAM roles and policies
+        - AWS IAM roles and policies
+        - Access Control Lists
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+    - category: Extensions
+      capabilities:      
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://apigateway.shephertz.com/
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://apigateway.shephertz.com/
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/app42.png     

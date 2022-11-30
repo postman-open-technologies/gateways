@@ -1,0 +1,423 @@
+---
+openapi: "3.0.0"
+servers:
+- url: "https://api.enterprise.apigee.com/v1"
+info:
+  title: "OAuth 2.0 Access Tokens API"
+  description: "Apigee Edge uses access tokens to define a user's permissions for\
+    \ modifying and using a specific API. When you apply OAuth 2.0 to the API, Edge\
+    \ checks the request for an access token. If an access token is present, and the\
+    \ API is within the scope of the access token, you are allowed to access the API.\
+    \ \nPrerequisites to use this API call are:\n\n* The API provider has created\
+    \ an organization.\n* You are a registered developer.\n* You have created an app.\n\
+    * You have a valid consumer key.\n* An access token has been generated."
+  version: "1.0"
+security:
+- Basic: []
+- OAuth: []
+paths:
+  /organizations/{org_name}/oauth2/accesstokens/{access_token}:
+    delete:
+      tags:
+      - "OAuth 2.0"
+      summary: "Delete OAuth 2.0 access token"
+      description: "Deletes the specified OAuth 2.0 access token."
+      operationId: "deleteOAuth2AccessToken"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/access_token"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+    post:
+      tags:
+      - "OAuth 2.0"
+      summary: "Approve, revoke, or update an OAuth 2.0 access token"
+      description: "Enables you to perform one of the following tasks:\n* **Approve\
+        \ or revoke an OAuth 2.0 access token**. Set the `action` query parameter\
+        \ to `approve` or `revoke`, respectively. Optionally, set the `cascade` query\
+        \ parameter to `true` to cause refresh tokens associated with the access token\
+        \ to be affected by the same action. \n* **Update the OAuth 2.0 access token\
+        \ attributes**. Pass the attribute details in the request body. Only attributes\
+        \ specified in the request body are updated. Any other existing attributes\
+        \ are not affected."
+      operationId: "updateOAuth2AccessToken"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/access_token"
+      - $ref: "#/components/parameters/action"
+      - $ref: "#/components/parameters/cascade"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccessTokenAttributes"
+    get:
+      tags:
+      - "OAuth 2.0"
+      summary: "Get OAuth 2.0 access token"
+      description: "Gets details for an OAuth 2.0 access token. "
+      operationId: "getOAuth20AccessToken"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/access_token"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessTokenDetails"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/oauth2/revoke:
+    post:
+      tags:
+      - "OAuth 2.0"
+      summary: "Revoke OAuth2 access token by end user or app ID"
+      description: "Revokes OAuth2 access tokens associated by specifying the end\
+        \ user ID, developer app ID, or both. \n\n**Notes**:\n\n* This API is available\
+        \ to **Apigee Edge Enterprise plans only**. \n* This feature must be enabled,\
+        \ as described in <a href=\"https://docs.apigee.com/api-platform/security/oauth/enable-retrieval-and-revocation-oauth-20-access-tokens-end-user-id-app-id-or-both\"\
+        >Enable retrieval and revocation of OAuth 2.0 access tokens by end user ID,\
+        \ app id, or both</a>.\n* You must HTML-encode the end user ID and app ID\
+        \ when you pass them in this API. \n* This API requires the `orgadmin` or\
+        \ `opsadmin` role.\n\nIf you use this API to revoke an access token, the associated\
+        \ refresh token will be revoked if the `cascade` parameter is set to `true`.\
+        \ Otherwise, the refresh token status will be unchanged.\n\nWhen your API\
+        \ request has been successfully sent, the API returns the HTTP status code\
+        \ `202 Accepted` and the response displays the number of OAuth 2.0 tokens\
+        \ that were submitted for revocation. The `202 Accepted` status does not mean\
+        \ that the revocation has been completed. For example, you may do a `GET`\
+        \ for access tokens after performing a revoke and see an OAuth 2.0 access\
+        \ token that should have been revoked. This may just mean that the revocation\
+        \ process is still in-progress. The processing time depends on the number\
+        \ of access tokens being revoked.\n\n**Revoke by app ID**\n\nAll OAuth2 access\
+        \ tokens generated by Edge include the ID of the developer app associated\
+        \ with the token, and you can revoke tokens based on that ID using this API.\
+        \ To get a list of developer app IDs for a specific developer, see <a href=\"\
+        /docs/developer-apps/1/routes/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email%7D/apps/get\"\
+        >List developer apps</a>. To find tokens based on developer app ID, see <a\
+        \ href=\"/docs/oauth-20-access-tokens-api/1/routes/organizations/%7Borg_name%7D/oauth2/search/get\"\
+        >Get OAuth2 access token by end user or app ID</a>. \n\n**Revoke by end user\
+        \ ID**\n\nIn some cases, you may wish to revoke tokens associated with the\
+        \ ID of the user to whom they were issued (the actual user of the client app).\
+        \ This ID has to be present in the token. Adding an end user ID to an access\
+        \ token requires some preliminary setup in the OAuthV2 policy that generates\
+        \ the token. For details, see <a href=\"https://docs.apigee.com/api-platform/security/oauth/enable-retrieval-and-revocation-oauth-20-access-tokens-end-user-id-app-id-or-both\"\
+        >Enable retrieval and revocation of OAuth 2.0 access tokens by end user ID,\
+        \ app id, or both</a>. You can use another API to search for tokens based\
+        \ on end user ID. See <a href=\"/docs/oauth-20-access-tokens-api/1/routes/organizations/%7Borg_name%7D/oauth2/search/get\"\
+        >Get OAuth2 access token by end user or app ID</a>. \n\nFor example, you may\
+        \ wish to provide a way for users to revoke their own access tokens. "
+      operationId: "revokeOAuth20AccessTokenEndUserAppId"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/enduser"
+      - $ref: "#/components/parameters/app"
+      - $ref: "#/components/parameters/cascade"
+      responses:
+        "202":
+          description: "Accepted"
+          content:
+            application/json:
+              schema:
+                type: "integer"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/oauth2/search:
+    get:
+      tags:
+      - "OAuth 2.0"
+      summary: "Get OAuth2 Access Token by End User or App ID"
+      description: "Gets an OAuth2 access token by end user ID, developer app ID,\
+        \ or both. \n\n**Notes**:\n\n* This API is available to **Apigee Edge Enterprise\
+        \ plans only**.\n* For information on enabling this feature, see <a href=\"\
+        https://docs.apigee.com/api-platform/security/oauth/enable-retrieval-and-revocation-oauth-20-access-tokens-end-user-id-app-id-or-both\"\
+        >Enable retrieval and revocation of OAuth 2.0 access tokens by end user ID,\
+        \ app id, or both</a>.\n* This API requires the `orgadmin` or `opsadmin` role.\n\
+        \n**Search by app ID**\n\nAll OAuth2 access tokens generated by Edge include\
+        \ the ID of the developer app associated with the token, and you can search\
+        \ for tokens based on that ID using this API. To get a list of developer app\
+        \ IDs for a specific developer, see <a href=\"/docs/developer-apps/1/routes/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email%7D/apps/get\"\
+        >List developer apps</a>.\n\n**Search by end user ID**\n\nIn some cases, you\
+        \ may wish to search for tokens based on the ID of the user to whom the token\
+        \ was issued (the actual user of the client app). This ID has to be available\
+        \ as a flow variable when the token is generated by the OAuthV2 policy. You\
+        \ can pass this ID as a query parameter or in a header with the access token\
+        \ request, or you can retrieve it from an external identity provider, as may\
+        \ be the case with the password grant type. \n\nFor example, you may wish\
+        \ to provide a way for users to discover which third-party apps they've authorized\
+        \ and to revoke their own access tokens for those apps. To search for tokens\
+        \ by user, you must first configure the OAuthV2 policy to insert a user ID\
+        \ into the token when it is created. This setup is described in <a href=\"\
+        https://docs.apigee.com/api-platform/security/oauth/enable-retrieval-and-revocation-oauth-20-access-tokens-end-user-id-app-id-or-both\"\
+        >Enable retrieval and revocation of OAuth 2.0 access tokens by end user ID,\
+        \ app id, or both</a>.\n\n**Use start and next to navigate through multiple\
+        \ pages of results**\n\nWhen the number of access tokens returned exceeds\
+        \ the `limit` defined in the query parameters, you will have multiple \"pages,\"\
+        \ or lists, of access token results to scroll through. Use the `start` query\
+        \ parameter and `next` response payload element to navigate through the results.\n\
+        \nFor example, let's say your first call returns the following response payload:\n\
+        \n```\n{\n  \"list\" : [ \"0XXX0wX4vX43lXXXX4f8e3504oXX\", \"0oXzhtXdXX8kXgeXv22zv7bXXdj4\"\
+        , \n  (...+8 more)],\n  \"meta\" : {\n    \"limit\" : 10,\n    \"next\" :\
+        \ \"3gwbXXX2thXXzX7XXdyOblXtXyXX\",\n    \"query\" : {\n      \"endUser\"\
+        \ : \"{enduser}\"\n    },\n    \"start\" : \"\",\n    \"totalResults\" : 100\n\
+        \  }\n}\n```\nNote that the request limited the results returned per page\
+        \ to 10 and that the total number of results is 100. You need a way to navigate\
+        \ through nine more pages of results to see all 100 results.\n\nTo do this,\
+        \ make another call with the `next` value in the output above as the `start`\
+        \ query parameter. The request URL may look something like this:\n```\nhttps://api.enterprise.apigee.com/v1/organizations/{org-name}/oauth2/search?enduser={enduser}&start=3gwbXXX2thXXzX7XXdyOblXtXyXX&limit=10\n\
+        ```\nSee the response payload below:\n\n``` {\n  \"list\" : [ \"3gwbXXX2thXXzX7XXdyOblXtXyXX\"\
+        , \"482XXv8XfXiouXvcXq6geXXkXXXX\", \n  (...+8 more)],\n  \"meta\" : {\n \
+        \   \"limit\" : 10,\n    \"next\" : \"Xa8mXidgXXtXXXcXnX8XXeXgXX6X\",\n  \
+        \  \"query\" : {\n      \"endUser\" : \"{enduser}\"\n    },\n    \"start\"\
+        \ : \"3gwbXXX2thXXzX7XXdyXblXtXyXX\",\n    \"totalResults\" : 100\n    \n\
+        \  }\n}\n```\nNote that this next page of 10 results shown above starts with\
+        \ the access token requested by the `start` parameter. To see the next 10\
+        \ results, make the same call, just using the `next` value in the output above\
+        \ as the start value as shown in bold below:\n\n``` https://api.enterprise.apigee.com/v1/organizations/{org-name}/oauth2/search?enduser={enduser}&start=Xa8mXidgXXtXXXcXnX8XXeXgXX6X&limit=10\
+        \ ```\n\nYou can page through each set of results by repeating this pattern\
+        \ of calls.\n\n**Response error details**\n\nThe following describes common\
+        \ errors and what they mean.\n\n* `keymanagement.service.app_id_not_found`:\
+        \ An app ID provided in the query parameters was not found.\n* `parameters_missing`:\
+        \ An end user ID provided in the query parameters was not found.\n* `InvalidValueForLimitParam`:\
+        \ The `limit` value provided in the query parameters exceeds the value of\
+        \ the `oauth_max_search_limit` property defined in your `keymanagement.properties`\
+        \ files for your management server and message processor.\n* `UnsupportedOperationRevoke`:\
+        \ If this feature isn't <a href=\"https://docs.apigee.com/api-platform/security/oauth/enable-retrieval-and-revocation-oauth-20-access-tokens-end-user-id-app-id-or-both\"\
+        >enabled</a>, you'll get an `UnsupportedOperationRevoke` error."
+      operationId: "getOAuth2AccessTokenEndUserAppId"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/enduser"
+      - $ref: "#/components/parameters/app"
+      - $ref: "#/components/parameters/limit"
+      - $ref: "#/components/parameters/start"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessToken"
+        "400":
+          description: "Bad"
+components:
+  securitySchemes:
+    Basic:
+      type: "http"
+      scheme: "basic"
+      description: "Multi-factor authentication is not supported."
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)"
+  parameters:
+    org_name:
+      in: "path"
+      name: "org_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Organization name."
+    access_token:
+      in: "path"
+      name: "access_token"
+      required: true
+      schema:
+        type: "string"
+      description: "Access token. "
+    developer_email:
+      in: "path"
+      name: "developer_email"
+      required: true
+      schema:
+        type: "string"
+      description: "Email address of the developer."
+    app_name:
+      in: "path"
+      name: "app_name"
+      required: true
+      schema:
+        type: "string"
+      description: "App name."
+    action:
+      in: "query"
+      name: "action"
+      required: false
+      schema:
+        type: "string"
+      description: "Set to `approve` or `revoke`."
+    cascade:
+      in: "query"
+      name: "cascade"
+      required: false
+      schema:
+        type: "string"
+      description: "Flag that specifies whether the refresh token associated with\
+        \ the access token is also approved or revoked. Set to `true` to approve or\
+        \ revoke the refresh token. Defaults to `false`."
+    enduser:
+      in: "query"
+      name: "enduser"
+      required: false
+      schema:
+        type: "string"
+      description: "ID of the end user for which you want to get or revoke OAuth 2.0\
+        \ access tokens. This value is not required, but you must query by either\
+        \ `enduser` or `app`."
+    app:
+      in: "query"
+      name: "app"
+      required: false
+      schema:
+        type: "string"
+      description: "ID of the developer app for which you want to get or revoke OAuth\
+        \ 2.0 access tokens. This value is not required, but you must query by either\
+        \ `enduser` or `app`."
+    limit:
+      in: "query"
+      name: "limit"
+      required: false
+      schema:
+        type: "string"
+      description: "Number of OAuth2 access token results you want to display per\
+        \ page of results. Defaults to `10`.\n\n**Note**: You cannot retrieve more\
+        \ results that the number defined by the `oauth_max_search_limit` property\
+        \ in your `keymanagement.properties` files for your management server and\
+        \ message processor."
+    start:
+      in: "query"
+      name: "start"
+      required: false
+      schema:
+        type: "string"
+      description: "Access token from which to start displaying. When the number of\
+        \ access tokens returned exceeds the limit value, use `start` to navigate\
+        \ the multiple pages, or lists of results."
+  schemas:
+    AccessTokenAttributes:
+      description: "Update access token attributes."
+      type: "object"
+      properties:
+        attributes:
+          description: "Attributes used to extend the default profile."
+          type: "array"
+          items:
+            $ref: "#/components/schemas/NameValue"
+        scope:
+          description: "List of scopes associated with the access token, validated\
+            \ at runtime against scopes defined in API product."
+          type: "string"
+    NameValue:
+      description: "Name/value attribute pairs."
+      type: "object"
+      properties:
+        name:
+          description: "Name of attribute."
+          type: "string"
+        value:
+          description: "Value of attribute."
+          type: "string"
+    AccessToken:
+      description: "Access token."
+      type: "object"
+      properties:
+        list:
+          type: "array"
+          description: "List of OAuth 2.0 access codes for the end user ID or app\
+            \ ID defined in the request."
+          items:
+            type: "string"
+        meta:
+          type: "object"
+          description: "Search metadata"
+          properties:
+            limit:
+              type: "integer"
+              description: "Total number of results included."
+            next:
+              type: "string"
+              description: "When the number of access tokens returned exceeds the\
+                \ limit defined in the query parameters, this property displays the\
+                \ value of the next access token to be displayed in the list. Use\
+                \ this value to navigate through multiple \"pages,\" or lists of results."
+            query:
+              type: "object"
+              description: "Query details."
+            start:
+              type: "string"
+              description: "Access token from which to start displaying content."
+            totalResults:
+              type: "string"
+              description: "Total number of OAuth2 access codes associated with the\
+                \ specified end user ID or app ID."
+    AccessTokenDetails:
+      description: "Access token details."
+      type: "object"
+      properties:
+        apiproducts:
+          type: "array"
+          description: "List of API products associated with the OAuth 2.0 access\
+            \ token."
+          items:
+            type: "string"
+        app:
+          type: "string"
+          description: "App."
+        appId:
+          type: "string"
+          description: "App ID."
+        attributes:
+          type: "array"
+          description: "List of attributes used to extend the default profile."
+          items:
+            type: "string"
+        clientId:
+          type: "string"
+          description: "Client ID."
+        createdAt:
+          type: "integer"
+          description: "Time at which the OAuth 2.0 access token was created in milliseconds\
+            \ since epoch."
+        expiresAt:
+          type: "integer"
+          description: "Time at which the OAuth 2.0 access token expires in milliseconds\
+            \ since epoch."
+        grantType:
+          type: "string"
+          description: "OAuth 2.0 grant type."
+        issuedAt:
+          type: "integer"
+          description: "Time at which the OAuth 2.0 access token was issued in milliseconds\
+            \ since epoch."
+        lastModifiedAt:
+          type: "integer"
+          description: "Time at which the OAuth 2.0 access token was last modified\
+            \ in milliseconds since epoch."
+        refreshCount:
+          type: "integer"
+          description: "OAuth 2.0 token refresh count."
+        scope:
+          type: "string"
+          description: "Scope associated with the access token, validated at runtime\
+            \ against scopes defined in API product."
+        status:
+          type: "string"
+          description: "Status of the OAuth 2.0 access token."
+        token:
+          type: "string"
+          description: "Token value."
+        tokenType:
+          type: "string"
+          description: "Token type."

@@ -1,0 +1,360 @@
+openapi: 3.0.0
+servers:
+- url: https://api.enterprise.apigee.com/v1
+info:
+  title: Company App Keys API
+  description: >-
+    Manage consumer credentials (also known as "API keys" or "app keys") that are generated, provisioned, and managed by Apigee Edge for apps associated with company entities.
+  version: '1.0'
+security:
+- Basic: []
+- OAuth: []
+paths:
+  '/organizations/{org_name}/companies/{company_name}/apps/{app_name}/keys/create':
+    post:
+      tags: ["Company", "Company App", "Consumer Key"]
+      summary: Create a consumer key and secret
+      description: >-
+        Creates a custom consumer key and secret for a company app. This is particularly useful if you want to migrate existing consumer keys/secrets to Edge from another system.
+        
+        
+        After creating the consumer key and secret, associate the key with an API product, as described in Add API Product to Key.
+
+
+        Consumer keys and secrets can contain letters, numbers, underscores, and hyphens. No other special characters are allowed.
+
+      
+        **Note**: Be aware of the following size limits on API keys. By staying within these limits, you help avoid service disruptions.
+
+ 
+        * Consumer key (API key) size: 2 KB
+        
+        * Consumer secret size: 2 KB
+        
+
+        If a consumer key and secret already exist, you can either keep them or delete them, as described in Delete Key for a Developer App.
+        
+
+        In addition, you can use this API if you have existing API keys and secrets that you want to copy into Edge from another system. For more information, see <a href="https://docs.apigee.com/developer-services/content/import-existing-consumer-keys-and-secrets">Import existing consumer keys and secrets</a>.
+      operationId: 'createDevAppKey'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/company_name'
+      - $ref: '#/components/parameters/app_name'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Keys'
+              example:
+                apiProducts:
+                - apiproduct: Hotels
+                  status: approved
+                attributes: [{"name": "attribute1", "value": "value1"}]
+                consumerKey: <consumerKey>
+                consumerSecret: <consumerSecret>
+                expiresAt: -1
+                issuedAt: 1523971974806
+                scopes: ["scope1", "scope2"]
+                status: approved
+        '400':
+          description: Bad request
+      requestBody:
+        description: Consumer key and secret.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                consumerKey:
+                  description: Consumer key.
+                  type: string
+                consumerSecret:
+                  description: Consumer secret.
+                  type: string
+            example:
+              consumerKey: <consumerKey>
+              consumerSecret: <consumerSecret>
+  "/organizations/{org_name}/companies/{company_name}/apps/{app_name}/keys/{consumer_key}":
+    get:
+      tags: ["Company App Keys"]
+      description: Get key information for a company app
+      summary: Gets information about the consumer key issued to a specific company app.
+      operationId: 'getCompanyAppKey'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/company_name'
+      - $ref: '#/components/parameters/app_name'
+      - $ref: '#/components/parameters/consumer_key'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Keys'
+              example:
+                apiProducts:
+                - apiproduct: Hotels
+                  status: approved
+                attributes: [{"name": "attribute1", "value": "value1"}]
+                consumerKey: <consumerKey>
+                consumerSecret: <consumerSecret>
+                expiresAt: -1
+                issuedAt: 1523971974806
+                scopes: ["scope1", "scope2"]
+                status: approved
+        '400':
+          description: Bad request
+    post:
+      summary: Add an API product, or approve or revoke a key for a company app
+      description: >-
+        Enables you to perform one of the following tasks:
+        
+        
+        * Add an API product to a company app key, enabling the app that holds the key to access the API resources bundled in the API product. You can also use this API to add attributes to the key. You must include all existing attributes, whether or not you are updating them, as well as any new attributes that you are adding. After adding the API product, you can use the same key to access all API products associated with the app.
+        
+        
+        * Approve or revoke a specific consumer key for an app. Call the API with the `action` query parameter set to `approve` or `revoke `(with no request body) and set the `Content-type` header to `application/octet-stream`. If successful, the HTTP status code for success is: `204 No Content` **Currently, this action cannot be executed using the Try this API panel.**
+        
+        
+        You can approve a consumer key that is currently revoked or pending. Once approved, the app can use the consumer key to access APIs. Revoking a consumer key renders it unusable for the app to use to access an API. An app with an unapproved key cannot access any API products and cannot invoke any APIs managed by Apigee Edge.
+
+        **Note**: Any access tokens associated with a revoked app key will remain active. However, Apigee Edge checks the status of the app key and if set to `revoked` it will not allow API calls to go through.
+      operationId: 'approveRevokeAddProductCompanyAppKey'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/company_name'
+      - $ref: '#/components/parameters/app_name'
+      - $ref: '#/components/parameters/consumer_key'
+      - $ref: '#/components/parameters/action'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Keys'
+              example:
+                apiProducts:
+                - apiproduct: Hotels
+                  status: approved
+                attributes: [{"name": "attribute1", "value": "value1"}]
+                consumerKey: <consumerKey>
+                consumerSecret: <consumerSecret>
+                expiresAt: -1
+                issuedAt: 1523971974806
+                scopes: ["scope1", "scope2"]
+                status: approved
+        '204':
+          description: No content
+        '400':
+          description: Bad request
+      requestBody:
+        description: List of API products and attributes.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                apiProducts:
+                  type: array
+                  description: List of API products associated with an API key. Required when adding an API product to a key.
+                  items:
+                      type: string
+                attributes:
+                  type: array
+                  description: List of attributes associated with an API key.
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the custom attribute.
+                      value:
+                        type: string
+                        description: Value of the custom attribute.
+            example:
+              apiProducts:
+              - Hotels
+              - Restaurants
+              attributes: [{"name": "attribute1", "value": "value1"}]
+    delete:
+      summary: Delete key for a company app
+      description: >-
+        Deletes a key for a company app and removes all API products associated with the app. The key can no longer be used to access any APIs.
+      operationId: 'deleteCompanyAppKey'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/company_name'
+      - $ref: '#/components/parameters/app_name'
+      - $ref: '#/components/parameters/consumer_key'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Keys'
+              example:
+                apiProducts:
+                - apiproduct: Hotels
+                  status: approved
+                attributes: [{"name": "attribute1", "value": "value1"}]
+                consumerKey: <consumerKey>
+                consumerSecret: <consumerSecret>
+                expiresAt: -1
+                issuedAt: 1523971974806
+                scopes: ["scope1", "scope2"]
+                status: approved
+        '400':
+          description: Bad request
+  "/organizations/{org_name}/companies/{company_name}/apps/{app_name}/keys/{consumer_key}/apiproducts/{apiproduct_name}":
+    post:
+      tags: ["Company App Keys"]
+      summary: Approve or revoke API product for a company app API key
+      description: >-
+        Sets the association of a company app's consumer key with an API product to `approved` or `revoked`. The API product must already be associated with the company app.
+        
+        To consume API resources defined in an API product, a company app's consumer key must be `approved` and it must also be `approved` for that specific API product.
+      operationId: 'approveRevokeCompanyAppKeyAPIProduct'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/company_name'
+      - $ref: '#/components/parameters/app_name'
+      - $ref: '#/components/parameters/consumer_key'
+      - $ref: '#/components/parameters/apiproduct_name'
+      - $ref: '#/components/parameters/action'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad request
+    delete:
+      tags: ["Company App Keys"]
+      summary: Remove API product for a company app API key
+      description: >-
+        Removes an API product from a company app's consumer key, and thereby renders the company app unable to access the API resources defined in that API product.
+        
+        
+        Note that the consumer key itself still exists after this call. Only the association of the key with the API product is removed.
+      operationId: 'approveRevokeCompanyAppKeyAPIProduct'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/company_name'
+      - $ref: '#/components/parameters/app_name'
+      - $ref: '#/components/parameters/consumer_key'
+      - $ref: '#/components/parameters/apiproduct_name'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad request
+components:
+  securitySchemes:
+    Basic:
+      type: http
+      scheme: basic
+      description: >-
+        Multi-factor authentication is not supported.
+    OAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: >-
+        For OAuth, enter the following in the Key field: Bearer %your-token%
+        (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)
+  parameters:
+    org_name:
+      in: path
+      name: org_name
+      required: true
+      schema:
+        type: string
+      description: Organization name.
+    company_name:
+      in: path
+      name: company_name
+      required: true
+      schema:
+        type: string
+      description: Company name.
+    app_name:
+      in: path
+      name: app_name
+      required: true
+      schema:
+        type: string
+      description: App name.
+    consumer_key:
+      in: path
+      name: consumer_key
+      required: true
+      schema:
+        type: string
+      description: Consumer key.
+    apiproduct_name:
+      in: path
+      name: apiproduct_name
+      required: true
+      schema:
+        type: string
+      description: API product name.
+    action:
+      in: query
+      name: action
+      required: false
+      schema:
+        type: string
+      description: Set to `approve` or `revoke`.
+  schemas:
+    Keys:
+      description: Consumer key and secret.
+      type: object
+      properties:
+        apiProducts:
+          type: array
+          description: List of API products associated with an API key. Required when adding an API product to a key.
+          items:
+            type: object
+            properties:
+              apiproduct:
+                type: string
+                description: Name of the API product.
+              status:
+                type: string
+                description: Status of the API product. Valid values include `approved` or `revoked`.
+        attributes:
+          type: array
+          description: List of attributes associated with an API key.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name of the custom attribute.
+              value:
+                type: string
+                description: Value of the custom attribute.
+        consumerKey:
+          description: Consumer key.
+          type: string
+        consumerSecret:
+          description: Consumer secret.
+          type: string
+        expiresAt:
+          type: integer
+          description: Time at which the consumer key and secret expire in milliseconds since epoch. Set to -1 to never expire.
+        issuedAt:
+          type: integer
+          description: Time at which the consumer key and secret were issued in milliseconds since epoch.
+        scopes:
+          type: array
+          description: List of OAuth scopes.
+          items:
+            type: string
+        status:
+          type: string
+          description: Status of the API key. Valid values include `approved` or `revoked`.

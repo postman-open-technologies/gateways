@@ -1,0 +1,927 @@
+openapi: 3.0.0
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+info:
+  title: Instance Templates API
+  description: >-
+    Use the Instance Templates API to manage templates that can be
+    used to deploy new NGINX Plus instances.
+  version: v1
+paths:
+  '/infrastructure/locations/{locationName}/instance-templates':
+    get:
+      tags:
+        - Instance Templates
+      summary: List Instance Templates
+      description: >-
+        Returns an unfiltered list of all Instance Template
+        resources in the specified Location.
+      operationId: listInstanceTemplates
+      parameters:
+        - $ref: '#/components/parameters/LocationName'
+      responses:
+        '200':
+          description: >-
+            Successfully retrieved a list of all Instance Template
+            resources for the specified Location.
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/ListInstanceTemplateResponse
+              examples:
+                INSTANCE_TEMPLATES:
+                  $ref: '#/components/examples/AWSListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+        - Instance Templates
+      summary: Create an Instance Template
+      description: Creates a new Instance Template resource.
+      operationId: addInstanceTemplate
+      parameters:
+        - $ref: '#/components/parameters/LocationName'
+      requestBody:
+        description: Defines the Instance Template resource.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstanceTemplate'
+            examples:
+              AWS_INSTANCE_TEMPLATE:
+                $ref: '#/components/examples/AWSRequest'
+              AZURE_INSTANCE_TEMPLATE:
+                $ref: >-
+                  #/components/examples/AzureRequestWithMarketplaceImageAndUsingExistingNic
+      responses:
+        '201':
+          description: >-
+            Successfully created the requested Instance Template
+            resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInstanceTemplateResponse'
+              examples:
+                AWS_INSTANCE_TEMPLATE:
+                  $ref: '#/components/examples/AWSResponse'
+                AZURE_INSTANCE_TEMPLATE:
+                  $ref: '#/components/examples/AzureResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  '/infrastructure/locations/{locationName}/instance-templates/{instanceTemplateName}':
+    get:
+      tags:
+        - Instance Templates
+      summary: Get an Instance Template
+      description: >-
+        Gets information for the specified Instance Template
+        resource.
+      operationId: getInstanceTemplate
+      parameters:
+        - $ref: '#/components/parameters/LocationName'
+        - $ref: '#/components/parameters/InstanceTemplateName'
+      responses:
+        '200':
+          description: >-
+            Successfully retrieved the requested Instance Template
+            resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInstanceTemplateResponse'
+              examples:
+                AWS_INSTANCE_TEMPLATE:
+                  $ref: '#/components/examples/AWSResponse'
+                AZURE_INSTANCE_TEMPLATE:
+                  $ref: '#/components/examples/AzureResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+        - Instance Templates
+      summary: Upsert an Instance Template
+      description: >-
+        Creates a new Instance Template resource or updates an
+        existing Instance Template resource.
+      operationId: upsertInstanceTemplate
+      parameters:
+        - $ref: '#/components/parameters/LocationName'
+        - $ref: '#/components/parameters/InstanceTemplateName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstanceTemplate'
+            examples:
+              AWS_INSTANCE_TEMPLATE:
+                $ref: '#/components/examples/AWSRequest'
+              AZURE_INSTANCE_TEMPLATE:
+                $ref: >-
+                  #/components/examples/AzureRequestWithCustomImageAndCreatingNewNicAndPublicIP
+        required: true
+      responses:
+        '200':
+          description: >-
+            Successfully updated the specified Instance Template
+            resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInstanceTemplateResponse'
+              examples:
+                AWS_INSTANCE_TEMPLATE:
+                  $ref: '#/components/examples/AWSResponse'
+                AZURE_INSTANCE_TEMPLATE:
+                  $ref: '#/components/examples/AzureResponse'
+        '201':
+          description: >-
+            Successfully created the requested Instance Template
+            resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInstanceTemplateResponse'
+              examples:
+                AWS_INSTANCE_TEMPLATE:
+                  $ref: '#/components/examples/AWSResponse'
+                AZURE_INSTANCE_TEMPLATE:
+                  $ref: '#/components/examples/AzureResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+    delete:
+      tags:
+        - Instance Templates
+      summary: Delete an Instance Template
+      description: Deletes the specified Instance Template resource.
+      operationId: deleteInstanceTemplate
+      parameters:
+        - $ref: '#/components/parameters/LocationName'
+        - $ref: '#/components/parameters/InstanceTemplateName'
+      responses:
+        '204':
+          description: >-
+            Successfully deleted the specified Instance Template
+            resource.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    LocationName:
+      name: locationName
+      in: path
+      description: >-
+        The name of the Location that contains the Instance
+        Template resource(s).
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    InstanceTemplateName:
+      name: instanceTemplateName
+      in: path
+      description: The name of the Instance Template resource.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+  responses:
+    BadRequest:
+      description: >
+        Bad input parameter, or possibly a bad URI. Check the
+        input for typos and try again.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 121220
+            message: >-
+              Error creating the instance template: could not
+              parse the request payload. Check the format of the
+              request, then try again.
+    Unauthorized:
+      description: |
+        User authentication is invalid or missing.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 401
+            message: authentication needed
+    NotFound:
+      description: |
+        The specified Instance Template resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 120903
+            message: >-
+              Error getting the list of instance templates: the
+              specified location does not exist. Check the
+              location name, then try again.
+    Conflict:
+      description: >
+        The request failed due to a conflict with an existing
+        Instance Template resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 121124
+            message: >-
+              Error creating the instance template: the instance
+              template already exists. Use a unique name for the
+              instance template, then try again.
+  schemas:
+    InstanceTemplate:
+      type: object
+      required:
+        - metadata
+        - desiredState
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          $ref: '#/components/schemas/InstanceTemplateState'
+        currentStatus:
+          $ref: '#/components/schemas/InstanceTemplateState'
+    GetInstanceTemplateResponse:
+      allOf:
+        - $ref: '#/components/schemas/InstanceTemplate'
+    ListInstanceTemplateResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstanceTemplate'
+    InstanceTemplateState:
+      oneOf:
+        - $ref: '#/components/schemas/AWSInstanceTemplate'
+        - $ref: '#/components/schemas/AzureInstanceTemplate'
+      discriminator:
+        propertyName: type
+        mapping:
+          AWS_INSTANCE_TEMPLATE: '#/components/schemas/AWSInstanceTemplate'
+          AZURE_INSTANCE_TEMPLATE: '#/components/schemas/AzureInstanceTemplate'
+    AWSInstanceTemplate:
+      type: object
+      required:
+        - type
+        - amiID
+        - instanceType
+        - subnetID
+      properties:
+        type:
+          type: string
+          description: The type of Instance Template.
+          enum:
+            - AWS_INSTANCE_TEMPLATE
+        amiID:
+          type: string
+          description: >
+            The AWS `amiID` for the image to use when deploying an
+            Instance using the template.
+        instanceType:
+          type: string
+          description: |
+            The machine size.
+        subnetID:
+          type: string
+          description: >
+            The `subnetID` of the AWS subnet where new Instances
+            created using the Instance Template should reside.
+
+
+            The specified subnet must be in the same AWS Virtual
+            Private Cloud (VPC) as the Instance Template's parent
+            Location resource.
+        securityGroupIDs:
+          type: array
+          description: >
+            The list of AWS securityGroupIDs that you want to
+            apply to new Instances. 
+
+
+            The Security GroupIDs must be available in the same
+            AWS region and Virtual Private Cloud (VPC) as the
+            Instance Template's parent Location resource.
+          items:
+            type: string
+        publicKey:
+          type: string
+          description: >
+            Provide the public key that you want to use to
+            authenticate to the EC2 instance that this template
+            will create. 
+        associatePublicIPAddress:
+          type: boolean
+          description: >
+            Specify if a public IP address should be assigned to
+            the instance.
+    AzureInstanceTemplate:
+      x-f5-experimental: true
+      type: object
+      required:
+        - type
+        - instanceType
+        - image
+        - networkInterface
+        - adminUser
+        - publicKey
+      properties:
+        type:
+          type: string
+          description: The type of Instance Template.
+          enum:
+            - AZURE_INSTANCE_TEMPLATE
+        image:
+          $ref: '#/components/schemas/AzureImage'
+        instanceType:
+          type: string
+          description: The virtual machine size and type.
+        networkInterface:
+          $ref: '#/components/schemas/AzureNetworkInterface'
+        adminUser:
+          type: string
+          description: The name of the administration account.
+        publicKey:
+          type: string
+          description: The Public Key string for the adminUser.
+    AzureImage:
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/AzureImageID'
+        - $ref: '#/components/schemas/AzureImageReference'
+      discriminator:
+        propertyName: type
+        mapping:
+          AZURE_IMAGE_ID: '#/components/schemas/AzureImageID'
+          AZURE_IMAGE_REFERENCE: '#/components/schemas/AzureImageReference'
+    AzureImageID:
+      type: object
+      description: >-
+        The Azure resource ID for the image to use when deploying
+        an Instance.
+      required:
+        - type
+        - imageID
+      properties:
+        type:
+          type: string
+          description: The type of the Azure Image.
+          enum:
+            - AZURE_IMAGE_ID
+        imageID:
+          type: string
+          description: The resource ID of the Azure image.
+    AzureImageReference:
+      type: object
+      description: >-
+        The parameters that identify which Azure Marketplace image
+        to use for the Instance.
+      required:
+        - type
+        - publisher
+        - offer
+        - sku
+      properties:
+        type:
+          type: string
+          description: The type of the Azure Image.
+          enum:
+            - AZURE_IMAGE_REFERENCE
+        publisher:
+          type: string
+          description: The publisher of the Azure Marketplace image.
+        offer:
+          type: string
+          description: The offer of the Azure Marketplace image.
+        sku:
+          type: string
+          description: The SKU of the Azure Marketplace image.
+        version:
+          type: string
+          description: >-
+            The version of the Azure Marketplace image (default is
+            latest).
+    AzureNetworkInterface:
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/AzureNetworkID'
+        - $ref: '#/components/schemas/AzureNetworkConfig'
+      discriminator:
+        propertyName: type
+        mapping:
+          AZURE_NIC_ID: '#/components/schemas/AzureNetworkID'
+          AZURE_NIC_CONFIG: '#/components/schemas/AzureNetworkConfig'
+    AzureNetworkID:
+      type: object
+      description: >-
+        Identifies the existing Azure Network Interface that you
+        want the Instance to use.
+      required:
+        - type
+        - nicID
+      properties:
+        type:
+          type: string
+          description: The type of the Azure Network Interface.
+          enum:
+            - AZURE_NIC_ID
+        nicID:
+          type: string
+          description: The ID of the Azure Network Interface.
+    AzureNetworkConfig:
+      type: object
+      description: >-
+        The parameters needed to create a new Azure Network
+        Interface for the Instance.
+      required:
+        - type
+        - virtualNetwork
+        - subnet
+      properties:
+        type:
+          type: string
+          description: The type of the Azure Network Interface.
+          enum:
+            - AZURE_NIC_CONFIG
+        virtualNetwork:
+          type: string
+          description: >-
+            Identifies the existing Virtual Network to be
+            associated with the Network Interface.
+        subnet:
+          type: string
+          description: >-
+            Identifies the existing Subnet to be associated with
+            the Network Interface.
+        securityGroup:
+          type: string
+          description: >-
+            Identifies the existing Network Security Group to be
+            associated with the Network Interface.
+        publicIp:
+          type: boolean
+          default: false
+          description: >-
+            If true a public IP address will be created and
+            associated with the Network Interface.
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+  examples:
+    AWSRequest:
+      value:
+        metadata:
+          name: my-instance-template
+          description: AWS Instance Template for T2 large
+          displayName: T2large-InstanceTemplate
+          tags:
+            - dev
+            - prod
+        desiredState:
+          type: AWS_INSTANCE_TEMPLATE
+          amiID: ami-a0cfeed8
+          instanceType: t2.large
+          subnetID: subnet-12345678
+          securityGroupIDs:
+            - sg-12345678
+            - sg-98765432
+          publicKey: my-public-key
+          associatePublicIPAddress: true
+    AzureRequestWithMarketplaceImageAndUsingExistingNic:
+      value:
+        metadata:
+          name: my-azure-template-for-standard-A1
+          description: Azure Instance Template for Standard A1
+          displayName: Standard_A1-instance-template
+          tags:
+            - dev
+            - prod
+        desiredState:
+          type: AZURE_INSTANCE_TEMPLATE
+          image:
+            type: AZURE_IMAGE_REFERENCE
+            publisher: nginxinc
+            offer: nginx-plus-v1
+            sku: nginx-plus-ub1804
+            version: latest
+          instanceType: Standard_A1
+          adminUser: azureuser
+          publicKey: ssh-rsa my-public-key-string
+          networkInterface:
+            type: AZURE_NIC_ID
+            nicID: >-
+              /subscriptions/mySubscriptionID/resourceGroups/myResourceGroup/providers/Microsoft.Network/networkInterfaces/myNicID
+    AzureRequestWithCustomImageAndCreatingNewNicAndPublicIP:
+      value:
+        metadata:
+          name: my-azure-template-for-standard-DS1_v2
+          description: Azure Instance Template for Standard DS1v2
+          displayName: DS1_v2-instance-template
+          tags:
+            - dev
+            - prod
+        desiredState:
+          type: AZURE_INSTANCE_TEMPLATE
+          image:
+            type: AZURE_IMAGE_ID
+            imageID: >-
+              /subscriptions/mySubscriptionID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/images/myCustomImageID
+          instanceType: Standard_DS1_v2
+          adminUser: azureuser
+          publicKey: ssh-rsa my-public-key-string
+          networkInterface:
+            type: AZURE_NIC_CONFIG
+            virtualNetwork: my-virtual-network
+            subnet: my-subnet
+            securityGroup: my-network-sg
+            publicIp: true
+    AWSResponse:
+      value:
+        currentStatus:
+          amiID: ami-a0cfeed8
+          associatePublicIPAddress: true
+          instanceType: t2.large
+          publicKey: my-public-key
+          securityGroupIDs:
+            - sg-12345678
+            - sg-98765432
+          subnetID: subnet-12345678
+          type: AWS_INSTANCE_TEMPLATE
+        desiredState:
+          amiID: ami-a0cfeed8
+          associatePublicIPAddress: true
+          instanceType: t2.large
+          publicKey: my-public-key
+          securityGroupIDs:
+            - sg-12345678
+            - sg-98765432
+          subnetID: subnet-12345678
+          type: AWS_INSTANCE_TEMPLATE
+        metadata:
+          createTime: '2020-04-17T02:18:44.394232Z'
+          description: AWS Instance Template for T2 large
+          displayName: T2large-InstanceTemplate
+          kind: instance-template
+          links:
+            rel: >-
+              /api/v1/infrastructure/locations/location-1/instance-templates/my-instance-template
+          name: my-instance-template
+          uid: 4157d480-cd0e-40a0-8ba8-d0d5ce17c5d6
+          updateTime: '2020-04-17T02:18:44.394232Z'
+    AzureResponse:
+      value:
+        currentStatus:
+          type: AZURE_INSTANCE_TEMPLATE
+          image:
+            type: AZURE_IMAGE_REFERENCE
+            publisher: nginxinc
+            offer: nginx-plus-v1
+            sku: nginx-plus-ub1804
+            version: latest
+          instanceType: Standard_A1
+          adminUser: azureuser
+          publicKey: ssh-rsa my-public-key-string
+          networkInterface:
+            type: AZURE_NIC_ID
+            nicID: >-
+              /subscriptions/mySubscriptionID/resourceGroups/myResourceGroup/providers/Microsoft.Network/networkInterfaces/myNicID
+        desiredState:
+          type: AZURE_INSTANCE_TEMPLATE
+          image:
+            type: AZURE_IMAGE_REFERENCE
+            publisher: nginxinc
+            offer: nginx-plus-v1
+            sku: nginx-plus-ub1804
+            version: latest
+          instanceType: Standard_A1
+          adminUser: azureuser
+          publicKey: ssh-rsa my-public-key-string
+          networkInterface:
+            type: AZURE_NIC_ID
+            nicID: >-
+              /subscriptions/mySubscriptionID/resourceGroups/myResourceGroup/providers/Microsoft.Network/networkInterfaces/myNicID
+        metadata:
+          createTime: '2020-04-17T02:18:44.394232Z'
+          description: Azure Instance Template for Standard A1
+          displayName: Standard_A1-instance-template
+          kind: instance-template
+          links:
+            rel: >-
+              /api/v1/infrastructure/locations/azure-westus2/instance-templates/my-azure-template-for-standard-A1
+          name: my-azure-template-for-standard-A1
+          uid: 4157d480-cd0e-40a0-8ba8-d0d5ce17c5d6
+          updateTime: '2020-04-17T02:18:44.394232Z'
+    AWSListResponse:
+      value:
+        items:
+          - currentStatus:
+              amiID: ami-a0cfeed8
+              associatePublicIPAddress: true
+              instanceType: t2.large
+              publicKey: my-public-key
+              securityGroupIDs:
+                - sg-12345678
+                - sg-98765432
+              subnetID: subnet-12345678
+              type: AWS_INSTANCE_TEMPLATE
+            desiredState:
+              amiID: ami-a0cfeed8
+              associatePublicIPAddress: true
+              instanceType: t2.large
+              publicKey: my-public-key
+              securityGroupIDs:
+                - sg-12345678
+                - sg-98765432
+              subnetID: subnet-12345678
+              type: AWS_INSTANCE_TEMPLATE
+            metadata:
+              createTime: '2020-04-17T02:18:44.394232Z'
+              description: AWS Instance Template for T2 large
+              displayName: T2large-InstanceTemplate
+              kind: instance-template
+              links:
+                rel: >-
+                  /api/v1/infrastructure/locations/location-1/instance-templates/my-instance-template
+              name: my-instance-template
+              uid: 4157d480-cd0e-40a0-8ba8-d0d5ce17c5d6
+              updateTime: '2020-04-17T02:18:44.394232Z'

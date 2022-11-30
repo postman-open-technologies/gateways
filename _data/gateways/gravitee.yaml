@@ -1,0 +1,112 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Gravitee
+  provider: Gravitee
+  slug: gravitee
+  rating: 1
+  license: Proprietary, Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    Manage, secure, and govern synchronous and asynchronous APIs with the world's first-ever event-native API Management platform.
+  platformCapabilities:
+    - Design
+    - Gateway
+    - Analytics
+    - Dashboards
+    - Portal
+    - Documentation
+  gatewayCapabilities:
+    - Mediation
+    - Mocking
+    - OpenAPI Integration
+    - OpenAPI Enforcement
+    - Protocol Transformation
+    - Traffic Management
+    - Versioning  
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+    - HTTP/2
+    - HTTP/2.0
+    - GraphQL    
+    - Kafka
+    - WebSockets
+    - gRPC
+    - RabbitMQ
+  downstreamProtocols:
+    - HTTP/1.1
+    - HTTP/2
+    - HTTP/2.0
+    - GraphQL    
+    - Kafka
+    - WebSockets
+    - gRPC
+    - RabbitMQ
+  deliveryModels:
+    - Customer Managed (Cloud)
+    - Customer Managed (On-Premises)
+    - Hybrid
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Load Balancer Routing
+        - Failover
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Service Discovery
+        - Throttling
+        - Traffic Optimization
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - Response Templates
+        - URL Rewriting
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - IP Access Rules
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+        - OpenID Connect
+    - category: Extensions
+      capabilities:
+        - HTTP Callout
+        - HTTP integrations      
+        - Command Line Interface (CLI)
+        - Grafana
+        - Cabana             
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://www.gravitee.io/platform/api-management
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://www.gravitee.io/platform/api-management
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/gravitee.png     

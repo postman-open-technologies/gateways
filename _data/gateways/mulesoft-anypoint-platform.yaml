@@ -1,0 +1,84 @@
+---
+class:
+  - gateway
+
+properties:
+  name: MuleSoft Anypoint Platform
+  provider: MuleSoft
+  slug: mulesoft-anypoint-platform
+  rating: 1
+  license: Proprietary
+  status: Active Research
+  researchDate: 2021-10
+  description: >
+    MuleSoft offers a broad suite of products to deliver integration solutions.  The Anypoint platform is often  listed in the iPaaS category, and as part of that, it contains Gateway functionality.
+  platformCapabilities:
+    - Gateway
+    - Design
+    - Threat Protection
+    - Portal
+    - Monitoring
+
+  gatewayCapabilities:
+    - Mediation
+    - Traffic Management
+    - Versioning
+    - Protocol Transformation
+    - Mocking
+  customCodeSupport:
+    - JavaScript
+  upstreamProtocols:
+    - HTTP/1.1
+  downstreamProtocols:
+    - HTTP/1.1
+  deliveryModels:
+    - SaaS
+    - Customer Managed (Cloud)
+    - Customer Managed (On-Premises)
+    - Hybrid
+  policies:
+    - category: Security
+      capabilities:
+        - Client ID and Secret (MuleSoft-specific API security model)
+        - Basic Authentication
+        - LDAP Authentication
+        - IP Access Rules
+        - CORS
+        - JSON Threat Protection
+        - JWT
+        - OAuth 2.0
+        - OpenID Connect
+        - PingFederate OAuth2.0 Token
+        - JSON Threat Protection
+        - XML Threat Protection
+    - category: Traffic Management
+      capabilities:
+        - Cache Lookup
+        - Cache Validation
+        - Cache Eviction
+        - Rate Limiting
+        - Spike Control
+    - category: Mediation
+      capabilities:
+        - Request Transformation
+    - category: Extension
+      capabilities:
+        - Message Logging
+        - Custom Policies
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://www.mulesoft.com/platform/enterprise-integration
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://docs.mulesoft.com/general/
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/mulesoft-anypoint-platform.png
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/mulesoft-anypoint-platform.png     

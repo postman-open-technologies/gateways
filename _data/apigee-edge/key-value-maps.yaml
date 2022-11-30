@@ -1,0 +1,1401 @@
+openapi: 3.0.0
+servers:
+- url: https://api.enterprise.apigee.com/v1
+info:
+  title: Key value maps API
+  description: >-
+    Manage the Apigee Edge key value store for longer-term data persistence. Key value maps (KVMs) are collections of arbitrary name/value pairs ("entries") that can be accessed at runtime by API proxies, or for other custom runtime requirements. The API lets you perform CRUD operations on the key value store. 
+    
+    
+    You can create and manage KVMs at multiple scopes:
+    
+    
+    * **API proxy**: KVMs at the API proxy scope can be accessed only by the API proxy or a specific revision of the proxy.
+    
+    * **Environment**: KVMs at the environment scope can be accessed by any API proxy in the environment (such as `test` or `prod`). In the Edge UI, KVMs are configured at the environment scope  (**APIs > Environments > Key Value Maps**).
+    
+    * **Organization**: KVMs at the organization scope can be accessed by all API proxies in all environments.
+    
+    
+    API proxies interact with the key value store at runtime using policies. See <a href="https://docs.apigee.com/api-services/reference/key-value-map-operations-policy">KeyValueMapOperations policy</a>.
+  version: '1.0'
+security:
+- Basic: []
+- OAuth: []
+paths:
+  "/organizations/{org_name}/apis/{api_name}/keyvaluemaps":
+    post:
+      tags: ["Key Value Map"]
+      summary: Create key value map in an API proxy
+      description: >-
+        Creates a key value map (KVM) for an API proxy.
+        
+
+        A KVM is a simple structure for persistently storing name/value pairs as entries in a named map. The entries in a KVM can be retrieved at runtime by the <a href="https://docs.apigee.com/api-services/reference/key-value-map-operations-policy">KeyValueMapOperations policy</a> or code running on Apigee Edge. Use KVMs for use cases such as profile-based access control, storing environment-specific data, to control application-specific behavior, and so on.
+        
+
+        You can create an encrypted KVM by adding `"encrypted" : "true"` to the request payload. You update encrypted KVMs the same way you update non-encrypted KVMs.
+        
+        
+        KVM names are case sensitive.
+        
+        
+        **Note**: KVMs created at the API proxy <a href="https://docs.apigee.com/api-platform/cache/key-value-maps.html#scope">scope</a> do not appear in the Edge UI. Only KVMs created at the environment scope apear in the Edge UI. To view the KVMs defined at the API proxy scope, see <a href="/docs/key-value-maps/1/routes/organizations/%7Borg_name%7D/apis/%7Bapi_name%7D/keyvaluemaps/get">List key value maps for an API proxy</a>.
+        
+        
+        For information on retrieving KVMs, see <a href="https://docs.apigee.com/api-services/reference/key-value-map-operations-policy">KeyValueMapOperations policy</a>.
+
+      operationId: 'createKVMAPIProxy'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/api_name'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KVM'
+              example:
+                encrypted: true
+                entry:
+                - name: keyname
+                  value: keyvalue
+                name: mykvm
+        '400':
+          description: Bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KVM'
+            example:
+              encrypted: true
+              entry:
+              - name: keyname
+                value: keyvalue
+              name: mykvm
+    get:
+      tags: ["Key Value Map"]
+      summary: List key value maps for an API proxy
+      description: >-
+        Lists the key value maps (KVMs) for an API proxy. 
+      operationId: 'listKVMsAPIProxy'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/api_name'
+      - $ref: '#/components/parameters/expand'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Bad request
+  "/organizations/{org_name}/apis/{api_name}/keyvaluemaps/{map_name}":
+    delete:
+      tags: ["Key Value Map"]
+      summary: Delete key value map from an API proxy
+      description: >-
+        Deletes a key value map (KVM) from an API proxy. KVM names are case sensitive.
+      operationId: 'deleteKVMAPIProxy'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/api_name'
+      - $ref: '#/components/parameters/map_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KVM'
+              example:
+                encrypted: true
+                entry:
+                - 
+                name: mykvm
+        '400':
+          description: Bad request
+    get:
+      tags: ["Key Value Map"]
+      summary: Get key value map in an API proxy
+      description: >-
+        Gets a key value map (KVM) in an API proxy, including the keys and values. KVM names are case sensitive.
+        
+        
+        With **Apigee Edge for Public Cloud**, the  maximum number of KVM entries returned is 1000. 
+      operationId: 'getKVMAPIProxy'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/api_name'
+      - $ref: '#/components/parameters/map_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KVM'
+              example:
+                encrypted: true
+                entry:
+                - name: keyname
+                  value: keyvalue
+                name: mykvm
+        '400':
+          description: Bad request
+  "/organizations/{org_name}/apis/{api_name}/keyvaluemaps/{map_name}/entries":
+    post:
+      tags: ["Key Value Map"]
+      summary: Create an entry in an API proxy-scoped KVM
+      description: >-
+        Creates an entry in an existing key value map (KVM) scoped to an API proxy.
+        
+        
+        A key entry cannot be larger than 2 KB. KVM names are case sensitive.
+        
+        
+        **Note**: **Apigee Edge for the Public Cloud only**.
+      operationId: 'createKVMEntryAPIProxy'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/api_name'
+      - $ref: '#/components/parameters/map_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: 
+                    type: string
+                    description: Name of the entry.
+                  value:
+                    type: string
+                    description: Value of the entry.
+              example:
+                name: keyname
+                value: keyvalue
+        '400':
+          description: Bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  description: Name of the entry.
+                value:
+                  type: string
+                  description: Value of the entry.
+            example:
+              name: keyname
+              value: keyvalue
+  "/organizations/{org_name}/apis/{api_name}/keyvaluemaps/{map_name}/entries/{entry_name}":
+    post:
+      tags: ["Key Value Map"]
+      summary: Update an entry in an API proxy-scoped KVM
+      description: >-
+        Updates an entry in a key value map (KVM) scoped to an API proxy. 
+        
+        
+        **Note**: **Apigee Edge for the Public Cloud only**.
+        
+        
+        A key cannot be larger than 2 KB. KVM names are case sensitive.
+        
+        
+        This method does not override the existing map. Instead, it updates the entries if they exist, or adds them if they do no exist. It can take several minutes before the new value is visible to runtime traffic.
+        
+        
+        For `entry_name`, use the key.
+      operationId: 'updateKVMEntryAPIProxy'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/api_name'
+      - $ref: '#/components/parameters/map_name'
+      - $ref: '#/components/parameters/entry_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: 
+                    type: string
+                    description: Name of the entry.
+                  value:
+                    type: string
+                    description: Value of the entry.
+              example:
+                name: keyname
+                value: keyvalue
+        '400':
+          description: Bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  description: Name of the entry.
+                value:
+                  type: string
+                  description: Value of the entry.
+            example:
+              name: keyname
+              value: keyvalue
+    get:
+      tags: ["Key Value Map"]
+      summary: Get a key's value in an API proxy-scoped key value map
+      description: >-
+        Gets the value of a key in an API proxy-scoped key value map (KVM). KVM names are case sensitive.
+      operationId: 'getKVMEntryAPIProxy'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/api_name'
+      - $ref: '#/components/parameters/map_name'
+      - $ref: '#/components/parameters/entry_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: 
+                    type: string
+                    description: Name of the entry.
+                  value:
+                    type: string
+                    description: Value of the entry.
+              example:
+                name: keyname
+                value: keyvalue
+        '400':
+          description: Bad request
+    delete:
+      tags: ["Key Value Map"]
+      summary: Delete an entry from an API-proxy scoped key value map
+      description: >-
+        Deletes an entry from an API proxy-scoped key value map (KVM) along with its associated entries. KVM names are case sensitive.
+      operationId: 'deleteKVMEntryAPIProxy'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/api_name'
+      - $ref: '#/components/parameters/map_name'
+      - $ref: '#/components/parameters/entry_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: 
+                    type: string
+                    description: Name of the entry.
+                  value:
+                    type: string
+                    description: Value of the entry.
+              example:
+                name: keyname
+                value: keyvalue
+        '400':
+          description: Bad request
+  "/organizations/{org_name}/apis/{api_name}/keyvaluemaps/{map_name}/keys":
+    get:
+      tags: ["Key Value Map"]
+      summary: List keys in an API proxy key value map
+      description: >-
+        Lists keys in a key value map (KVM) scoped to an API proxy. KVM names are case sensitive.
+        
+        
+        **Note**: **Apigee Edge for Public Cloud only**.
+        
+
+        * By default, the maximum number of keys returned is 100. You can increase this to a maximum of 1000 using the count query parameter.
+        
+        * Paginate the list of keys returned using the `startkey` and `count` query parameters.
+        
+        * You can also create and manage environment-scoped key value maps in the management UI. For more information, see <a href="https://docs.apigee.com/docs/api-services/content/creating-and-editing-environment-keyvalue-maps">Creating and editing environment key value maps</a>.
+        
+      operationId: 'listKeysKVMAPIProxy'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/api_name'
+      - $ref: '#/components/parameters/map_name'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/startkey'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Bad request
+  "/organizations/{org_name}/apis/{api_name}/revisions/{revision_number}/keyvaluemaps":
+    post:
+      tags: ["Key Value Map"]
+      summary: Create key value map in an API proxy revision
+      description: >-
+        Creates a key value map (KVM) scoped to an API proxy revision.
+        
+        
+        **Note**: **Apigee Edge for Public Cloud only**.
+      operationId: 'createKVMAPIProxyRevision'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/api_name'
+      - $ref: '#/components/parameters/revision_number'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KVM'
+              example:
+                encrypted: true
+                entry:
+                - name: keyname
+                  value: keyvalue
+                name: mykvm
+        '400':
+          description: Bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KVM'
+            example:
+              encrypted: true
+              entry:
+              - name: keyname
+                value: keyvalue
+              name: mykvm
+  "/organizations/{org_name}/apis/{api_name}/revisions/{revision_number}/keyvaluemaps/{map_name}/entries":
+    post:
+      tags: ["Key Value Map"]
+      summary: Create an entry in an API proxy revision-scoped KVM
+      description: >-
+        Creates an entry in an existing key value map (KVM) scoped to an API proxy revision. 
+        
+        
+        **Note**: **Apigee Edge for the Public Cloud only**.
+        
+        
+        A key/entry-name cannot be larger than 2 KB. KVM names are case sensitive.
+      operationId: 'createKVMEntryAPIProxyRevision'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/api_name'
+      - $ref: '#/components/parameters/revision_number'
+      - $ref: '#/components/parameters/map_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: 
+                    type: string
+                    description: Name of the entry.
+                  value:
+                    type: string
+                    description: Value of the entry.
+              example:
+                name: keyname
+                value: keyvalue
+        '400':
+          description: Bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  description: Name of the entry.
+                value:
+                  type: string
+                  description: Value of the entry.
+            example:
+              name: keyname
+              value: keyvalue
+  "/organizations/{org_name}/apis/{api_name}/revisions/{revision_number}/keyvaluemaps/{map_name}/entries/{entry_name}":
+    post:
+      tags: ["Key Value Map"]
+      summary: Update an entry in an API proxy revision-scoped KVM
+      description: >-
+        Updates an entry in a key value map (KVM) scoped to an API proxy revision. 
+
+
+        **Note**: **Apigee Edge for the Public Cloud only**.
+        
+
+        A key cannot be larger than 2 KB. KVM names are case sensitive.
+
+
+        This method does not override the existing map. Instead, it updates the entries if they exist, or adds them if they do not exist. It can take several minutes before the new value is visible to runtime traffic.
+        
+        
+        For `entry_name`, use the key.
+      operationId: 'updateEntryAPIProxyRevision'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/api_name'
+      - $ref: '#/components/parameters/revision_number'
+      - $ref: '#/components/parameters/map_name'
+      - $ref: '#/components/parameters/entry_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: 
+                    type: string
+                    description: Name of the entry.
+                  value:
+                    type: string
+                    description: Value of the entry.
+              example:
+                name: keyname
+                value: keyvalue
+        '400':
+          description: Bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  description: Name of the entry.
+                value:
+                  type: string
+                  description: Value of the entry.
+            example:
+              name: keyname
+              value: keyvalue
+  "/organizations/{org_name}/apis/{api_name}/revisions/{revision_number}/keyvaluemaps/{map_name}/keys":
+    get:
+      tags: ["Key Value Map"]
+      summary: List keys in an API proxy revision key value map
+      description: >-
+        Lists keys in a key value map (KVM) scoped to an API proxy revision. KVM names are case sensitive.
+        
+        
+        **Note**: **Apigee Edge for Public Cloud only**.
+      operationId: 'listKVMEntryAPIProxyRevision'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/api_name'
+      - $ref: '#/components/parameters/revision_number'
+      - $ref: '#/components/parameters/map_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Bad request
+  "/organizations/{org_name}/environments/{env_name}/keyvaluemaps":
+    post:
+      tags: ["Key Value Map"]
+      summary: Create key value map in an environment
+      description: >-
+        Creates a key value map (KVM) in an environment.
+        
+
+        A KVM is a simple structure for persistently storing name/value pairs as entries in a named map. The entries in a KVM can be retrieved at runtime by the <a href="https://docs.apigee.com/api-services/reference/key-value-map-operations-policy">KeyValueMapOperations policy</a> or code running on Apigee Edge. Use KVMs for use cases such as profile-based access control, storing environment-specific data, to control application-specific behavior, and so on.
+        
+
+        You can create an encrypted KVM by adding `"encrypted" : "true"` to the request payload. You update encrypted KVMs the same way you update non-encrypted KVMs.
+        
+        
+        KVM names are case sensitive.
+        
+        
+        **Note**: You can also create and manage environment-scoped KMVs in the Edge UI. For more information, see <a href="https://docs.apigee.com/api-services/content/creating-and-editing-environment-keyvalue-maps">Creating and editing environment key value maps</a>.
+        
+        
+        For information on retrieving KVMs, see <a href="https://docs.apigee.com/api-services/reference/key-value-map-operations-policy">KeyValueMapOperations policy</a>.
+      operationId: 'createKVMEnv'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/env_name'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KVM'
+              example:
+                encrypted: true
+                entry:
+                - name: keyname
+                  value: keyvalue
+                name: mykvm
+        '400':
+          description: Bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KVM'
+            example:
+              encrypted: true
+              entry:
+              - name: keyname
+                value: keyvalue
+              name: mykvm
+    get:
+      tags: ["Key Value Map"]
+      summary: List key value maps in an Environment
+      description: >-
+        Lists the key value maps (KVMs) for an environment. 
+        
+        
+        **Note**: You can also create and manage environment-scoped KVMs in the Edge UI. For more information, see <a href="https://docs.apigee.com/api-platform/cache/creating-and-editing-environment-keyvalue-maps">Creating and editing environment key value maps</a>.
+      operationId: 'listKVMsEnv'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/env_name'
+      - $ref: '#/components/parameters/expand'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Bad request
+  "/organizations/{org_name}/environments/{env_name}/keyvaluemaps/{map_name}":
+    get:
+      tags: ["Key Value Map"]
+      summary: Get key value map in an environment
+      description: >-
+        Gets a key value map (KVM) in an API proxy by name, along with the keys and values. KVM names are case sensitive.
+        
+        
+        **Note**: With Apigee Edge for Public Cloud, the maximum number of KVM entries returned is 1000. 
+        
+        
+        You can also create and manage environment-scoped KVMs in the Edge UI. For more information, see <a href="https://docs.apigee.com/docs/api-services/content/creating-and-editing-environment-keyvalue-maps">Creating and editing environment key value maps</a>.
+      operationId: 'getKVMEnv'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/env_name'
+      - $ref: '#/components/parameters/map_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KVM'
+              example:
+                encrypted: true
+                entry:
+                - name: keyname
+                  value: keyvalue
+                name: mykvm
+        '400':
+          description: Bad request
+    delete:
+      tags: ["Key Value Map"]
+      summary: Delete key value map from an environment
+      description: >-
+        Deletes a key value map (KVM) and all associated entries from an environment. KVM names are case sensitive.
+        
+        
+        **Note**: You can also create and manage environment-scoped key value maps in the Edge UI. For more information, see <a href="https://docs.apigee.com/docs/api-services/content/creating-and-editing-environment-keyvalue-maps">Creating and editing environment key value maps</a>.
+      operationId: 'deleteKVMEnv'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/env_name'
+      - $ref: '#/components/parameters/map_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KVM'
+              example:
+                encrypted: true
+                entry:
+                - 
+                name: mykvm
+        '400':
+          description: Bad request
+    post:
+      tags: ["Key Value Map"]
+      summary: Update key value map in an environment
+      description: >-
+        Updates an existing key value map (KVM) in an environment. 
+        
+        
+        This API does not override the existing map. Instead, this method updates the entries if they exist or adds them if not. It can take several minutes before the new value is visible to runtime traffic.
+        
+        
+        **Notes**: 
+        
+        * **Apigee Edge for Private Cloud only**. For Apigee Edge for Public Cloud use Update an entry in an environment-scoped KVM.
+        
+        * You can also create and manage environment-scoped key value maps in the Edge UI. For more information, see <a href="https://docs.apigee.com/docs/api-services/content/creating-and-editing-environment-keyvalue-maps">Creating and editing environment key value maps</a>.
+      operationId: 'updateKVMEnv'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/env_name'
+      - $ref: '#/components/parameters/map_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KVM'
+              example:
+                encrypted: true
+                entry:
+                - name: keyname
+                  value: keyvalue
+                name: mykvm
+        '400':
+          description: Bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KVM'
+            example:
+              encrypted: true
+              entry:
+              - name: keyname
+                value: keyvalue
+              name: mykvm
+  "/organizations/{org_name}/environments/{env_name}/keyvaluemaps/{map_name}/entries":
+    post:
+      tags: ["Key Value Map"]
+      summary: Create an entry in an environment-scoped KVM
+      description: >-
+        Creates an entry in an existing key value map (KVM) scoped to an environment.
+        
+        
+        A key/entry-name cannot be larger than 2 KB. KVM names are case sensitive.
+        
+        
+        **Notes**: 
+        
+        * **Apigee Edge for the Public Cloud only**.
+        
+        * You can also create and manage environment-scoped key value maps in the Edge UI. For more information, see <a href="https://docs.apigee.com/docs/api-services/content/creating-and-editing-environment-keyvalue-maps">Creating and editing environment key value maps</a>.
+      operationId: 'createEntryKVMEnv'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/env_name'
+      - $ref: '#/components/parameters/map_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: 
+                    type: string
+                    description: Name of the entry.
+                  value:
+                    type: string
+                    description: Value of the entry.
+              example:
+                name: keyname
+                value: keyvalue
+        '400':
+          description: Bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  description: Name of the entry.
+                value:
+                  type: string
+                  description: Value of the entry.
+            example:
+              name: keyname
+              value: keyvalue
+  "/organizations/{org_name}/environments/{env_name}/keyvaluemaps/{map_name}/entries/{entry_name}":
+    post:
+      tags: ["Key Value Map"]
+      summary: Update an entry in an environment-scoped KVM
+      description: >-
+        Updates an entry in a key value map scoped to an environment. 
+        
+        
+        **Notes**: 
+        
+        
+        * **Apigee Edge for the Public Cloud only**.
+        
+        
+        * You can also create and manage environment-scoped key value maps in the management UI. For more information, see <a href="https://docs.apigee.com/docs/api-services/content/creating-and-editing-environment-keyvalue-maps">Creating and editing environment key value maps</a>.
+        
+        
+        A key cannot be larger than 2 KB. KVM names are case sensitive.
+        
+        
+        This method does not override the existing map. Instead, it updates the entries if they exist, or adds them if they do not exist. It can take several minutes before the new value is visible to runtime traffic.
+        
+        
+        For `entry_name`, use the key.
+      operationId: 'updateEntryKVMEnv'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/env_name'
+      - $ref: '#/components/parameters/map_name'
+      - $ref: '#/components/parameters/entry_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: 
+                    type: string
+                    description: Name of the entry.
+                  value:
+                    type: string
+                    description: Value of the entry.
+              example:
+                name: keyname
+                value: keyvalue
+        '400':
+          description: Bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  description: Name of the entry.
+                value:
+                  type: string
+                  description: Value of the entry.
+            example:
+              name: keyname
+              value: keyvalue
+    delete:
+      tags: ["Key Value Map"]
+      summary: Delete an entry from an environment-scoped key value map
+      description: >-
+        Deletes an entry from an environment-scoped key value map (KVM) along with associated entries. KVM names are case sensitive.
+        
+        
+        **Note**: You can also create and manage environment-scoped key value maps in the management UI. For more information, see <a href="https://docs.apigee.com/docs/api-services/content/creating-and-editing-environment-keyvalue-maps">Creating and editing environment key value maps</a>.
+      operationId: 'deleteEntryKVMEnv'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/env_name'
+      - $ref: '#/components/parameters/map_name'
+      - $ref: '#/components/parameters/entry_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: 
+                    type: string
+                    description: Name of the entry.
+                  value:
+                    type: string
+                    description: Value of the entry.
+              example:
+                name: keyname
+                value: keyvalue
+        '400':
+          description: Bad request
+    get:
+      tags: ["Key Value Map"]
+      summary: Get a the value of a key in an environment-scoped key value map
+      description: Get a key's value in an environment-scoped key value map
+      operationId: 'getKeyKVMEnv'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/env_name'
+      - $ref: '#/components/parameters/map_name'
+      - $ref: '#/components/parameters/entry_name'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+  "/organizations/{org_name}/environments/{env_name}/keyvaluemaps/{map_name}/keys":
+    get:
+      tags: ["Key Value Map"]
+      summary: List keys in an environment-scoped key value map
+      description: >-
+        Lists keys in a key value map (KVM) scoped to an environment. KVM names are case sensitive.
+        
+        
+        **Notes**: 
+        
+        
+        * **Apigee Edge for Public Cloud only**.
+        
+        * By default, the maximum number of keys returned is 100. You can increase this to a maximum of 1000 using the count query parameter.
+        
+        * Paginate the list of keys returned using the `startkey` and `count` query parameters.
+        
+        * You can also create and manage environment-scoped key value maps in the management UI. For more information, see <a href="https://docs.apigee.com/docs/api-services/content/creating-and-editing-environment-keyvalue-maps">Creating and editing environment key value maps</a>.
+        
+        
+      operationId: 'listKeysKMVEnv'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/env_name'
+      - $ref: '#/components/parameters/map_name'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/startkey'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Bad request
+  "/organizations/{org_name}/keyvaluemaps":
+    post:
+      tags: ["Key Value Map"]
+      summary: Create key value map in an organization
+      description: >-
+        Creates a key value map (KVM) in an organization.
+        
+
+        A KVM is a simple structure for persistently storing name/value pairs as entries in a named map. The entries in a KVM can be retrieved at runtime by the <a href="https://docs.apigee.com/api-services/reference/key-value-map-operations-policy">KeyValueMapOperations policy</a> or code running on Apigee Edge. Use KVMs for use cases such as profile-based access control, storing environment-specific data, to control application-specific behavior, and so on.
+        
+
+        You can create an encrypted KVM by adding `"encrypted" : "true"` to the request payload. You update encrypted KVMs the same way you update non-encrypted KVMs.
+        
+        
+        KVM names are case sensitive.
+        
+        
+        **Note**: KVMs created at the organization <a href="https://docs.apigee.com/api-platform/cache/key-value-maps.html#scope">scope</a> do not appear in the Edge UI. Only KVMs created at the environment scope apear in the Edge UI. To see the KVMs defined at the organization scope, use the List KVMs for an organization API.
+        
+        
+        For information on retrieving KVMs, see <a href="https://docs.apigee.com/api-services/reference/key-value-map-operations-policy">KeyValueMapOperations policy</a>.
+      operationId: 'createKVMOrg'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KVM'
+              example:
+                encrypted: true
+                entry:
+                - name: keyname
+                  value: keyvalue
+                name: mykvm
+        '400':
+          description: Bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KVM'
+            example:
+              encrypted: true
+              entry:
+              - name: keyname
+                value: keyvalue
+              name: mykvm
+    get:
+      tags: ["Key Value Map"]
+      summary: List key value maps in an organization
+      description: Lists key value maps in an organization.
+      operationId: 'listKVMsOrg'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/expand'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Bad request
+  "/organizations/{org_name}/keyvaluemaps/{map_name}":
+    get:
+      tags: ["Key Value Map"]
+      summary: Get key value map in an organization
+      description: Gets a key value map in an organization.
+      operationId: 'getKVMOrg'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/map_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KVM'
+              example:
+                encrypted: true
+                entry:
+                - name: keyname
+                  value: keyvalue
+                name: mykvm
+        '400':
+          description: Bad request
+    post:
+      tags: ["Key Value Map"]
+      summary: Update key value map in an organization
+      description: >-
+        Updates an existing key value map (KVM) in an environment. 
+        
+        
+        This API does not override the existing map. Instead, this method updates the entries if they exist or adds them if not. It can take several minutes before the new value is visible to runtime traffic.
+        
+        
+        **Note**: **Apigee Edge for the Private Cloud only**. For Apigee Edge for the Cloud, update map entries individually instead of in bulk. See Update an entry in an organization-scoped KVM.
+      operationId: 'updateKVMOrg'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/map_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KVM'
+              example:
+                encrypted: true
+                entry:
+                - name: keyname
+                  value: keyvalue
+                name: mykvm
+        '400':
+          description: Bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KVM'
+            example:
+              encrypted: true
+              entry:
+              - name: keyname
+                value: keyvalue
+              name: mykvm
+    delete:
+      tags: ["Key Value Map"]
+      summary: Delete key value map from an organization
+      description: >-
+        Deletes a key value map (KVM) and all associated entries from an organization. KVM names are case sensitive.
+      operationId: 'deleteKVMOrg'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/map_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KVM'
+              example:
+                encrypted: true
+                entry:
+                - 
+                name: mykvm
+        '400':
+          description: Bad request
+  "/organizations/{org_name}/keyvaluemaps/{map_name}/entries":
+    post:
+      tags: ["Key Value Map"]
+      summary: Create a key value entry in an organization-scoped KVM
+      description: >-
+        Creates an entry in an existing key value map (KVM) scoped to an organization.
+        
+        
+        A key/entry-name cannot be larger than 2 KB. KVM names are case sensitive.
+        
+        
+        **Note**: **Apigee Edge for the Public Cloud only**.
+      operationId: 'createEntryKVMOrg'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/map_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: 
+                    type: string
+                    description: Name of the entry.
+                  value:
+                    type: string
+                    description: Value of the entry.
+              example:
+                name: keyname
+                value: keyvalue
+        '400':
+          description: Bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  description: Name of the entry.
+                value:
+                  type: string
+                  description: Value of the entry.
+            example:
+              name: keyname
+              value: keyvalue
+  "/organizations/{org_name}/keyvaluemaps/{map_name}/entries/{entry_name}":
+    delete:
+      tags: ["Key Value Map"]
+      summary: Delete an entry from an organization-scoped KVM
+      description: >-
+        Deletes an entry from an organization-scoped key value map (KVM). KVM names are case sensitive.
+      operationId: 'deleteEntryKVMOrg'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/map_name'
+      - $ref: '#/components/parameters/entry_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: 
+                    type: string
+                    description: Name of the entry.
+                  value:
+                    type: string
+                    description: Value of the entry.
+              example:
+                name: keyname
+                value: keyvalue
+        '400':
+          description: Bad request
+    get:
+      tags: ["Key Value Map"]
+      summary: Get the value of a key in an organization-scoped key value map
+      description: >-
+        Gets the value of a key in an organization-scoped key value map (KVM). KVM names are case sensitive.
+      operationId: 'getKeyKVMOrg'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/map_name'
+      - $ref: '#/components/parameters/entry_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: 
+                    type: string
+                    description: Name of the entry.
+                  value:
+                    type: string
+                    description: Value of the entry.
+              example:
+                name: keyname
+                value: keyvalue
+        '400':
+          description: Bad request
+    post:
+      tags: ["Key Value Map"]
+      summary: Update an entry in an organization-scoped KVM
+      description: >-
+        Updates an entry in a key value map scoped to an organization. 
+        
+        
+        **Note**: **Apigee Edge for the Public Cloud only**.
+        
+        
+        A key cannot be larger than 2 KB. KVM names are case sensitive.
+        
+        
+        This method does not override the existing map. Instead, it updates the entries if they exist, or adds them if they do not exist. It can take several minutes before the new value is visible to runtime traffic.
+        
+        
+        For `entry_name`, use the key.
+      operationId: 'updateEntryKVMOrg'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/map_name'
+      - $ref: '#/components/parameters/entry_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: 
+                    type: string
+                    description: Name of the entry.
+                  value:
+                    type: string
+                    description: Value of the entry.
+              example:
+                name: keyname
+                value: keyvalue
+        '400':
+          description: Bad request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  description: Name of the entry.
+                value:
+                  type: string
+                  description: Value of the entry.
+            example:
+              name: keyname
+              value: keyvalue
+  "/organizations/{org_name}/keyvaluemaps/{map_name}/keys":
+    get:
+      tags: ["Key Value Map"]
+      summary: List keys in an organization key value map
+      description: >-
+        Lists keys in a key value map (KVM) scoped to an organization. KVM names are case sensitive.
+        
+        
+        **Note**: **Apigee Edge for Public Cloud only**.
+        
+        * By default, the maximum number of keys returned is 100. You can increase this to a maximum of 1000 using the count query parameter.
+        
+        * Paginate the list of keys returned using the `startkey` and `count` query parameters.
+        
+        * You can also create and manage environment-scoped key value maps in the management UI. For more information, see <a href="https://docs.apigee.com/docs/api-services/content/creating-and-editing-environment-keyvalue-maps">Creating and editing environment key value maps</a>.
+        
+      operationId: 'listKeysKVMOrg'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/map_name'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/startkey'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Bad request
+components:
+  securitySchemes:
+    Basic:
+      type: http
+      scheme: basic
+      description: >-
+        Multi-factor authentication is not supported.
+    OAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: >-
+        For OAuth, enter the following in the Key field: Bearer %your-token%
+        (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)
+  parameters:
+    org_name:
+      in: path
+      name: org_name
+      required: true
+      schema:
+        type: string
+      description: Organization name.
+    env_name:
+      in: path
+      name: env_name
+      required: true
+      schema:
+        type: string
+      description: Environment name.
+    api_name:
+      in: path
+      name: api_name
+      required: true
+      schema:
+        type: string
+      description: API proxy name.
+    revision_number:
+      in: path
+      name: revision_number
+      required: true
+      schema:
+        type: string
+      description: API proxy revision number.
+    map_name:
+      in: path
+      name: map_name
+      required: true
+      schema:
+        type: string
+      description: Key value map name.
+    entry_name:
+      in: path
+      name: entry_name
+      required: true
+      schema:
+        type: string
+      description: Name of the key for the key/value pair.
+    expand:
+      in: query
+      name: expand
+      required: false
+      schema:
+        type: boolean
+      description: "Set to `true` to expand the view of the response. <b>Note</b>: This parameter only applies to Apigee Edge for Private Cloud. It has no effect in Apigee Edge for Public Cloud."
+    startkey:
+      in: query
+      name: startkey
+      required: false
+      schema:
+        type: string
+      description: |
+        Returns a list of keys starting with the specified key. For example, if an unfiltered list
+        includes&#58;
+        
+          - `mykey_12`
+          - `mykey_products`
+          - `ab_test_key`
+          - `user_status`
+          
+        If the startkey is `mykey_products`, the returned list will be&#58;
+        
+          - `ab_test_key`
+          - `user_status`
+          
+        For pagination, start with an empty or missing `startkey`, and then use the last returned value to get the next page of (up to) `count` keys. Repeat until you get an empty array.
+        
+        Note: `/keyvaluemaps/{map_name}/keys` is the only way to get every entry when `/keyvaluemaps/{map_name}` exceeds the 1000 maximim entries returned.
+        The order of keys is stable but does not match the literal key or insertion order. If you add a new entry, the new key can appear anywhere.
+
+    count:
+      in: query
+      name: count
+      required: false
+      schema:
+        type: integer
+      description: Number of keys to return. By default, the maximum number of keys returned is 100. You can increase this to a maximum of 1000 using the `count` query parameter. Use with the `startkey` parameter to provide more targeted filtering or pagination.
+  schemas:
+    KVMs:
+      type: array
+      description: KVM entries.
+      items:
+        $ref: '#/components/schemas/KVM'
+    KVM:
+      description: KVM entry details.
+      type: object
+      required:
+      - name
+      - entry
+      properties:
+        name:
+          description: >-
+            Name of the KVM. Valid characters include: `A-Z0-9._\-$ %`
+          type: string
+        encrypted:
+          description: Flag that specifies whether the KVM is encrypted. Defaults to `false`.
+          type: boolean
+        entry:
+          type: array
+          description: >-
+            Name/value pairs for the KVM entry that define the data to be stored. Valid characters include: `A-Z0-9._\-$ %`
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: KVM entry name.
+              value:
+                type: string
+                description: KVM entry value.

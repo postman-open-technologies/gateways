@@ -1,0 +1,99 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Oracle
+  provider: Oracle
+  slug: oracle
+  rating: 2
+  license: Proprietary
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    The Gateway service enables you to publish APIs with private endpoints that are accessible from within your network, and which you can expose with public IP addresses if you want them to accept internet traffic. The endpoints support API validation, request and response transformation, CORS, authentication and authorization, and request limiting.
+  platformCapabilities:
+    - Gateway
+    - Analytics
+    - Portal
+    - Documentation
+    - SDK
+  gatewayCapabilities:
+    - Mediation
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+  downstreamProtocols:
+    - HTTP/1.1
+  deliveryModels:
+    - Customer Managed (Cloud)
+    - Customer Managed (On-Premises)
+    - Hybrid
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Cache Eviction
+        - Cache Invalidation
+        - Cache Lookup
+        - Cache Population
+        - Cache Storage
+        - Cache Target Response
+        - Cache Validation
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Regions
+        - Throttling
+        - Traffic Optimization
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Cache Eviction
+        - Cache Lookup
+        - Cache Store
+        - Context Variables
+        - Request Size Limit
+        - Request Validation
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - URL Rewriting
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - IP Access Rules
+        - Message Inspection
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+    - category: Extensions
+      capabilities:
+        - HTTP Callout
+        - HTTP integrations
+        - Command Line Interface (CLI)
+
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://docs.oracle.com/en-us/iaas/Content/APIGateway/home.htm
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://docs.oracle.com/en-us/iaas/Content/APIGateway/home.htm
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/oracle.png     

@@ -1,0 +1,896 @@
+openapi: 3.0.0
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+info:
+  title: Instance Groups API
+  description: >-
+    Use the Instance Groups API to manage a set of instances that
+    can be used for scaling and high availability.
+  version: v1
+paths:
+  /infrastructure/instance-groups:
+    get:
+      tags:
+        - Instance Groups
+      summary: List Instance Groups
+      description: >-
+        Returns an unfiltered list of all Instance Group
+        resources.
+      operationId: listInstanceGroups
+      responses:
+        '200':
+          description: >-
+            Successfully retieved a list of all the configured
+            Instance Groups.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListInstanceGroupsResponse'
+              example:
+                value:
+                  items:
+                    - currentStatus:
+                        instanceRefs: []
+                        state:
+                          conditions: []
+                          selfConfigState:
+                            configured: 1
+                            configuring: 0
+                            deleting: 0
+                            error: 0
+                            isConfigured: true
+                            isConfiguring: false
+                            isDeleting: false
+                            isError: false
+                            total: 1
+                      desiredState: {}
+                      metadata:
+                        createTime: '2020-05-13T09:29:49.464273Z'
+                        description: us-west-2 autoscale group
+                        displayName: aws-autoscale-group
+                        kind: instance-group
+                        links:
+                          rel: >-
+                            /api/v1/infrastructure/instance-groups/amz-us-west-2-as-group
+                        name: amz-us-west-2-as-group
+                        uid: 802ef1f8-9105-474a-b9a7-599837efd6b4
+                        updateTime: '2020-05-13T09:29:49.464273Z'
+                    - currentStatus:
+                        instanceRefs:
+                          - ref: >-
+                              /infrastructure/locations/eks-cluster/instances/30dc361a3729
+                          - ref: >-
+                              /infrastructure/locations/eks-cluster/instances/01a9eead50e5
+                        state:
+                          conditions: []
+                          selfConfigState:
+                            configured: 1
+                            configuring: 0
+                            deleting: 0
+                            error: 0
+                            isConfigured: true
+                            isConfiguring: false
+                            isDeleting: false
+                            isError: false
+                            total: 1
+                      desiredState: {}
+                      metadata:
+                        createTime: '2020-05-13T16:58:17.058124Z'
+                        description: K8S NGINX+ deployment
+                        displayName: k8s-nginx-deploy
+                        kind: instance-group
+                        links:
+                          rel: >-
+                            /api/v1/infrastructure/instance-groups/k8s-nginx-deploy
+                        name: k8s-nginx-deploy
+                        uid: 97d06b70-0d00-4863-b86d-40ab29efefdc
+                        updateTime: '2020-05-13T16:58:17.058124Z'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+        - Instance Groups
+      summary: Create an Instance Group
+      description: Creates an new Instance Group resource.
+      operationId: addInstanceGroup
+      requestBody:
+        description: Defines the Instance Group resource to be added.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstanceGroup'
+            example:
+              value:
+                metadata:
+                  name: k8s-nginx-deploy
+                  displayName: K8S NGINX+ deployment
+                  description: k8s-nginx-deploy
+                desiredState: {}
+      responses:
+        '202':
+          description: >-
+            The Instance Group resource has been accepted for
+            creation. The Instance Group will be created after it
+            is done configuring.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInstanceGroupResponse'
+              example:
+                value:
+                  metadata:
+                    createTime: '2020-05-13T16:58:17.058124Z'
+                    description: K8S NGINX+ deployment
+                    displayName: k8s-nginx-deploy
+                    kind: instance-group
+                    links:
+                      rel: >-
+                        /api/v1/infrastructure/instance-groups/k8s-nginx-deploy
+                    name: k8s-nginx-deploy
+                    uid: 97d06b70-0d00-4863-b86d-40ab29efefdc
+                    updateTime: '2020-05-13T16:58:17.058124Z'
+                  desiredState: {}
+                  currentStatus:
+                    instanceRefs:
+                      - ref: >-
+                          /infrastructure/locations/eks-cluster/instances/30dc361a3729
+                      - ref: >-
+                          /infrastructure/locations/eks-cluster/instances/01a9eead50e5
+                    state:
+                      conditions: []
+                      selfConfigState:
+                        configured: 1
+                        configuring: 0
+                        deleting: 0
+                        error: 0
+                        isConfigured: true
+                        isConfiguring: false
+                        isDeleting: false
+                        isError: false
+                        total: 1
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  '/infrastructure/instance-groups/{instanceGroupName}':
+    get:
+      tags:
+        - Instance Groups
+      summary: Get an Instance Group
+      description: >-
+        Returns information about a specified Instance Groupe
+        resource.
+      operationId: getInstanceGroup
+      parameters:
+        - $ref: '#/components/parameters/InstanceGroupName'
+      responses:
+        '200':
+          description: >-
+            Successfully retrieved the requested Instance Group
+            resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInstanceGroupResponse'
+              example:
+                value:
+                  metadata:
+                    createTime: '2020-05-13T16:58:17.058124Z'
+                    description: K8S NGINX+ deployment
+                    displayName: k8s-nginx-deploy
+                    kind: instance-group
+                    links:
+                      rel: >-
+                        /api/v1/infrastructure/instance-groups/k8s-nginx-deploy
+                    name: k8s-nginx-deploy
+                    uid: 97d06b70-0d00-4863-b86d-40ab29efefdc
+                    updateTime: '2020-05-13T16:58:17.058124Z'
+                  desiredState: {}
+                  currentStatus:
+                    instanceRefs:
+                      - ref: >-
+                          /infrastructure/locations/eks-cluster/instances/30dc361a3729
+                      - ref: >-
+                          /infrastructure/locations/eks-cluster/instances/01a9eead50e5
+                    state:
+                      conditions: []
+                      selfConfigState:
+                        configured: 1
+                        configuring: 0
+                        deleting: 0
+                        error: 0
+                        isConfigured: true
+                        isConfiguring: false
+                        isDeleting: false
+                        isError: false
+                        total: 1
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+        - Instance Groups
+      summary: Upsert an Instance Group
+      description: >-
+        Creates a new Instance Group resource or updates an
+        existing Instance Group resource.
+      operationId: upsertInstanceGroup
+      parameters:
+        - $ref: '#/components/parameters/InstanceGroupName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstanceGroup'
+            example:
+              value:
+                metadata:
+                  name: k8s-nginx-deploy
+                  displayName: K8S NGINX+ deployment
+                  description: k8s-nginx-deploy
+                desiredState: {}
+        required: true
+      responses:
+        '202':
+          description: >
+            The Instance Group resource has been accepted for
+            creation or update.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInstanceGroupResponse'
+              example:
+                value:
+                  metadata:
+                    createTime: '2020-05-13T16:58:17.058124Z'
+                    description: K8S NGINX+ deployment
+                    displayName: k8s-nginx-deploy
+                    kind: instance-group
+                    links:
+                      rel: >-
+                        /api/v1/infrastructure/instance-groups/k8s-nginx-deploy
+                    name: k8s-nginx-deploy
+                    uid: 97d06b70-0d00-4863-b86d-40ab29efefdc
+                    updateTime: '2020-05-13T16:58:17.058124Z'
+                  desiredState: {}
+                  currentStatus:
+                    instanceRefs:
+                      - ref: >-
+                          /infrastructure/locations/eks-cluster/instances/30dc361a3729
+                      - ref: >-
+                          /infrastructure/locations/eks-cluster/instances/01a9eead50e5
+                    state:
+                      conditions: []
+                      selfConfigState:
+                        configured: 1
+                        configuring: 0
+                        deleting: 0
+                        error: 0
+                        isConfigured: true
+                        isConfiguring: false
+                        isDeleting: false
+                        isError: false
+                        total: 1
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      tags:
+        - Instance Groups
+      summary: Delete an Instance Group
+      description: Deletes the specified Instance Group resource.
+      operationId: deleteInstanceGroup
+      parameters:
+        - $ref: '#/components/parameters/InstanceGroupName'
+      responses:
+        '204':
+          description: >-
+            Successfully deleted the specified Instance Group
+            resource.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+components:
+  parameters:
+    InstanceGroupName:
+      name: instanceGroupName
+      in: path
+      description: The name of the Instance Group.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+  schemas:
+    ListInstanceGroupsResponse:
+      x-f5-experimental: true
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstanceGroup'
+    GetInstanceGroupResponse:
+      x-f5-experimental: true
+      allOf:
+        - $ref: '#/components/schemas/InstanceGroup'
+    InstanceGroup:
+      x-f5-experimental: true
+      type: object
+      required:
+        - metadata
+        - desiredState
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          $ref: '#/components/schemas/InstanceGroupState'
+        currentStatus:
+          $ref: '#/components/schemas/InstanceGroupStatus'
+    InstanceGroupState:
+      x-f5-experimental: true
+      type: object
+      properties:
+        bigIpIntegration:
+          $ref: '#/components/schemas/BigIpIntegration'
+    InstanceGroupStatus:
+      x-f5-experimental: true
+      type: object
+      required:
+        - state
+      properties:
+        instanceRefs:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstanceRef'
+        bigIpIntegration:
+          $ref: '#/components/schemas/BigIpIntegration'
+        state:
+          $ref: '#/components/schemas/ConfigState'
+    InstanceRef:
+      x-f5-experimental: true
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ResourceRef'
+      description: Reference to a member Instance resource.
+    BigIpIntegration:
+      x-f5-experimental: true
+      type: object
+      properties:
+        integrationRef:
+          description: >-
+            Reference to a BIG-IP Integration object, indicating
+            that the Instances will be members of a BIG-IP server
+            pool.
+          $ref: '#/components/schemas/ResourceRef'
+        serverPoolIp:
+          description: >
+            The Instance IP address or CIDR to use when the
+            Instance is a member of a BIG-IP server pool.
+
+            If this is a CIDR, then the Instance IP address that
+            matches the mask will be the member address in the
+            BIG-IP server pool.
+
+            Otherwise, if this is an absolute IP address, that
+            will be used as the server-pool member address.
+          type: string
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    NamedLinks:
+      allOf:
+        - $ref: '#/components/schemas/SelfLinks'
+        - type: object
+          description: >
+            Contains information about the object being referred
+            to.
+
+
+            These are generally details -- like the object name
+            and display name --
+
+            that are useful to a consumer of the API that performs
+            further
+
+            processing. 
+
+
+            This object is only present in responses.
+              
+          properties:
+            name:
+              type: string
+              example: production
+              description: |
+                The name of the linked resource.
+            displayName:
+              type: string
+              example: Production Environment
+              description: A user friendly resource name.
+    ResourceRef:
+      type: object
+      required:
+        - ref
+      properties:
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: |
+            A reference to another NGINX Controller resource.
+        links:
+          $ref: '#/components/schemas/NamedLinks'
+    ConfigStateTally:
+      type: object
+      properties:
+        isConfigured:
+          type: boolean
+          description: The configuration operation is complete.
+        isConfiguring:
+          type: boolean
+          description: >-
+            The configuration of the resource, or of its
+            child(ren), is in process.
+        isError:
+          type: boolean
+          description: >-
+            An error occurred while configuring the resource or
+            its child(ren).
+        isDeleting:
+          type: boolean
+          description: >-
+            A delete operation is in progress for the resource or
+            its child(ren).
+        total:
+          type: integer
+          description: >-
+            The total number of resources to which the
+            configuration operation applies.
+        configured:
+          type: integer
+          description: >-
+            The number of resources that have a complete and valid
+            configuration.
+        configuring:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being configured.
+        error:
+          type: integer
+          description: >-
+            The number of resources that have encountered an error
+            during the configuration process.
+        deleting:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being deleted.
+    ConfigCondition:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The condition type.
+        message:
+          type: string
+          description: >-
+            A human-readable message that provides additional
+            information about the configuration operation.
+    ConfigState:
+      type: object
+      description: >
+        A representation of the resource's current configuration
+        state 
+
+        that comprises the status of the resource itself
+        (`selfConfigState`) and any child 
+
+        resources (`childrenConfigState`).
+
+
+        The conditions array provides additional information
+        during configuration changes.
+      properties:
+        selfConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        childrenConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigCondition'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+  responses:
+    BadRequest:
+      description: >
+        Bad input parameter, or possibly a bad URI. Check the
+        input for typos and try again.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+    Unauthorized:
+      description: |
+        User authentication is invalid or missing.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+    NotFound:
+      description: |
+        The specified instance group resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+    Conflict:
+      description: >
+        The request failed due to a conflict with an existing
+        instance group resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+  examples:
+    InstanceGroupRequest:
+      value:
+        metadata:
+          name: k8s-nginx-deploy
+          displayName: K8S NGINX+ deployment
+          description: k8s-nginx-deploy
+        desiredState: {}
+    GetInstanceGroupResponse:
+      value:
+        metadata:
+          createTime: '2020-05-13T16:58:17.058124Z'
+          description: K8S NGINX+ deployment
+          displayName: k8s-nginx-deploy
+          kind: instance-group
+          links:
+            rel: >-
+              /api/v1/infrastructure/instance-groups/k8s-nginx-deploy
+          name: k8s-nginx-deploy
+          uid: 97d06b70-0d00-4863-b86d-40ab29efefdc
+          updateTime: '2020-05-13T16:58:17.058124Z'
+        desiredState: {}
+        currentStatus:
+          instanceRefs:
+            - ref: >-
+                /infrastructure/locations/eks-cluster/instances/30dc361a3729
+            - ref: >-
+                /infrastructure/locations/eks-cluster/instances/01a9eead50e5
+          state:
+            conditions: []
+            selfConfigState:
+              configured: 1
+              configuring: 0
+              deleting: 0
+              error: 0
+              isConfigured: true
+              isConfiguring: false
+              isDeleting: false
+              isError: false
+              total: 1
+    ListInstanceGroupsResponse:
+      value:
+        items:
+          - currentStatus:
+              instanceRefs: []
+              state:
+                conditions: []
+                selfConfigState:
+                  configured: 1
+                  configuring: 0
+                  deleting: 0
+                  error: 0
+                  isConfigured: true
+                  isConfiguring: false
+                  isDeleting: false
+                  isError: false
+                  total: 1
+            desiredState: {}
+            metadata:
+              createTime: '2020-05-13T09:29:49.464273Z'
+              description: us-west-2 autoscale group
+              displayName: aws-autoscale-group
+              kind: instance-group
+              links:
+                rel: >-
+                  /api/v1/infrastructure/instance-groups/amz-us-west-2-as-group
+              name: amz-us-west-2-as-group
+              uid: 802ef1f8-9105-474a-b9a7-599837efd6b4
+              updateTime: '2020-05-13T09:29:49.464273Z'
+          - currentStatus:
+              instanceRefs:
+                - ref: >-
+                    /infrastructure/locations/eks-cluster/instances/30dc361a3729
+                - ref: >-
+                    /infrastructure/locations/eks-cluster/instances/01a9eead50e5
+              state:
+                conditions: []
+                selfConfigState:
+                  configured: 1
+                  configuring: 0
+                  deleting: 0
+                  error: 0
+                  isConfigured: true
+                  isConfiguring: false
+                  isDeleting: false
+                  isError: false
+                  total: 1
+            desiredState: {}
+            metadata:
+              createTime: '2020-05-13T16:58:17.058124Z'
+              description: K8S NGINX+ deployment
+              displayName: k8s-nginx-deploy
+              kind: instance-group
+              links:
+                rel: >-
+                  /api/v1/infrastructure/instance-groups/k8s-nginx-deploy
+              name: k8s-nginx-deploy
+              uid: 97d06b70-0d00-4863-b86d-40ab29efefdc
+              updateTime: '2020-05-13T16:58:17.058124Z'

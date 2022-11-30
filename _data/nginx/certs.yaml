@@ -1,0 +1,888 @@
+openapi: 3.0.0
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+info:
+  description: >-
+    Use the Certs API to manage the certificates used to secure
+    your App traffic.
+  version: v1
+  title: Certs API
+paths:
+  '/services/environments/{environmentName}/certs':
+    get:
+      tags:
+        - Certs
+      summary: List all Certs
+      description: >-
+        Returns a list of Cert metadata objects for all of the
+        Certs in the specified environment.
+      operationId: listCerts
+      responses:
+        '200':
+          description: >-
+            Successfully retrieved a list of Certs for the
+            specified Environment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertList'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      tags:
+        - Certs
+      summary: Create a Cert
+      operationId: createCert
+      description: |
+        Creates a new Cert resource in the specified Environment.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cert'
+      responses:
+        '201':
+          description: Successfully created the specified Cert resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertStatus'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '409':
+          description: >-
+            The request failed due to a naming conflict with an
+            existing resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    parameters:
+      - name: environmentName
+        description: The name of the Environment that contains the Cert.
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/EnvironmentName'
+  '/services/environments/{environmentName}/certs/{certName}':
+    get:
+      tags:
+        - Certs
+      summary: Get a Cert
+      operationId: getCert
+      description: Returns information for a specific Cert resource.
+      responses:
+        '200':
+          description: Sucessfully retrieved the requested Cert.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertStatus'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    put:
+      tags:
+        - Certs
+      summary: Upsert a Cert
+      operationId: updateCert
+      description: Creates a new Cert or updates an existing Cert resource.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cert'
+      responses:
+        '200':
+          description: Sucessfully updated the specified Cert resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertStatus'
+        '201':
+          description: Successfully created the requested Cert resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertStatus'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    delete:
+      tags:
+        - Certs
+      summary: Delete a Cert
+      operationId: deleteCert
+      description: Deletes the specified Cert resource.
+      responses:
+        '204':
+          description: The specified Cert resource was successfully deleted.
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '409':
+          description: >
+            The request to delete the specified Cert resource
+            failed.
+
+            The Cert is referenced by active objects and cannot be
+            deleted. Delete the referencing objects or remove the
+            references, then try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    parameters:
+      - name: environmentName
+        description: The name of the Environment that contains the Cert.
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/EnvironmentName'
+      - name: certName
+        description: The name of the Cert.
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ResourceName'
+components:
+  schemas:
+    ResourceName:
+      type: string
+      description: The name of a resource.
+      example: production
+    CertMetadata:
+      type: object
+      description: Public certificate metadata.
+      required:
+        - authorityKeyIdentifier
+        - commonName
+        - expired
+        - expiry
+        - issuer
+        - publicKeyType
+        - serialNumber
+        - signatureAlgorithm
+        - subject
+        - subjectAlternativeName
+        - subjectKeyIdentifier
+        - thumbprint
+        - thumbprintAlgorithm
+        - validFrom
+        - validTo
+        - version
+      properties:
+        authorityKeyIdentifier:
+          type: string
+          example: >-
+            2B D0 69 47 94 76 09 FE F4 6B 8D 2E 40 A6 F7 47 4D 7F
+            08 5E
+          description: >-
+            The identifier of the signing authority for the
+            certificate.
+        commonName:
+          type: string
+          example: www.myapp.com
+          description: >-
+            The Common Name (CN) for the certificate. This is
+            typically a Fully Qualified Domain Name (FQDN), and
+            must be the same as the web address users access when
+            connecting to a web site.
+        expired:
+          type: boolean
+          example: false
+          description: Indicates the expiration status of the certificate.
+        expiry:
+          type: integer
+          example: 35500034
+          description: >-
+            The number of seconds until the certificate will
+            expire.
+        issuer:
+          type: string
+          example: DigiCert Class 3 Extended Validation SSL SGC CA.
+          description: >-
+            Identifies the entity who signed and issued the
+            certificate.
+        publicKeyType:
+          type: string
+          example: RSA (2048 Bits)
+          description: >-
+            Identifies the encryption algorithm used to create the
+            public key for the ceritficate.
+        serialNumber:
+          type: string
+          example: '16469416336579571270'
+          description: A unique identifier for the certificate.
+        signatureAlgorithm:
+          type: string
+          example: SHA-256
+          description: Identifies the algorithm used to sign the certificate.
+        subject:
+          type: string
+          example: www.myapp.com
+          description: >-
+            Contains the Distinguished Name (DN) information for
+            the certificate.
+        subjectAlternativeName:
+          type: string
+          example: DNS Name=static.xxxx
+          description: >-
+            Defines additional identifies bound to the subject of
+            the certificate. For example, the DNS name is used to
+            add addtional domain names to a certificate.
+        subjectKeyIdentifier:
+          type: string
+          example: >-
+            31 EA 76 A9 23 74 A5 DF D4 FD EE A0 C1 A6 9E C6 11 0E
+            11 EC
+          description: >-
+            A hash value of the SSL certificate that can be used
+            to identify certificates that contain a particular
+            public key.
+        thumbprint:
+          type: string
+          example: >-
+            E6 A7 87 96 E0 C7 A3 E5 43 78 35 CA 16 78 5B 48 5A A9
+            DD C4 5C CD 0A 65 AA 89 33 E3 C3 D0 89 71
+          description: >-
+            A hash to ensure that the certificate has not been
+            modified.
+        thumbprintAlgorithm:
+          type: string
+          example: SHA-1
+          description: Defines the algorithm used to hash the certificate.
+        validFrom:
+          type: string
+          example: '2019-07-29T09:12:33.001Z'
+          description: The start of the validity period for the certificate.
+        validTo:
+          type: string
+          example: '2029-07-29T09:12:33.001Z'
+          description: The end of the validity period for the certificate.
+        version:
+          type: integer
+          example: 3
+          description: >-
+            The version of the certificate, typically 3 for X.509
+            certificates.
+    CertDesiredState:
+      type: object
+      discriminator:
+        propertyName: type
+        mapping:
+          PEM: '#/components/schemas/PEM'
+          PKCS12: '#/components/schemas/PKCS12'
+          REMOTE_FILE: '#/components/schemas/RemoteFile'
+      oneOf:
+        - $ref: '#/components/schemas/PEM'
+        - $ref: '#/components/schemas/PKCS12'
+        - $ref: '#/components/schemas/RemoteFile'
+    CertList:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CertStatus'
+    CertStatus:
+      type: object
+      required:
+        - metadata
+        - desiredState
+        - currentStatus
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          $ref: '#/components/schemas/CertDesiredState'
+        currentStatus:
+          $ref: '#/components/schemas/CertCurrentStatus'
+    CertCurrentStatus:
+      type: object
+      description: >
+        'Shows the current status of the certificate.
+
+
+        When any certificates have expired, the Certs service sets
+        `state.selfConfigState.isConfigured` and
+        `state.selfConfigState.isError` to `true`. The service
+        will also add a value to the conditons array with the type
+        "expiration" and a message that shows when the first
+        certificate will expire. For example, `conditions: [{type:
+        "expiration", message: "Certificate www.example.com will
+        expire in 29 days."}])`'
+      required:
+        - state
+        - certMetadata
+        - type
+      properties:
+        type:
+          type: string
+        privateKey:
+          type: string
+        publicCert:
+          type: string
+        data:
+          type: string
+        password:
+          type: string
+        caCerts:
+          type: array
+          items:
+            type: string
+        state:
+          $ref: '#/components/schemas/ConfigState'
+        certMetadata:
+          type: array
+          description: Public certificate metadata.
+          items:
+            $ref: '#/components/schemas/CertMetadata'
+    Cert:
+      type: object
+      description: Contains the certificate to upload.
+      required:
+        - metadata
+        - desiredState
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          $ref: '#/components/schemas/CertDesiredState'
+    PEM:
+      type: object
+      description: >
+        Defines a PEM-formatted certificate that contains a key
+        and certificates.
+
+
+        Because JSON does not support multi-line strings, you must
+        replace binary line feeds with ASCII line feeds (`\n`).
+
+        The private key data will be redacted in the response for
+        all get and list requests.
+      required:
+        - privateKey
+        - publicCert
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - PEM
+        password:
+          type: string
+          example: myPa$$w0rd
+          description: >-
+            The passphrase to use to decrypt the private key.
+            Required if the private key is encrypted.
+        privateKey:
+          type: string
+          example: >-
+            -----BEGIN PRIVATE KEY-----\n
+            MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALSQBtRafNJtTqN0\n
+            <EXAMPLE_SNIPPED>
+            nYiZq6TZUsHjfG2R9PlK6jsvno9O6amN96Al6ZSTTDjhr4VU7/RJ0p/cisiCboCX\n
+            4cCq6lFKpIpeZJI=\n -----END PRIVATE KEY-----
+          description: >
+            The private key used to sign the public certificate.
+
+
+            Because JSON does not support multi-line strings, you
+            must replace binary line feeds with ASCII line feeds
+            (`\n`). The private key data will be redacted in the
+            response for all get and list requests.
+        publicCert:
+          type: string
+          example: >-
+            -----BEGIN CERTIFICATE-----\n
+            MIICpzCCAhACCQDkjx7mP9cuRjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UEBhMC\n
+            <EXAMPLE_SNIPPED>
+            MiJVGawyxDzBm2UhzNOE0ABHfjAgM6PAYmtMhhQawk6bmttXYhJeqhLSji4LEj5d\n
+            Z4FmXQ5rWM0RWBs=\n -----END CERTIFICATE-----
+          description: >
+            The end-entity certificate, in PEM format.
+
+
+            Because JSON does not support multi-line strings, you
+            must replace binary line feeds with ASCII line feeds
+            (`\n`).
+        caCerts:
+          type: array
+          items:
+            type: string
+          example:
+            - >-
+              -----BEGIN CERTIFICATE-----\n
+              MIIE+zCCBGSgAwIBAgICAQ0wDQYJKoZIhvcNAQEFBQAwgbsxJDAiBgNVBAcTG1Zh\n
+              <EXAMPLE_SNIPPED>
+              WBsUs5iB0QQeyAfJg594RAoYC5jcdnplDQ1tgMQLARzLrUc+cb53S8wGd9D0Vmsf\n
+              SxOaFIqII6hR8INMqzW/Rn453HWkrugp++85j09VZw==\n
+              -----END CERTIFICATE-----
+          description: >
+            An optional list of intermediate certificates in PEM
+            format that are used to validate the public
+            certificate.
+
+
+            Because JSON does not support multi-line strings, you
+            must replace binary line feeds with ASCII line feeds
+            (`\n`).
+    PKCS12:
+      type: object
+      description: >-
+        Defines a cert with key and certificates encoded in PKCS12
+        format.
+      required:
+        - data
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - PKCS12
+        data:
+          type: string
+          example: >-
+            MIIGoQIBAzCCBmcGCSqGSIb3DQEHAaCCBlgEggZUMIIGUDCCA08GCSqGSIb3DQEHBqCCA0AwggM8AgEAMIIDNQYJKoZIhvcNAQcBMBwGCiqGSIb3DQEMAQYwDgQIe7ZblBoEW3QCAggAgIIDCCgLEvzp9n6<EXAMPLE_SNIPPED>9QbpGT0MDEwITAJBgUrDgMCGgUABBQJs6ZgeAMcxVLrq1hU+TlUOArMuQQIGK59vCBn0wECAggA
+          description: >-
+            A base-64-encoded string that contains a private key,
+            a public certificate, and, optionally, other
+            intermediate certificates.
+        password:
+          type: string
+          example: myPa$$w0rd
+          description: The password to use to decrypt PKCS12 data.
+    RemoteFile:
+      type: object
+      description: >
+        Define a Cert resource by providing references to remote
+        files.
+
+
+        > **Note:** These are file path references only. The
+        system can not validate the file contents or extract the
+        certificate metadata. Providing a PEM or PKCS12
+        certificate is recommended.
+      required:
+        - privateKey
+        - publicCert
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - REMOTE_FILE
+        privateKey:
+          type: string
+          example: /certs/www.example.com/example.key
+          description: The path to the private key file.
+        publicCert:
+          type: string
+          example: /certs/www.example.com/example.crt
+          description: >-
+            The path to the certificate bundle file. The file must
+            contain the public certificate and may contain
+            additional intermediate certificates.
+    EnvironmentName:
+      type: string
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    ConfigStateTally:
+      type: object
+      properties:
+        isConfigured:
+          type: boolean
+          description: The configuration operation is complete.
+        isConfiguring:
+          type: boolean
+          description: >-
+            The configuration of the resource, or of its
+            child(ren), is in process.
+        isError:
+          type: boolean
+          description: >-
+            An error occurred while configuring the resource or
+            its child(ren).
+        isDeleting:
+          type: boolean
+          description: >-
+            A delete operation is in progress for the resource or
+            its child(ren).
+        total:
+          type: integer
+          description: >-
+            The total number of resources to which the
+            configuration operation applies.
+        configured:
+          type: integer
+          description: >-
+            The number of resources that have a complete and valid
+            configuration.
+        configuring:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being configured.
+        error:
+          type: integer
+          description: >-
+            The number of resources that have encountered an error
+            during the configuration process.
+        deleting:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being deleted.
+    ConfigCondition:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The condition type.
+        message:
+          type: string
+          description: >-
+            A human-readable message that provides additional
+            information about the configuration operation.
+    ConfigState:
+      type: object
+      description: >
+        A representation of the resource's current configuration
+        state 
+
+        that comprises the status of the resource itself
+        (`selfConfigState`) and any child 
+
+        resources (`childrenConfigState`).
+
+
+        The conditions array provides additional information
+        during configuration changes.
+      properties:
+        selfConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        childrenConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigCondition'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'

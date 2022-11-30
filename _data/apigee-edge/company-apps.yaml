@@ -1,0 +1,562 @@
+openapi: 3.0.0
+servers:
+- url: https://api.enterprise.apigee.com/v1
+info:
+  title: Company apps API
+  description: >-
+    A consumer/client app associated with a company entity. For more information,
+        see <a href="https://docs.apigee.com/api-platform/publish/creating-apps-surface-your-api">Register apps and manage API keys</a>.
+  version: '1.0'
+security:
+- Basic: []
+- OAuth: []
+paths:
+  "/organizations/{org_name}/companies/{company_name}/apps":
+    post:
+      tags: ["Company", "Company App"]
+      summary: Create company app
+      description: >-
+        Creates an app associated with a company, associates the app with an API product, and auto-generates an API key for the app to use in calls to API proxies inside the API product. You must create a profile for the company in your organization before you can register apps that are associated with the company.
+
+
+        **Ensure optimal API product and app security**
+
+
+        An organization-level property, `features.keymanagement.disable.unbounded.permissions`, strengthens the security of API products in verifying API calls. When the property is set to `true`, the following features are enforced.
+
+
+        * **App creation**: When creating a developer or company app, the Edge API requires that the app be associated with an API product. (The Edge UI already enforces this.)
+
+
+
+        * **API product configuration**: To create or update an API product, the API product must include at least one API proxy or a resource path in its definition.
+
+
+        * **Runtime security**: API calls are rejected by an API product in the following situations:
+
+          * An API product doesn't include at least one API proxy or resource path. 
+
+          * If the `flow.resource.name` variable in the message doesn't include a resource path that the API product can evaluate.
+
+          * If the app making the API call isn't associated with an API product.
+
+
+        **Note:** Setting this organization property requires system administrator rights. Edge for Private Cloud system administrators can make add this property on their own with the Update organization properties API. If you are an Edge for Public Cloud user and the previously described restrictions are not in place, contact Apigee Support to set the organization property for you.
+      operationId: 'createCompanyApp'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/company_name'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyApp'
+              example:
+                appFamily: default
+                appId: 123abc-456-def
+                attributes:
+                - name: ADMIN_EMAIL
+                  value: admin@example.com
+                - name: MINT_BILLING_TYPE
+                  value: POSTPAID
+                callbackUrl: example.com
+                companyName: Acme
+                createdAt: 1568312504191
+                createdBy: ahamilton@example.com
+                credentials:
+                - apiProducts:
+                  - apiproduct: myproduct
+                    status: approved
+                  attributes: []
+                  consumerKey: F91jQrfX6CKhyEheXFBL3gxxxxx
+                  consumerSecret: TLbUJFyzOlLxxxx
+                  expiresAt: -1
+                  issuedAt: 1568312504682
+                  scopes: []
+                  status: approved
+                lastModifiedAt: 1568313405903
+                lastModifiedBy: ahamilton@example.com
+                name: myapp
+                scopes: []
+                status: approved
+        '400':
+          description: Bad request
+      requestBody:
+        description: Company app request.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyAppRequest'
+            example:
+              apiproducts: ["myproduct"]
+              attributes:
+              - name: ADMIN_EMAIL
+                value: admin@example.com
+              - name: MINT_BILLING_TYPE
+                value: POSTPAID
+              callbackUrl: example.com
+              name: myapp
+              scopes: []
+              status: approved
+    get:
+      tags: ["Company", "Company App"]
+      summary: List company apps
+      description: >-
+        Lists company apps in an organization. Optionally, you can expand the response to include the profile for each app.
+
+
+        With Apigee Edge for Public Cloud:
+
+        * A maximum of 100 company apps are returned per API call.
+
+        * You can paginate the list of company apps returned using the `startKey` and `count` query parameters.
+
+      operationId: 'listCompanyApps'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/company_name'
+      - $ref: '#/components/parameters/expand'
+      - $ref: '#/components/parameters/keyStatus'
+      - $ref: '#/components/parameters/count'
+      - $ref: '#/components/parameters/startKey'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: array
+                  items:
+                    type: string
+                - $ref: '#/components/schemas/CompanyApps'
+          description: OK
+        '400':
+          description: Bad request
+  "/organizations/{org_name}/companies/{company_name}/apps/{app_name}":
+    post:
+      tags: ["Company", "Company App"]
+      summary: Approve or revoke a company app
+      description: >-
+        Sets the API key status of a company app to `approved` or `revoked`.
+
+        If a company app is revoked, none of its API keys are valid for API calls, even though the keys themselves still display an "Approved" status.
+
+        The HTTP status code for success is: `204 No Content`.
+      operationId: 'approveRevokeCompanyApp'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/company_name'
+      - $ref: '#/components/parameters/app_name'
+      - $ref: '#/components/parameters/action'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad request
+    delete:
+      tags: ["Company", "Company App"]
+      summary: Delete company app
+      description: Deletes a company app.
+      operationId: 'deleteCompanyApp'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/company_name'
+      - $ref: '#/components/parameters/app_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyApp'
+              example:
+                appFamily: default
+                appId: 123abc-456-def
+                attributes:
+                - name: ADMIN_EMAIL
+                  value: admin@example.com
+                - name: MINT_BILLING_TYPE
+                  value: POSTPAID
+                callbackUrl: example.com
+                companyName: Acme
+                createdAt: 1568312504191
+                createdBy: ahamilton@example.com
+                credentials:
+                - apiProducts:
+                  - apiproduct: myproduct
+                    status: approved
+                  attributes: []
+                  consumerKey: F91jQrfX6CKhyEheXFBL3gxxxxx
+                  consumerSecret: TLbUJFyzOlLxxxx
+                  expiresAt: -1
+                  issuedAt: 1568312504682
+                  scopes: []
+                  status: approved
+                lastModifiedAt: 1568313405903
+                lastModifiedBy: ahamilton@example.com
+                name: myapp
+                scopes: []
+                status: approved
+        '400':
+          description: Bad request
+    put:
+      tags: ["Company", "Company App"]
+      summary: Update company app
+      description: >-
+        Updates an existing company app.
+
+        **Note**: You must include all current attribute, API product, and callback values in the payload along with any changes you want to make; otherwise, the existing values are removed. To display the current values, see Get the company app API.
+      operationId: ''
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/company_name'
+      - $ref: '#/components/parameters/app_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyApp'
+              example:
+                appFamily: default
+                appId: 123abc-456-def
+                attributes:
+                - name: ADMIN_EMAIL
+                  value: admin@example.com
+                - name: MINT_BILLING_TYPE
+                  value: POSTPAID
+                callbackUrl: example.com
+                companyName: Acme
+                createdAt: 1568312504191
+                createdBy: ahamilton@example.com
+                credentials:
+                - apiProducts:
+                  - apiproduct: myproduct
+                    status: approved
+                  attributes: []
+                  consumerKey: F91jQrfX6CKhyEheXFBL3gxxxxx
+                  consumerSecret: TLbUJFyzOlLxxxx
+                  expiresAt: -1
+                  issuedAt: 1568312504682
+                  scopes: []
+                  status: approved
+                lastModifiedAt: 1568313405903
+                lastModifiedBy: ahamilton@example.com
+                name: myapp
+                scopes: []
+                status: approved
+        '400':
+          description: Bad request
+      requestBody:
+        description: Company app details.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyAppRequest'
+            example:
+              apiproducts: ["myproduct"]
+              attributes:
+              - name: ADMIN_EMAIL
+                value: admin@example.com
+              - name: MINT_BILLING_TYPE
+                value: POSTPAID
+              callbackUrl: example.com
+              name: myapp
+              scopes: []
+              status: approved
+    get:
+      tags: ["Company", "Company App"]
+      summary: Get company app
+      description: >-
+        Gets the profile for a company app.
+      operationId: 'getCompanyApp'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/company_name'
+      - $ref: '#/components/parameters/app_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyApp'
+              example:
+                appFamily: default
+                appId: 123abc-456-def
+                attributes:
+                - name: ADMIN_EMAIL
+                  value: admin@example.com
+                - name: MINT_BILLING_TYPE
+                  value: POSTPAID
+                callbackUrl: example.com
+                companyName: Acme
+                createdAt: 1568312504191
+                createdBy: ahamilton@example.com
+                credentials:
+                - apiProducts:
+                  - apiproduct: myproduct
+                    status: approved
+                  attributes: []
+                  consumerKey: F91jQrfX6CKhyEheXFBL3gxxxxx
+                  consumerSecret: TLbUJFyzOlLxxxx
+                  expiresAt: -1
+                  issuedAt: 1568312504682
+                  scopes: []
+                  status: approved
+                lastModifiedAt: 1568313405903
+                lastModifiedBy: ahamilton@example.com
+                name: myapp
+                scopes: []
+                status: approved
+        '400':
+          description: Bad request
+components:
+  securitySchemes:
+    Basic:
+      type: http
+      scheme: basic
+      description: >-
+        Multi-factor authentication is not supported.
+    OAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    org_name:
+      in: path
+      name: org_name
+      required: true
+      schema:
+        type: string
+      description: Name of the organization.
+    company_name:
+      in: path
+      name: company_name
+      required: true
+      schema:
+        type: string
+      description: Name of the company.
+    app_name:
+      in: path
+      name: app_name
+      required: true
+      schema:
+        type: string
+      description: Name of the application.
+    action:
+      in: query
+      name: action
+      required: true
+      schema:
+        type: string
+      description: >-
+        Action to perform. Valid values include `approved` or `revoked`.
+    count:
+      in: query
+      name: count
+      required: false
+      schema:
+        type: integer
+      description: >-
+        **Apigee Edge for Public Cloud only**. Number of company apps to return in the API call. The limit is 100. Required if you specify `startKey`.
+    keyStatus:
+      in: query
+      name: keyStatus
+      required: false
+      schema:
+        type: string
+      description: >-
+        **Apigee Edge for Private Cloud only**. Filter list to apps with specific key status. Valid values
+        include `approved`, `pending`, or `revoked`.
+    expand:
+      in: query
+      name: expand
+      required: false
+      schema:
+        type: boolean
+      description: >-
+        Flag that specifies whether to view expanded details for each app. Set to `true` to view expanded details. Defaults to `false`. Not applicable if you use the `count` or `startKey` query parameters.
+    startKey:
+      in: query
+      name: startKey
+      required: false
+      schema:
+        type: string
+      description: >-
+        **Apigee Edge for Public Cloud only**. ID of the app from which to start displaying the list of apps.
+
+
+
+
+        For example, if the unfiltered list includes the following app names:
+
+
+        ```
+
+        "companyApp1",
+
+        "companyApp2",
+
+        "companyApp3"
+
+        ```
+
+
+        If you set the `startKey` to `companyApp2`, the list will include:
+
+
+        ```
+
+        "companyrApp2",
+
+        "companyApp3"
+
+        ```
+  schemas:
+    CompanyApps:
+      description: List of company app details.
+      type: object
+      properties:
+        app:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyApp'
+    CompanyApp:
+      description: Company app details.
+      type: object
+      properties:
+        appFamily:
+          description: Output only. App family.
+          type: string
+        appId:
+          description: Output only. ID of the app.
+          type: string
+        attributes:
+          description: >-
+            List of attributes used for customizing profile information or for app-specific processing. With Apigee Edge for Public Cloud, the custom attribute limit is 18.
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              value:
+                type: string
+        callbackUrl:
+          description: >-
+            Callback URL used by OAuth 2.0 authorization servers to communicate authorization codes back to apps.
+          type: string
+        companyName:
+          description: Output only. Name of the company.
+          type: string
+        createdAt:
+          format: int32
+          description: Output only. Time the app was created in milliseconds since epoch.
+          type: integer
+        createdBy:
+          description: Output only. Email address of the developer that created the app.
+          type: string
+        credentials:
+          description: >-
+            Output only. Set of credentials for the app. Credentials are API key/secret pairs associated with API products.
+          type: array
+          items:
+            type: object
+            properties:
+              apiProducts:
+                description: List of API products.
+                type: array
+                items:
+                  type: string
+              attributes:
+                description: List of attributes.
+                type: array
+                items:
+                  type: string
+              consumerKey:
+                description: Consumer API key.
+                type: string
+              consumerSecret:
+                description: Consumer secret.
+                type: string
+              expiresAt:
+                description: Time the credentials expire in milliseconds since epoch.
+                format: int32
+                type: integer
+              issuedAt:
+                format: int32
+                description: Time the credentials were issued in milliseconds since epoch.
+                type: integer
+              scopes:
+                description: OAuth scopes.
+                type: array
+                items:
+                  type: string
+              status:
+                description: Status of the credentials.
+                type: string
+        lastModifiedAt:
+          format: int32
+          description: Output only. Last modified time as milliseconds since epoch.
+          type: integer
+        lastModifiedBy:
+          description: Output only. Email of developer that last modified the app.
+          type: string
+        name:
+          description: >-
+            Name of the company app. Required when creating a company app; not required when updating a company app. The name becomes the unique ID of the app for this organization and company. Names must begin with an alphanumeric character and can contain letters, numbers, spaces, and the following characters: `. _ # - $ %`. While you can use spaces in the name, we recommend that you use camel case, underscores, or hyphens instead. Otherwise, you will have to URL encode the app name when you need to include it in the URL of other Edge API calls.
+          type: string
+        scopes:
+          description: >-
+            Scopes to apply to the app. The specified scope names must already exist on the API product that you associate with the app.
+          type: array
+          items:
+            type: string
+        status:
+          description: Status of the credential.
+          type: string
+    CompanyAppRequest:
+      description: Company app request.
+      type: object
+      properties:
+        apiProducts:
+          description: List of API products to which the app is associated (when creating or updating an app). The name of the API product is the name returned when you <a href="/docs/api-products/1/routes/organizations/%7Borg_name%7D/apiproducts/get">list API products</a>. For example, if the Display Name of the API product in the Edge UI is `Premium API Product`, then the name is `premium-api-product` (all lowercase with spaces replaced by hyphens). You can add API products later when you <a href="/docs/developer-apps/1/routes/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email%7D/apps/%7Bapp_name%7D/put">update the developer app</a>. Existing API products are listed in the `credentials` array.
+          type: array
+          items:
+            type: string
+        attributes:
+          description: >-
+            List of attributes used for customizing profile information or for app-specific processing. With Apigee Edge for Public Cloud, the custom attribute limit is 18.
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              value:
+                type: string
+        callbackUrl:
+          description: >-
+            Callback URL used by OAuth 2.0 authorization servers to communicate authorization codes back to apps.
+          type: string
+        keyExpiresIn:
+          type: integer
+          format: int32
+          description: Lifetime of the consumer key that will be generated for the developer app, in milliseconds. The default value, `-1`, indicates an infinite validity period. Once set, the expiration can't be updated.
+        name:
+          description: >-
+            Name of the company app. Required when creating a company app; not required when updating a company app. The name becomes the unique ID of the app for this organization and company. Names must begin with an alphanumeric character and can contain letters, numbers, spaces, and the following characters: `. _ # - $ %`. While you can use spaces in the name, we recommend that you use camel case, underscores, or hyphens instead. Otherwise, you will have to URL encode the app name when you need to include it in the URL of other Edge API calls.
+          type: string
+        scopes:
+          description: >-
+            Scopes to apply to the app. The specified scope names must already exist on the API product that you associate with the app.
+          type: array
+          items:
+            type: string
+        status:
+          description: Status of the credential.
+          type: string

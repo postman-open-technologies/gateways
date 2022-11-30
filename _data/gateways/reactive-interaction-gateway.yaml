@@ -1,0 +1,99 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Reactive Interaction Gateway
+  provider: Reactive Interaction Gateway
+  slug: reactive-interaction-gateway
+  rating: 2
+  license: Proprietary, Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    The REactive Interaction Gatewy is focused on optimizing microservice operations, decoupling the services using some kind of messaging service, like Kafka; now the backend-for-frontends service simply listens to the Kafka stream, where all other services publish their events to. Providing a gateway that subscribes to Kafka topics, while holding connections to all active frontends, forwarding events to the users they're addressed to, all in a scalable way. And on top of that, it also handles authorization, so your services don't have to care about that either.
+  platformCapabilities:
+    - Gateway
+    - Analytics
+  gatewayCapabilities:
+    - Mediation
+    - OpenAPI Integration
+    - Protocol Transformation
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+    - Kafka
+    - WebSockets
+    - Server-Sent Events (SSE)
+    - HTTP long-polling
+    - NATS
+  downstreamProtocols:
+    - HTTP/1.1
+    - Kafka
+    - WebSockets
+    - Server-Sent Events (SSE)
+    - HTTP long-polling
+    - NATS
+  deliveryModels:
+    - Customer Managed (On-Premises)
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Throttling
+        - Traffic Optimization
+        - Tracing
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - URL Rewriting
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - JWT
+        - JWT Validation
+        - JWT authorizers        
+        - IP Access Rules
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+    - category: Extensions
+      capabilities:
+        - HTTP Callout
+        - HTTP integrations
+        - Avro
+        - Azure Event Hubs
+        - AWS Kinesis
+
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://accenture.github.io/reactive-interaction-gateway/
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://github.com/Accenture/reactive-interaction-gateway
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/reactive-interaction-gateway.png     

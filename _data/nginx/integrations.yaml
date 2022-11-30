@@ -1,0 +1,1168 @@
+openapi: 3.0.0
+info:
+  title: Integrations API
+  description: >-
+    Use the Integrations API to manage integrated cloud provider
+    or data collector accounts.
+  version: v1
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+paths:
+  /platform/integrations:
+    get:
+      tags:
+        - Integrations
+      summary: List all Integrations
+      description: Returns an unfiltered list of integration accounts.
+      operationId: listIntegrations
+      responses:
+        '200':
+          description: Successfully retreived a list of integration accounts.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListIntegrationResponse'
+              examples:
+                INTEGRATIONS:
+                  $ref: '#/components/examples/ListIntegrationResponse'
+    post:
+      tags:
+        - Integrations
+      summary: Create an Integration account
+      description: Creates a new integration account.
+      operationId: addIntegration
+      requestBody:
+        description: Defines the integration account to be added.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Integration'
+            examples:
+              AWS:
+                $ref: '#/components/examples/AWSRequest'
+              Splunk:
+                $ref: '#/components/examples/SplunkRequest'
+      responses:
+        '201':
+          description: Successfully created the requested integration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetIntegrationResponse'
+              examples:
+                AWS:
+                  $ref: '#/components/examples/AWSResponse'
+                Splunk:
+                  $ref: '#/components/examples/SplunkResponse'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              examples:
+                BadReq:
+                  $ref: '#/components/examples/BadRequestError'
+        '409':
+          description: >-
+            The request failed due to a conflict with an existing
+            integration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              examples:
+                AlreadyExists:
+                  $ref: '#/components/examples/AlreadyExistsError'
+  '/platform/integrations/{integrationName}':
+    get:
+      tags:
+        - Integrations
+      summary: Get an Integration account
+      description: Gets information about a specific integration account.
+      operationId: getIntegration
+      parameters:
+        - $ref: '#/components/parameters/IntegrationName'
+      responses:
+        '200':
+          description: >-
+            Successfully retrieved the requested integration
+            account.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetIntegrationResponse'
+              examples:
+                AWS:
+                  $ref: '#/components/examples/AWSResponse'
+        '404':
+          description: Integration resource not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              examples:
+                NotFound:
+                  $ref: '#/components/examples/NotFoundError'
+    put:
+      tags:
+        - Integrations
+      summary: Upsert an Integration account
+      description: >-
+        Creates a new integration account or updates an existing
+        integration account.
+      operationId: upsertIntegration
+      parameters:
+        - $ref: '#/components/parameters/IntegrationName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Integration'
+            examples:
+              AWS:
+                $ref: '#/components/examples/AWSRequest'
+              Splunk:
+                $ref: '#/components/examples/SplunkRequest'
+        required: true
+      responses:
+        '200':
+          description: >-
+            Successfully received the request to update the
+            specified integration account.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetIntegrationResponse'
+              examples:
+                AWS:
+                  $ref: '#/components/examples/AWSResponse'
+                Splunk:
+                  $ref: '#/components/examples/SplunkResponse'
+        '201':
+          description: >-
+            Successfully updated the specified integration
+            account.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetIntegrationResponse'
+              examples:
+                AWS:
+                  $ref: '#/components/examples/AWSResponse'
+                Splunk:
+                  $ref: '#/components/examples/SplunkResponse'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              examples:
+                BadReq:
+                  $ref: '#/components/examples/BadRequestError'
+    patch:
+      tags:
+        - Integrations
+      summary: Update an Integration account
+      description: Updates an existing integration account.
+      operationId: updateIntegration
+      parameters:
+        - $ref: '#/components/parameters/IntegrationName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateIntegration'
+            examples:
+              AWS:
+                $ref: '#/components/examples/AWSRequestForPatch'
+              Splunk:
+                $ref: '#/components/examples/SplunkRequestForPatch'
+        required: true
+      responses:
+        '200':
+          description: >-
+            Successfully received the request to update the
+            specified integration account.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateIntegration'
+              examples:
+                AWS:
+                  $ref: '#/components/examples/AWSResponseForPatch'
+                Splunk:
+                  $ref: '#/components/examples/SplunkResponseForPatch'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              examples:
+                BadReq:
+                  $ref: '#/components/examples/BadRequestError'
+        '404':
+          description: Integration resource not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              examples:
+                NotFound:
+                  $ref: '#/components/examples/NotFoundError'
+    delete:
+      tags:
+        - Integrations
+      summary: Delete an Integration account
+      description: Deletes the specified integration account.
+      operationId: deleteIntegration
+      parameters:
+        - $ref: '#/components/parameters/IntegrationName'
+      responses:
+        '204':
+          description: >-
+            Successfully deleted the specified integration
+            account.
+        '404':
+          description: Integration not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              examples:
+                NotFound:
+                  $ref: '#/components/examples/NotFoundError'
+components:
+  parameters:
+    IntegrationName:
+      name: integrationName
+      in: path
+      description: The name of the integration account.
+      required: true
+      schema:
+        type: string
+  schemas:
+    Integration:
+      type: object
+      description: >
+        The Integration resource defines the account credentials
+        and endpoint needed for NGINX Controller to connect to
+        external services.
+      required:
+        - metadata
+        - desiredState
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          $ref: '#/components/schemas/IntegrationState'
+        currentStatus:
+          $ref: '#/components/schemas/IntegrationState'
+    GetIntegrationResponse:
+      allOf:
+        - $ref: '#/components/schemas/Integration'
+    ListIntegrationResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Integration'
+    UpdateIntegration:
+      type: object
+      required:
+        - metadata
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          $ref: '#/components/schemas/UpdateIntegrationState'
+        currentStatus:
+          $ref: '#/components/schemas/UpdateIntegrationState'
+    UpdateIntegrationState:
+      oneOf:
+        - $ref: '#/components/schemas/AWSIntegrationForUpdate'
+        - $ref: '#/components/schemas/AzureIntegrationForUpdate'
+        - $ref: '#/components/schemas/GenericIntegrationForUpdate'
+        - $ref: '#/components/schemas/VSphereIntegrationForUpdate'
+      discriminator:
+        propertyName: type
+        mapping:
+          AWS_INTEGRATION: '#/components/schemas/AWSIntegrationForUpdate'
+          AZURE_INTEGRATION: '#/components/schemas/AzureIntegrationForUpdate'
+          GENERIC_INTEGRATION: '#/components/schemas/GenericIntegrationForUpdate'
+          VSPHERE_INTEGRATION: '#/components/schemas/VSphereIntegrationForUpdate'
+    AWSIntegrationForUpdate:
+      description: >
+        The AWS integration stores the AWS access key for
+        programmatic access to the AWS cloud API.
+      required:
+        - type
+      type: object
+      properties:
+        type:
+          type: string
+          description: >-
+            The AWS_INTEGRATION is an integration for connecting
+            to Amazon Web Services (AWS).
+          enum:
+            - AWS_INTEGRATION
+        endpointUri:
+          type: string
+          description: The URI of the AWS cloud service endpoint.
+        credential:
+          description: |
+            Account credentials for AWS cloud API.
+          oneOf:
+            - $ref: '#/components/schemas/AWSAccessKeyCredential'
+          discriminator:
+            propertyName: type
+            mapping:
+              AWS_ACCESS_KEY: '#/components/schemas/AWSAccessKeyCredential'
+    AzureIntegrationForUpdate:
+      description: >
+        The Azure integration stores the Azure credentials for
+        programmatic access to the Azure cloud API.
+      required:
+        - type
+      type: object
+      properties:
+        type:
+          type: string
+          description: >-
+            The AZURE_INTEGRATION is an integration for connecting
+            to Microsoft Azure.
+          enum:
+            - AZURE_INTEGRATION
+        credential:
+          description: |
+            Account credentials for Azure cloud API.
+          oneOf:
+            - $ref: '#/components/schemas/AzureServicePrincipal'
+          discriminator:
+            propertyName: type
+            mapping:
+              AZURE_SERVICE_PRINCIPAL: '#/components/schemas/AzureServicePrincipal'
+    VSphereIntegrationForUpdate:
+      type: object
+      description: >
+        The VSphere integration stores the credentials for
+        programmatic access to the VSphere cloud API.
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: >
+            The VSPHERE_INTEGRATION is an Integration for
+            connecting to the VSphere datacenter.
+          enum:
+            - VSPHERE_INTEGRATION
+        hostname:
+          type: string
+          description: >-
+            VSphere instance hostname ( FQDN or IP ), Connection
+            to it from the controller is through https, the
+            VSphere server certificate is not verified.
+        rawCa:
+          type: string
+          description: >-
+            Raw CA Certificate used to verify the vSphere server
+            certificate
+          example: |-
+            -----BEGIN CERTIFICATE-----
+              MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+              [SNIP]
+              2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+              rg7hesA=
+              -----END CERTIFICATE-----
+        credential:
+          oneOf:
+            - $ref: '#/components/schemas/UserPassCredential'
+          discriminator:
+            propertyName: type
+            mapping:
+              USER_PASS: '#/components/schemas/UserPassCredential'
+    GenericIntegrationForUpdate:
+      required:
+        - type
+      type: object
+      description: >
+        A Generic integration stores the credentials and URI
+        endpoint to connect to external services
+
+        that require a username and password or an API token for
+        authentication, or accept an unauthenticated connection.
+      properties:
+        type:
+          type: string
+          description: >
+            The GENERIC_INTEGRATION is an integration for
+            connecting to external services that require a
+
+            username and password or an API key, or accept an
+            unauthenticated connection.
+          enum:
+            - GENERIC_INTEGRATION
+        endpointUri:
+          type: string
+          description: The URI of the service endpoint.
+        credential:
+          oneOf:
+            - $ref: '#/components/schemas/UserPassCredential'
+            - $ref: '#/components/schemas/ApiKeyCredential'
+            - $ref: '#/components/schemas/Unauthenticated'
+          discriminator:
+            propertyName: type
+            mapping:
+              USER_PASS: '#/components/schemas/UserPassCredential'
+              API_KEY: '#/components/schemas/ApiKeyCredential'
+              UNAUTHENTICATED: '#/components/schemas/Unauthenticated'
+    IntegrationState:
+      oneOf:
+        - $ref: '#/components/schemas/AWSIntegration'
+        - $ref: '#/components/schemas/AzureIntegration'
+        - $ref: '#/components/schemas/GenericIntegration'
+        - $ref: '#/components/schemas/VSphereIntegration'
+      discriminator:
+        propertyName: type
+        mapping:
+          AWS_INTEGRATION: '#/components/schemas/AWSIntegration'
+          AZURE_INTEGRATION: '#/components/schemas/AzureIntegration'
+          GENERIC_INTEGRATION: '#/components/schemas/GenericIntegration'
+          VSPHERE_INTEGRATION: '#/components/schemas/VSphereIntegration'
+    AzureIntegration:
+      description: >
+        The Azure integration stores the Azure credentials for
+        programmatic access to the Azure cloud API.
+      required:
+        - type
+        - credential
+      type: object
+      properties:
+        type:
+          type: string
+          description: >-
+            The AZURE_INTEGRATION is an integration for connecting
+            to Microsoft Azure.
+          enum:
+            - AZURE_INTEGRATION
+        credential:
+          description: |
+            Account credentials for Azure cloud API.
+          oneOf:
+            - $ref: '#/components/schemas/AzureServicePrincipal'
+          discriminator:
+            propertyName: type
+            mapping:
+              AZURE_SERVICE_PRINCIPAL: '#/components/schemas/AzureServicePrincipal'
+    AWSIntegration:
+      description: >
+        The AWS integration stores the AWS access key for
+        programmatic access to the AWS cloud API.
+      required:
+        - type
+        - credential
+      type: object
+      properties:
+        type:
+          type: string
+          description: >-
+            The AWS_INTEGRATION is an integration for connecting
+            to Amazon Web Services (AWS).
+          enum:
+            - AWS_INTEGRATION
+        endpointUri:
+          type: string
+          description: The URI of the AWS cloud service endpoint.
+        credential:
+          description: |
+            Account credentials for AWS cloud API.
+          oneOf:
+            - $ref: '#/components/schemas/AWSAccessKeyCredential'
+          discriminator:
+            propertyName: type
+            mapping:
+              AWS_ACCESS_KEY: '#/components/schemas/AWSAccessKeyCredential'
+    AWSAccessKeyCredential:
+      required:
+        - type
+        - accessKeyID
+        - secretAccessKey
+      type: object
+      description: >
+        AWS access key credentials: access key ID and secret
+        access key.
+      properties:
+        type:
+          type: string
+          description: >
+            AWS_ACCESS_KEY credentials are used to access the AWS
+            API programmatically.
+          enum:
+            - AWS_ACCESS_KEY
+        accessKeyID:
+          type: string
+          description: The access key ID of the AWS access key credential.
+        secretAccessKey:
+          type: string
+          description: >-
+            The secret access key of the AWS access key
+            credential.
+    AzureServicePrincipal:
+      required:
+        - type
+        - clientID
+        - clientSecret
+        - tenantID
+      type: object
+      properties:
+        type:
+          type: string
+          description: ''
+          enum:
+            - AZURE_SERVICE_PRINCIPAL
+        clientID:
+          type: string
+          description: The Client ID of the service principal.
+        clientSecret:
+          type: string
+          description: The secret associated with the service principal.
+        tenantID:
+          type: string
+          description: >-
+            The ID for the Active Directory tenant to which the
+            service principal belongs.
+    VSphereIntegration:
+      type: object
+      description: >
+        The VSphere integration stores the credentials for
+        programmatic access to the VSphere cloud API.
+      required:
+        - type
+        - hostname
+        - credential
+      properties:
+        type:
+          type: string
+          description: >
+            The VSPHERE_INTEGRATION is an Integration for
+            connecting to the VSphere cloud.
+          enum:
+            - VSPHERE_INTEGRATION
+        hostname:
+          type: string
+          description: >-
+            VSphere instance hostname ( FQDN or IP ), Connection
+            to it from the controller is through https, the
+            VSphere server certificate is not verified.
+        rawCa:
+          type: string
+          description: >-
+            Raw CA Certificate used to verify the vSphere server
+            certificate
+          example: |-
+            -----BEGIN CERTIFICATE-----
+              MIIDMTCCasdfAwIBAgIUWw25xyNvQPxtjGUZopz0KeoaaQkwDQYJKoZIhvcNAQEL
+              [SNIP]
+              2CPqdhpmQhAbzx9ElT8KyC7/08IdV0JK/kSWjfE4jOPOJyI2q0DWExKLuYe+rO+Q
+              rg7hesA=
+              -----END CERTIFICATE-----
+        credential:
+          oneOf:
+            - $ref: '#/components/schemas/UserPassCredential'
+          discriminator:
+            propertyName: type
+            mapping:
+              USER_PASS: '#/components/schemas/UserPassCredential'
+    GenericIntegration:
+      required:
+        - type
+        - endpointUri
+        - credential
+      type: object
+      description: >
+        A Generic integration resource stores the credentials and
+        URI endpoint to connect to external services
+
+        that require a username and password or API token for
+        authentication, or accept unauthenticated connection.
+      properties:
+        type:
+          type: string
+          description: >
+            The GENERIC_INTEGRATION is an Integration for
+            connecting to external services that require a
+
+            username and password or an API key, or accept an
+            unauthenticated connection.
+          enum:
+            - GENERIC_INTEGRATION
+        endpointUri:
+          type: string
+          description: The URI of the service endpoint.
+        credential:
+          oneOf:
+            - $ref: '#/components/schemas/UserPassCredential'
+            - $ref: '#/components/schemas/ApiKeyCredential'
+            - $ref: '#/components/schemas/Unauthenticated'
+          discriminator:
+            propertyName: type
+            mapping:
+              USER_PASS: '#/components/schemas/UserPassCredential'
+              API_KEY: '#/components/schemas/ApiKeyCredential'
+              UNAUTHENTICATED: '#/components/schemas/Unauthenticated'
+    UserPassCredential:
+      description: >-
+        A credential consisting of a username and password. In the
+        case of splunk HEC, username can be any string.
+      required:
+        - type
+        - password
+        - username
+      type: object
+      properties:
+        type:
+          type: string
+          description: >
+            USER_PASS credentials are used to connect to web
+            services that accept a username and password for
+            authentication.
+          enum:
+            - USER_PASS
+        username:
+          type: string
+        password:
+          type: string
+    ApiKeyCredential:
+      description: For API key based authentication.
+      required:
+        - type
+        - apiKey
+      type: object
+      properties:
+        type:
+          type: string
+          description: >
+            API_KEY credentials are used to connect to web
+            services that accept an API key for authentication.
+          enum:
+            - API_KEY
+        apiKey:
+          type: string
+    Unauthenticated:
+      description: For unauthenticated connections.
+      required:
+        - type
+      type: object
+      properties:
+        type:
+          type: string
+          description: >
+            Unauthenticated can be used for services that do not
+            need authentication.
+          enum:
+            - UNAUTHENTICATED
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          not:
+            type: string
+            enum:
+              - .
+              - ..
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+            - cannot be only `.` or `..`
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+  examples:
+    AWSRequest:
+      value:
+        metadata:
+          name: my-aws-integration
+          description: AWS integration for us-west-1
+          displayName: UsWest1-Integration
+          tags:
+            - us-west-1
+        desiredState:
+          type: AWS_INTEGRATION
+          endpointUri: 'https://ec2.us-west-1.amazonaws.com'
+          credential:
+            type: AWS_ACCESS_KEY
+            accessKeyID: AKIAJ3N2PZUMZE3Y67ZA
+            secretAccessKey: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY)
+    AWSResponse:
+      value:
+        metadata:
+          name: my-aws-integration
+          description: AWS integration for us-west-1
+          displayName: UsWest1-Integration
+          tags:
+            - us-west-1
+          uid: 619887de-a748-4931-853d-c6b706f95ddf
+          createTime: '2019-09-18T16:42:15.1183523Z'
+          updateTime: '2019-09-18T16:42:15.1183523Z'
+        desiredState:
+          type: AWS_INTEGRATION
+          endpointUri: 'https://ec2.us-west-1.amazonaws.com'
+          credential:
+            type: AWS_ACCESS_KEY
+            accessKeyID: AKIAJ3N2PZUMZE3Y67ZA
+            secretAccessKey: '*********'
+        currentStatus:
+          type: AWS_INTEGRATION
+          endpointUri: 'https://ec2.us-west-1.amazonaws.com'
+          credential:
+            type: AWS_ACCESS_KEY
+            accessKeyID: AKIAJ3N2PZUMZE3Y67ZA
+            secretAccessKey: '*********'
+    SplunkRequest:
+      value:
+        metadata:
+          name: my-splunk-integration
+          description: Splunk integration
+          displayName: splunk-Integration
+          tags:
+            - dev
+        desiredState:
+          type: GENERIC_INTEGRATION
+          endpointUri: 'https://splunk.com:8080/services/collector'
+          credential:
+            type: USER_PASS
+            user: x
+            password: CF179AE4-3C99-45F5-A7CC-3284AA91CF67
+    SplunkResponse:
+      value:
+        metadata:
+          name: my-splunk-integration
+          description: Splunk integration
+          displayName: splunk-Integration
+          tags:
+            - dev
+          uid: 619887de-a748-4931-853d-c6b706f95ddf
+          createTime: '2019-09-18T16:42:15.1183523Z'
+          updateTime: '2019-09-18T16:42:15.1183523Z'
+        desiredState:
+          type: GENERIC_INTEGRATION
+          endpointUri: 'https://splunk.com:8080/services/collector'
+          credential:
+            type: USER_PASS
+            user: x
+            password: '*********'
+        currentStatus:
+          type: GENERIC_INTEGRATION
+          endpointUri: 'https://splunk.com:8080/services/collector'
+          credential:
+            type: USER_PASS
+            user: x
+            password: '*********'
+    AWSRequestForPatch:
+      value:
+        metadata:
+          name: my-aws-integration
+          description: AWS integration for us-west-1
+          displayName: UsWest1-Integration
+          tags:
+            - us-west-1
+        desiredState:
+          type: AWS_INTEGRATION
+          credential:
+            type: AWS_ACCESS_KEY
+            accessKeyID: AKIAJ3N2PZUMZE3Y67ZA
+            secretAccessKey: '*********'
+    AWSResponseForPatch:
+      value:
+        metadata:
+          name: my-aws-integration
+          description: AWS integration for us-west-1
+          displayName: UsWest1-Integration
+          tags:
+            - us-west-1
+          uid: 619887de-a748-4931-853d-c6b706f95ddf
+          createTime: '2019-09-18T16:42:15.1183523Z'
+          updateTime: '2019-09-18T16:42:15.1183523Z'
+        desiredState:
+          type: AWS_INTEGRATION
+          endpointUri: 'https://ec2.us-west-1.amazonaws.com'
+          credential:
+            type: AWS_ACCESS_KEY
+            accessKeyID: AKIAJ3N2PZUMZE3Y67ZA
+            secretAccessKey: '*********'
+        currentStatus:
+          type: AWS_INTEGRATION
+          endpointUri: 'https://ec2.us-west-1.amazonaws.com'
+          credential:
+            type: AWS_ACCESS_KEY
+            accessKeyID: AKIAJ3N2PZUMZE3Y67ZA
+            secretAccessKey: '*********'
+    SplunkRequestForPatch:
+      value:
+        metadata:
+          name: my-splunk-integration
+          description: Splunk integration
+          displayName: splunk-Integration
+          tags:
+            - dev
+        desiredState:
+          type: GENERIC_INTEGRATION
+          credential:
+            type: USER_PASS
+            user: x
+            password: CF179AE4-3C99-45F5-A7CC-3284AA91CF67
+    SplunkResponseForPatch:
+      value:
+        metadata:
+          name: my-splunk-integration
+          description: Splunk integration
+          displayName: splunk-Integration
+          tags:
+            - dev
+          uid: 619887de-a748-4931-853d-c6b706f95ddf
+          createTime: '2019-09-18T16:42:15.1183523Z'
+          updateTime: '2019-09-18T16:42:15.1183523Z'
+        desiredState:
+          type: GENERIC_INTEGRATION
+          endpointUri: 'https://splunk.com:8080/services/collector'
+          credential:
+            type: USER_PASS
+            user: x
+            password: '*********'
+        currentStatus:
+          type: GENERIC_INTEGRATION
+          endpointUri: 'https://splunk.com:8080/services/collector'
+          credential:
+            type: USER_PASS
+            user: x
+            password: '*********'
+    ListIntegrationResponse:
+      value:
+        items:
+          - metadata:
+              name: my-aws-integration
+              description: AWS integration for us-west-1
+              displayName: UsWest1-Integration
+              tags:
+                - us-west-1
+              uid: 619887de-a748-4931-853d-c6b706f95ddf
+              createTime: '2019-09-18T16:42:15.1183523Z'
+              updateTime: '2019-09-18T16:42:15.1183523Z'
+            desiredState:
+              type: AWS_INTEGRATION
+              endpointUri: 'https://ec2.us-west-1.amazonaws.com'
+              credential:
+                type: AWS_ACCESS_KEY
+                accessKeyID: AKIAJ3N2PZUMZE3Y67ZA
+                secretAccessKey: '*********'
+            currentStatus:
+              type: AWS_INTEGRATION
+              endpointUri: 'https://ec2.us-west-1.amazonaws.com'
+              credential:
+                type: AWS_ACCESS_KEY
+                accessKeyID: AKIAJ3N2PZUMZE3Y67ZA
+                secretAccessKey: '*********'
+          - metadata:
+              name: my-splunk-integration
+              description: Splunk integration
+              displayName: splunk-Integration
+              tags:
+                - dev
+              uid: 619887de-a748-4931-853d-c6b706f95ddf
+              createTime: '2019-09-18T16:42:15.1183523Z'
+              updateTime: '2019-09-18T16:42:15.1183523Z'
+            desiredState:
+              type: GENERIC_INTEGRATION
+              endpointUri: 'https://splunk.com:8080/services/collector'
+              credential:
+                type: USER_PASS
+                user: x
+                password: '*****'
+            currentStatus:
+              type: GENERIC_INTEGRATION
+              endpointUri: 'https://splunk.com:8080/services/collector'
+              credential:
+                type: USER_PASS
+                user: x
+                password: '*****'
+    NotFoundError:
+      value:
+        code: 120003
+        message: >-
+          Error getting the Integration resource: the specified
+          integration does not exist. Check the name of the
+          Integration resource, then try again.
+    BadRequestError:
+      value:
+        code: 120004
+        message: >-
+          Error creating the Integration resource: could not parse
+          the request payload. Check the format of the request,
+          then try again.
+    AlreadyExistsError:
+      value:
+        code: 120007
+        message: >-
+          Error creating the Integration resource: the integration
+          already exists. Use a unique name for the Integration
+          resource, then try again.

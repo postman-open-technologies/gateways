@@ -1,0 +1,115 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Sensedia
+  provider: Sensedia
+  slug: sensedia
+  rating: 2
+  license: Proprietary, Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    Sensedia is a leading integration solutions provider with more than +200 enterprise clients across a range of sectors. Its world-class portfolio includes: an API Management Platform, Adaptive Governance, Events Hub, Service Mesh, Cloud Connectors and Strategic Professional Services' teams.
+  platformCapabilities:
+    - Design
+    - Gateway
+    - Analytics
+    - Portal
+    - Documentation
+    - Monetization
+    - SDK
+    - Performance
+    - Dashboards
+    - Teams
+  gatewayCapabilities:
+    - Mediation
+    - Mocking
+    - OpenAPI Integration
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+    - SOAP
+    - Database
+    - ERP    
+  downstreamProtocols:
+    - HTTP/1.1
+    - SOAP
+  deliveryModels:
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Cache Eviction
+        - Cache Invalidation
+        - Cache Lookup
+        - Cache Population
+        - Cache Storage
+        - Cache Target Response
+        - Cache Validation      
+        - Plans
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Regions
+        - Spike Arrest
+        - Spike Control
+        - Throttling
+        - Traffic Optimization
+    - category: Mediation
+      capabilities:
+        - Cache Eviction
+        - Cache Lookup
+        - Cache Store      
+        - CORS
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - SOAP Validation
+        - URL Rewriting
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - IP Access Rules
+        - JWS
+        - JWT Validation
+        - JWT authorizers
+        - Message Inspection
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+        - PCI - DSS Compliance
+    - category: Extensions
+      capabilities:
+        - HTTP Callout
+        - HTTP integrations
+        - Alerts
+
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://www.sensedia.com
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://www.sensedia.com/api-management-platform
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/sensedia.png     

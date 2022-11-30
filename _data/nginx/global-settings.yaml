@@ -1,0 +1,743 @@
+openapi: 3.0.0
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+info:
+  description: >-
+    Use the Global Settings API to manage the system-wide
+    configurations for NGINX Controller and Controller Agent.
+  version: v1
+  title: Global Settings API
+paths:
+  /platform/global:
+    get:
+      tags:
+        - Global Settings
+      summary: Get the Global Settings
+      operationId: getGlobalSettings
+      description: >-
+        Gets information about the global settings for NGINX
+        Controller.
+      responses:
+        '200':
+          description: >-
+            Successfully retrieved the global settings for NGINX
+            Controller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalSettings'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/Internal'
+    put:
+      tags:
+        - Global Settings
+      operationId: putGlobalSettings
+      description: Updates the global settings used by NGINX Controller.
+      summary: Update the Global Settings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GlobalSettings'
+      responses:
+        '200':
+          description: >-
+            Successfully updated the global settings for NGINX
+            Controller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalSettings'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/Internal'
+    patch:
+      tags:
+        - Global Settings
+      operationId: patchGlobalSettings
+      description: Updates the global settings for NGINX Controller.
+      summary: Update part of the Global Settings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GlobalSettings'
+      responses:
+        '200':
+          description: >-
+            Successfully updated the global settings for NGINX
+            Controller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GlobalSettings'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/Internal'
+components:
+  responses:
+    Internal:
+      description: >-
+        The request cannot be processed because of an internal
+        server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+    Unauthorized:
+      description: User authentication is invalid or missing.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+    Forbidden:
+      description: The request failed due to insufficient privileges.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+    BadRequest:
+      description: >-
+        Bad input parameter, or possibly a bad URI. Check the
+        input for typos and try again.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+  schemas:
+    GlobalSettings:
+      type: object
+      required:
+        - metadata
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          type: object
+          properties:
+            agentSettings:
+              $ref: '#/components/schemas/AgentSettingsData'
+            platformSettings:
+              $ref: '#/components/schemas/PlatformSettingsData'
+        currentStatus:
+          type: object
+          properties:
+            state:
+              $ref: '#/components/schemas/ConfigState'
+            agentSettings:
+              $ref: '#/components/schemas/AgentSettingsData'
+            platformVersion:
+              $ref: '#/components/schemas/PlatformVersionData'
+            platformSettings:
+              $ref: '#/components/schemas/PlatformSettingsData'
+    AgentSettingsData:
+      type: object
+      description: Sets the global settings for NGINX Controller Agent.
+      properties:
+        enableNGINXConfigAnalyzer:
+          type: boolean
+          description: Disable or enable NGINX configuration file analysis.
+          default: true
+        enablePeriodicNGINX-T:
+          type: boolean
+          description: >-
+            Disable or enable periodic NGINX configuration syntax
+            checking with \"nginx -t\".
+          default: false
+        enableAnalyzeSSLCertificates:
+          type: boolean
+          description: Disable or enable analyzing SSL certs.
+          default: true
+        apiKey:
+          type: string
+          description: Access token to retrieve Agent installer.
+    PlatformVersionData:
+      type: object
+      description: >-
+        Returns the version information for NGINX Controller and
+        its sub-components.
+      required:
+        - version
+        - buildNumber
+        - components
+      properties:
+        version:
+          type: string
+          description: The version number.
+        buildNumber:
+          type: string
+          description: Build number of the artifact used for installation.
+        components:
+          type: array
+          description: The NGINX Controller sub-components.
+          items:
+            $ref: '#/components/schemas/componentDef'
+      example:
+        version: 3.0.0
+        buildNumber: '2313201'
+        components:
+          - application: secrets
+            version: 0.9.1
+          - application: platform-mgr
+            version: 0.2.2
+    componentDef:
+      type: object
+      required:
+        - application
+        - version
+      properties:
+        application:
+          type: string
+        version:
+          type: string
+      example:
+        application: secrets
+        version: 0.9.1
+    PlatformSettingsData:
+      type: object
+      description: Sets the platform settings for NGINX Controller.
+      properties:
+        apigwCert:
+          type: string
+          description: >
+            SSL/TLS certificate (PEM format) for API Gateway.
+
+            Because JSON does not support multi-line strings, you
+            must replace binary line feeds with ASCII line feeds
+            (`\n`).
+          example: >-
+            -----BEGIN CERTIFICATE-----\n
+            MIICpzCCAhACCQDkjx7mP9cuRjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UEBhMC\n
+            <EXAMPLE_SNIPPED>
+            MiJVGawyxDzBm2UhzNOE0ABHfjAgM6PAYmtMhhQawk6bmttXYhJeqhLSji4LEj5d\n
+            Z4FmXQ5rWM0RWBs=\n -----END CERTIFICATE-----
+        apigwKey:
+          type: string
+          writeOnly: true
+          description: >
+            Private key (PEM format) for API Gateway. Key must
+            match certificate.
+
+            Because JSON does not support multi-line strings, you
+            must replace binary line feeds with ASCII line feeds
+            (`\n`).
+          example: >-
+            -----BEGIN PRIVATE KEY-----\n
+            MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALSQBtRafNJtTqN0\n
+            <EXAMPLE_SNIPPED>
+            nYiZq6TZUsHjfG2R9PlK6jsvno9O6amN96Al6ZSTTDjhr4VU7/RJ0p/cisiCboCX\n
+            4cCq6lFKpIpeZJI=\n -----END PRIVATE KEY-----
+        FQDN:
+          type: string
+          description: >-
+            Fully qualified domain name for the NGINX Controller
+            server, which users and Controller Agents will use
+            when connecting to NGINX Controller.
+        smtpHost:
+          type: string
+          description: SMTP host
+        smtpPort:
+          type: integer
+          description: SMTP port
+          minimum: 1
+          maximum: 65535
+        smtpAuthentication:
+          type: boolean
+          description: Specify if SMTP server requires username and password.
+        smtpUseTLS:
+          type: boolean
+          description: Specify if SMTP should use TLS.
+        smtpFrom:
+          type: string
+          description: Specify the email to show in the 'FROM' field.
+        smtpUser:
+          type: string
+          description: >-
+            SMTP user (required when smtpAuthentication is
+            enabled).
+        smtpPassword:
+          type: string
+          description: >-
+            SMTP password (required when smtpAuthentication is
+            enabled).
+        dbType:
+          type: string
+          enum:
+            - external
+            - embedded
+          description: >-
+            Config database type - embedded or external.
+            Read-only.
+          readOnly: true
+          example: embedded
+        dbHost:
+          type: string
+          description: >-
+            Config database host (read-only if using an embedded
+            Config database).
+        dbPort:
+          type: integer
+          description: >-
+            Config database port (read-only if using internal
+            Config database).
+          minimum: 1
+          maximum: 65535
+        dbUser:
+          type: string
+          description: >-
+            Config database username (read-only if using internal
+            Config database).
+        dbPassword:
+          type: string
+          description: >-
+            Config database password (read-only if using internal
+            Config database).
+        dbUseTLS:
+          type: boolean
+          description: >-
+            Specify wether the Config database connection uses TLS
+            or not (read-only if using internal Config database).
+        dbCA:
+          type: string
+          description: >
+            SSL/TLS Certificate Authority certificate (PEM format)
+            for verifying Config database server certificate. Only
+            required if server certificate is signed by a private
+            CA.
+
+            Because JSON does not support multi-line strings, you
+            must replace line feed and/or carriage return
+            characters with their literal equivalents as two
+            characters - `\n`, a backslash and letter `n`.
+
+            Read-only if using internal Config database.
+          example: >-
+            -----BEGIN
+            CERTIFICATE-----\nMIICpzCCAhACCQDkjx7mP9cuRjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UEBhMC\n<EXAMPLE_SNIPPED>Z4FmXQ5rWM0RWBs=\n-----END
+            CERTIFICATE-----
+        dbClientCert:
+          type: string
+          description: >
+            SSL/TLS client certificate (PEM format) for
+            authenticating when connecting to the Config database.
+
+            Because JSON does not support multi-line strings, you
+            must replace binary line feeds with ASCII line feeds
+            (`\n`).
+
+            Read-only if using internal Config database.
+          example: >-
+            -----BEGIN
+            CERTIFICATE-----\nMIICpzCCAhACCQDkjx7mP9cuRjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UEBhMC\n<EXAMPLE_SNIPPED>Z4FmXQ5rWM0RWBs=\n-----END
+            CERTIFICATE-----
+        dbClientKey:
+          type: string
+          description: >
+            Private key (PEM format) for Config database
+            connection. Key must match certificate.
+
+            Because JSON does not support multi-line strings, you
+            must replace binary line feeds with ASCII line feeds
+            (`\n`).
+
+            Read-only if using internal Config database.
+          example: >-
+            -----BEGIN PRIVATE
+            KEY-----\nMIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALSQBtRafNJtTqN0\n<EXAMPLE_SNIPPED>nYiZq6TZUsHjfG2R9PlK6jsvno9O6amN96Al6ZSTTDjhr4VU7/RJ0p/cisiCboCX\n4cCq6lFKpIpeZJI=\n-----END
+            PRIVATE KEY-----
+        tsdbVolumeType:
+          type: string
+          description: Time Series database volume type.
+          enum:
+            - local
+            - nfs
+            - aws
+          readOnly: true
+        tsdbNFSHost:
+          type: string
+          description: Time Series database NFS host.
+          readOnly: true
+        tsdbNFSPath:
+          type: string
+          description: Time Series database NFS path.
+          readOnly: true
+        tsdbAWSVolumeID:
+          type: string
+          description: Time Series database AWS Volume ID.
+          readOnly: true
+        clusterFloatingIP:
+          type: string
+          pattern: >-
+            ^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)$|^$
+          description: >
+            Floating IPv4 address used to communicate with
+            Controller in multinode/cluster mode.
+
+            This setting is only valid for local (non-cloud)
+            installations. Set empty value to disable floating IP.
+        clusterLoadBalancer:
+          type: string
+          description: >-
+            Hostname or IP of the external cluster load balancer.
+            Read-only.
+          readOnly: true
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          not:
+            type: string
+            enum:
+              - .
+              - ..
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+            - cannot be only `.` or `..`
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    ConfigStateTally:
+      type: object
+      properties:
+        isConfigured:
+          type: boolean
+          description: The configuration operation is complete.
+        isConfiguring:
+          type: boolean
+          description: >-
+            The configuration of the resource, or of its
+            child(ren), is in process.
+        isError:
+          type: boolean
+          description: >-
+            An error occurred while configuring the resource or
+            its child(ren).
+        isDeleting:
+          type: boolean
+          description: >-
+            A delete operation is in progress for the resource or
+            its child(ren).
+        total:
+          type: integer
+          description: >-
+            The total number of resources to which the
+            configuration operation applies.
+        configured:
+          type: integer
+          description: >-
+            The number of resources that have a complete and valid
+            configuration.
+        configuring:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being configured.
+        error:
+          type: integer
+          description: >-
+            The number of resources that have encountered an error
+            during the configuration process.
+        deleting:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being deleted.
+    ConfigCondition:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The condition type.
+        message:
+          type: string
+          description: >-
+            A human-readable message that provides additional
+            information about the configuration operation.
+    ConfigState:
+      type: object
+      description: >
+        A representation of the resource's current configuration
+        state 
+
+        that comprises the status of the resource itself
+        (`selfConfigState`) and any child 
+
+        resources (`childrenConfigState`).
+
+
+        The conditions array provides additional information
+        during configuration changes.
+      properties:
+        selfConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        childrenConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigCondition'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'

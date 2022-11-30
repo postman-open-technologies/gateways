@@ -1,0 +1,796 @@
+openapi: 3.0.0
+info:
+  version: v1
+  title: Login API
+  description: >-
+    Use the Login API to retrieve an authentication cookie.
+    Include the session ID that's in the authentication cookie in
+    the request header for all subsequent requests.
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+paths:
+  /platform/login:
+    post:
+      tags:
+        - Login
+      summary: Log in to NGINX Controller
+      description: >
+        Logs in to the NGINX Controller platform and returns the
+        user account's authentication cookie.
+
+
+        The session ID is returned in an authentication cookie
+        named `session`. You must include this session ID in the
+        request header for all subsequent requests to authenticate
+        to the platform. For example:
+
+
+        `curl -X GET --cookie 'session=<session cookie>' --header
+        'Content-type: application/json'
+        'https://192.0.2.10/api/v1/platform/global'`
+
+
+        - The maximum session lifetime is 8 hours. Sessions are
+        purged within 5 minutes of expiring. Once the session
+        lifetime limit is exceeded, you must log in to obtain a
+        fresh session token.
+
+        - Sessions are purged immediately on logout.
+
+        - Sessions are purged immediately if the user is removed.
+      operationId: login
+      requestBody:
+        description: >
+          A JSON object containing the type and the authentication
+          information itself.
+
+          - If type == 'BASIC', then the username and password are
+          required.
+
+          - If type == 'ACTIVE_DIRECTORY', then the authentication
+          provider name, username, and password are required.
+
+          - If type == 'AZURE_ACTIVE_DIRECTORY', then the
+          authentication provider name, and type are required.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      security: []
+      responses:
+        '200':
+          description: >
+            Received request to login with OIDC. Returns the
+            Azure's authorization URL for SSO.
+        '204':
+          description: >
+            Successfully authenticated.
+
+            The session ID is returned in an authentication cookie
+            named `session`. You must include this session ID in
+            the request header for all subsequent requests.
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: >-
+                  session=.eJwlzjEOwzAIQNG7MGcA22DIZSKbgNI1aaaqd2-kLn96w;
+                  HttpOnly; Secure; Path=/
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          $ref: '#/components/responses/StatusConflict'
+        '500':
+          $ref: '#/components/responses/Internal'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+    get:
+      tags:
+        - Login
+      summary: Get Login Session
+      description: >-
+        Checks the validity of the current user's session. Returns
+        the user's account info if the session is valid.
+      operationId: sessionsStatus
+      responses:
+        '200':
+          description: >
+            Successfully validated the session ID and returned the
+            associated user account info.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              example:
+                currentStatus:
+                  account: '1'
+                  authn: amplify
+                  email: nobody@nodomain.com
+                  firstName: nobody
+                  id: 777
+                  lastLogin: 1580759750
+                  lastName: here
+                  password: '********'
+                  roles:
+                    - links:
+                        rel: /api/v1/platform/roles/guest
+                        name: guest
+                      ref: /platform/roles/guest
+                  groups:
+                    - links:
+                        rel: /api/v1/platform/auth/groups/guest
+                        name: guest
+                      ref: /platform/groups/guest
+                desiredState:
+                  email: nobody@nodomain.com
+                  firstName: nobody
+                  lastName: here
+                  password: '********'
+                  roles:
+                    - ref: /platform/roles/guest
+                metadata:
+                  createTime: '2020-02-03T19:15:24.916809Z'
+                  kind: user
+                  name: nobody@nodomain.com
+                  updateTime: '2020-02-03T19:55:50.291147Z'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/Internal'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /platform/oidc-handler:
+    get:
+      summary: >-
+        OIDC redirect URL, that handles Login into controller
+        using OIDC
+      description: >
+        The endpoint that OIDC provider talks to after
+        authenticating the user. It returns the user account's
+        authentication cookie.
+
+
+        The session ID is returned in an authentication cookie
+        named `session`. You must include this session ID in the
+        request header for all subsequent requests to authenticate
+        to the platform. For example:
+
+
+        `curl -X GET --cookie 'session=<session cookie>' --header
+        'Content-type: application/json'
+        'https://192.0.2.10/api/v1/platform/global'`
+
+
+        - The maximum session lifetime is 8 hours.
+
+        - Sessions are purged immediately on logout.
+
+        - Sessions are purged immediately if the user is removed
+        or associated Auth provider is removed.
+          Read more about this here https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow#successful-response
+      operationId: oidc-handler
+      parameters:
+        - in: query
+          name: code
+          schema:
+            type: string
+          description: >-
+            The authorization_code that the app requested. The app
+            exchnages teh code to get access token.
+        - in: query
+          name: state
+          schema:
+            type: string
+          description: >-
+            State parameter is included if the app added it in the
+            login request to the Identity provider. This helps
+            prevent CSRF attacks.
+        - in: query
+          name: error
+          schema:
+            type: string
+          description: >-
+            An error code string sent from the Identity provider
+            when authentication did not go through as expected.
+        - in: query
+          name: error_description
+          schema:
+            type: string
+          description: >-
+            A specific error message that describes the root cause
+            of the authentication failure.
+      security: []
+      responses:
+        '302':
+          description: >
+            Successfully authenticated and Sends Redirect back to
+            the home page.
+
+            The session ID is returned in an authentication cookie
+            named `session`. You must include this session ID in
+            the request header for all subsequent requests.
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: >-
+                  session=.eJwlzjEOwzAIQNG7MGcA22DIZSKbgNI1aaaqd2-kLn96w;
+                  HttpOnly; Secure; Path=/
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /platform/logout:
+    post:
+      tags:
+        - Logout
+      summary: Log out of NGINX Controller
+      description: >-
+        Logs the user account out of the NGINX Controller platform
+        and expires the authentication cookie.
+      operationId: logout
+      responses:
+        '204':
+          description: The user was successfully logged out.
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: session=; Expires=Jan 1 1970; Path=/
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/Internal'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: session
+  responses:
+    BadRequest:
+      description: >
+        Bad input parameter, or possibly a bad URI. Check the
+        request format and try again.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            message: >-
+              Error logging in: unknown auth type sent in request.
+              Check the request format and try again.
+            code: 2346
+    Unauthorized:
+      description: |
+        User authentication cookie is invalid or missing.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            message: >-
+              Error getting session status: the session is either
+              invalid or has expired. Log in using your account
+              credentials and then resend the request with the new
+              session token.
+            code: 2373
+    StatusConflict:
+      description: |
+        Wrong username and/or password.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            message: >-
+              Error logging in: incorrect username or password.
+              Check the login credentials, then try resending the
+              request.
+            code: 2379
+    Internal:
+      description: >
+        The request cannot be processed because of an internal
+        server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            message: >-
+              Error logging in: could not store session
+              information. Try resending the request.
+            code: 2372
+    ServiceUnavailable:
+      description: >
+        The request cannot be processed because service is
+        unavailable. Please try resending the request. 
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            message: >-
+              Error retrieving the user information. Try resending
+              the request.
+            code: 2351
+  schemas:
+    Login:
+      type: object
+      properties:
+        credentials:
+          oneOf:
+            - $ref: '#/components/schemas/BasicAuth'
+            - $ref: '#/components/schemas/ActiveDirectoryAuth'
+            - $ref: '#/components/schemas/AzureActiveDirectoryAuth'
+          discriminator:
+            propertyName: type
+            mapping:
+              BASIC: '#/components/schemas/BasicAuth'
+              ACTIVE_DIRECTORY: '#/components/schemas/ActiveDirectoryAuth'
+              AZURE_ACTIVE_DIRECTORY: '#/components/schemas/AzureActiveDirectoryAuth'
+          example:
+            type: BASIC
+            username: guest@nginx.com
+            password: 'Guest#12E'
+    AzureActiveDirectoryAuth:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - AZURE_ACTIVE_DIRECTORY
+        providerName:
+          type: string
+          description: >
+            The Azure active directory provider name configured
+            within NGINX Controller.
+      required:
+        - type
+        - providerName
+    ActiveDirectoryAuth:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - ACTIVE_DIRECTORY
+        username:
+          type: string
+          description: |
+            The username for the NGINX Controller User account.
+        password:
+          type: string
+          description: |
+            The password for the NGINX Controller User account.
+        providerName:
+          type: string
+          description: >
+            The active directory provider name configured within
+            NGINX Controller.
+      required:
+        - type
+        - username
+        - password
+        - providerName
+    BasicAuth:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - BASIC
+        username:
+          type: string
+          description: |
+            The username for the NGINX Controller User account.
+        password:
+          type: string
+          description: |
+            The password for the NGINX Controller User account.
+      required:
+        - type
+        - username
+        - password
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          not:
+            type: string
+            enum:
+              - .
+              - ..
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+            - cannot be only `.` or `..`
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    NamedLinks:
+      allOf:
+        - $ref: '#/components/schemas/SelfLinks'
+        - type: object
+          description: >
+            Contains information about the object being referred
+            to.
+
+
+            These are generally details -- like the object name
+            and display name --
+
+            that are useful to a consumer of the API that performs
+            further
+
+            processing. 
+
+
+            This object is only present in responses.
+              
+          properties:
+            name:
+              type: string
+              example: production
+              description: |
+                The name of the linked resource.
+            displayName:
+              type: string
+              example: Production Environment
+              description: A user friendly resource name.
+    ResourceRef:
+      type: object
+      required:
+        - ref
+      properties:
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: |
+            A reference to another NGINX Controller resource.
+        links:
+          $ref: '#/components/schemas/NamedLinks'
+    UserDef:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+        - password
+      properties:
+        account:
+          type: string
+          minLength: 1
+          maxLength: 64
+          example: 1
+          deprecated: true
+          description: The account number of the tentant.
+        id:
+          type: integer
+          example: 123
+          description: Account ID
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 64
+          example: John
+          description: Given name.
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 64
+          example: Doe
+          description: Surname.
+        lastLogin:
+          type: integer
+          example: 1570132969
+          description: Unix time (seconds since Epoch) of last login.
+        email:
+          type: string
+          example: john.doe@nginx.com
+          description: >-
+            An email address that serves as the account's
+            username. This must match the resource's metadata.name
+            property.
+          format: email
+        authn:
+          type: string
+          enum:
+            - amplify
+        password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 64
+          description: |
+            Passwords must meet the following requirements:
+
+              - length must be between 8 and 64 characters
+              - must contain at least 1 letter
+              - must contain at least 1 number
+              - must be different from the old password
+
+              Dictionary words, mangled dictionary words, or systematic passwords like '1234567a' are not allowed.
+        apiKey:
+          type: string
+          example: 761ab961448865d86ef71c67fd74432b
+          deprecated: true
+          description: User api key.
+        isEnabled:
+          type: boolean
+          description: Indicates if the account is enabled.
+          default: false
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceRef'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceRef'
+    User:
+      type: object
+      required:
+        - metadata
+        - desiredState
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          $ref: '#/components/schemas/UserDef'
+        currentStatus:
+          $ref: '#/components/schemas/UserDef'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'

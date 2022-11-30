@@ -1,0 +1,571 @@
+---
+openapi: "3.0.0"
+servers:
+- url: "https://api.enterprise.apigee.com/v1"
+info:
+  title: "User roles API"
+  description: "Manage role-based access in Apigee Edge. User roles form the basis\
+    \ of role-based access in Apigee Edge.\n\nUsers are associated with one or more\
+    \ user roles. Each user role defines a set of permissions (GET, PUT, DELETE) on\
+    \ RBAC resources (defined by URI paths).\n\nA user role is scoped to an organization.\n\
+    \nUpdated: 01/25/21"
+  version: "1.0"
+security:
+- Basic: []
+- OAuth: []
+paths:
+  /organizations/{org_name}/userroles:
+    get:
+      tags:
+      - "User Roles"
+      summary: "List roles in an organization"
+      description: "Lists roles available to all users in an organization."
+      operationId: "listUserRoles"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+        "400":
+          description: "Bad request"
+    post:
+      tags:
+      - "User Roles"
+      summary: "Create roles in an organization"
+      description: "Creates one or more user roles in an organization.\n\nAfter you\
+        \ create the role, you can use the following APIs to add permissions to the\
+        \ role:\n\n* <a href=\"/docs/user-roles/1/routes/organizations/%7Borg_name%7D/userroles/%7Brole_name%7D/resourcepermissions/post\"\
+        >Add permissions for multiple resources to a role</a>    \n* <a href=\"/docs/user-roles/1/routes/organizations/%7Borg_name%7D/userroles/%7Brole_name%7D/permissions/post\"\
+        >Add permissions for a resource to a role</a>\n\nRole names <a href=\"https://docs.apigee.com/advisory/naming-and-input-error-advisories#VALIDATION_ERR_ROLENAME\"\
+        >cannot contain special characters</a>."
+      operationId: "createRole"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  role:
+                    type: "array"
+                    description: "Role names."
+                    items:
+                      type: "object"
+                      properties:
+                        name:
+                          type: "string"
+                          description: "Name of the role."
+              example:
+                role:
+                - name: "role1"
+                - name: "role2"
+        "400":
+          description: "Bad request"
+      requestBody:
+        description: "Role names."
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                role:
+                  type: "array"
+                  description: "Role names."
+                  items:
+                    type: "object"
+                    properties:
+                      name:
+                        type: "string"
+                        description: "Name of the role."
+            example:
+              role:
+              - name: "role1"
+              - name: "role2"
+  /organizations/{org_name}/userroles/{role_name}:
+    get:
+      tags:
+      - "User Roles"
+      summary: "Get role"
+      description: "Gets the name of a user role. If you want to view permissions\
+        \ for the role, see <a href=\"/docs/user-roles/1/routes/organizations/%7Borg_name%7D/userroles/%7Brole_name%7D/permissions/get\"\
+        >List permissions for resources associated with a role</a>."
+      operationId: "getRole"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/role_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                properties:
+                  name:
+                    type: "string"
+                    description: "Name of the role."
+              example:
+                name: "mycustomrole"
+        "400":
+          description: "Bad request"
+    delete:
+      tags:
+      - "User Roles"
+      summary: "Delete role"
+      description: "Deletes a role from an organization.\n\nRoles can only be deleted\
+        \ when no users are assigned to the role. See <a href=\"/docs/user-roles/1/routes/organizations/%7Borg_name%7D/userroles/%7Brole_name%7D/users/%7Buser_email%7D/delete\"\
+        >Remove a user from a role."
+      operationId: "deleteRole"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/role_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                properties:
+                  name:
+                    type: "string"
+                    description: "Name of the role."
+              example:
+                name: "mycustomrole"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/userroles/{role_name}/users:
+    get:
+      tags:
+      - "User Roles"
+      summary: "List users assigned to a role"
+      description: "Lists the users assigned to a role."
+      operationId: "listUsersAssignedToRole"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/role_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                description: "Users assigned to a role."
+                items:
+                  type: "string"
+        "400":
+          description: "Bad request"
+    post:
+      tags:
+      - "User Roles"
+      summary: "Add a user to a role"
+      description: "Adds a user to a role.\n\n**Note**: **This API cannot be executed\
+        \ using the Try this API panel**. For an example using curl, see  <a href=\"\
+        https://docs.apigee.com/api-platform/system-administration/understanding-roles#assigningrolestoauser-assigningrolestouserswiththeedgeapi\"\
+        \ >Assigning roles to users with the Edge API</a>.\n\nSpecify a custom role\
+        \ or one of the following <a href=\"https://docs.apigee.com/api-platform/system-administration/edge-built-roles\"\
+        >built-in roles</a>:\n\n* Organization administrator: `orgadmin`\n* Read-only\
+        \ organization administrator (Cloud only): `readonlyadmin`\n* Operations administrator:\
+        \ `opsadmin`\n* Business user: `businessuser`\n* User: `user`"
+      operationId: "addUserToRole"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/role_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserRoles"
+              example:
+                emailId: "ahamilton@example.com"
+                firstName: "Alex"
+                lastName: "Hamilton"
+                roles:
+                  role:
+                  - name: "user"
+                    organization: "myorg"
+                  - name: "mycustomrole"
+                    organization: "myrog"
+        "400":
+          description: "Bad request"
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: "object"
+              properties:
+                id:
+                  type: "string"
+                  description: "Email address of the user."
+  /organizations/{org_name}/userroles/{role_name}/users/{user_email}:
+    delete:
+      tags:
+      - "User Roles"
+      summary: "Remove user from role"
+      description: "Removes a user from the specified role."
+      operationId: "removeUserFromRole"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/role_name"
+      - $ref: "#/components/parameters/user_email"
+      responses:
+        "204":
+          description: "No Content"
+        "400":
+          description: "Bad request"
+    get:
+      tags:
+      - "User Roles"
+      summary: "Verify user roles"
+      description: "Verifies roles to which user is assigned."
+      operationId: "verifyUserRoles"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/role_name"
+      - $ref: "#/components/parameters/user_email"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+              example:
+                emailId: "ahamilton@example.com"
+                firstName: "Alex"
+                lastName: "Hamilton"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/userroles/{role_name}/resourcepermissions:
+    post:
+      tags:
+      - "User Roles"
+      - "Permissions"
+      summary: "Add permissions for multiple resources to a role"
+      description: "Adds permissions for multiple resources to a role."
+      operationId: "addMultipleResourcePermissionsForResource"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/role_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourcePermissions"
+              example:
+                resourcePermission:
+                - path: "/applications"
+                  permissions:
+                  - "put"
+                  - "get"
+                  - "delete"
+                - path: "/apiproducts"
+                  permissions:
+                  - "put"
+                  - "get"
+                  - "delete"
+        "400":
+          description: "Bad request"
+      requestBody:
+        description: "Role names."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResourcePermissions"
+            example:
+              resourcePermission:
+              - path: "/applications"
+                permissions:
+                - "put"
+                - "get"
+                - "delete"
+              - path: "/apiproducts"
+                permissions:
+                - "put"
+                - "get"
+                - "delete"
+  /organizations/{org_name}/userroles/{role_name}/permissions:
+    post:
+      tags:
+      - "User Roles"
+      - "Permissions"
+      summary: "Add permissions for a resource to role"
+      description: "Adds permissions for a resource to a role.\n\nIn Apigee Edge,\
+        \ user roles are assigned different permissions to view (`GET`), create or\
+        \ update (`PUT`), or delete (`DELETE`) resources in an organization; for example,\
+        \ modifying API proxies, creating custom reports, and so on. Users in a particular\
+        \ role are limited to the permissions added to the role.\n\nA permission consists\
+        \ of a set of verbs (`get`, `put`, and/or `delete`) and a resource path. For\
+        \ example, to allow a user role to view the API proxies in an organization,\
+        \ the role must have the following permission:\n\n```\n{\n   \"path\" : \"\
+        /applications\",\n   \"permissions\" : [\"get\"]\n}\n```\nTo be able to list\
+        \ and create an API proxy:\n\n```\n{\n   \"path\" : \"/applications\",\n \
+        \  \"permissions\" : [\"get\", \"put\"]\n}\n```\nFor a complete list of the\
+        \ available resource paths and verbs, see <a href=\"https://docs.apigee.com/api-platform/system-administration/permissions\"\
+        >Permissions reference</a>.\n\n\nYou can use the `*` wildcard in the URI pattern\
+        \ to indicate any value; for example, to include either the `test` or `prod`\
+        \ environment in the resource path: `/environments/*/cache`. For more information\
+        \ and examples on using the API to add permissions, see <a href=\"https://docs.apigee.com/api-platform/system-administration/managing-roles-api\"\
+        >Creating roles with the API</a>.\n\nThis API does not remove any existing\
+        \ permissions in the role. To remove a permsission, see <a href=\"/docs/user-roles/1/routes/organizations/%7Borg_name%7D/userroles/%7Brole_name%7D/permissions/%7Bpermission%7D/delete\"\
+        >Delete permission for a resource in a role</a>."
+      operationId: "addResourcePermissionsToRole"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/role_name"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourcePermission"
+              example:
+                path: "/applications"
+                permissions:
+                - "put"
+                - "get"
+                - "delete"
+        "400":
+          description: "Bad request"
+      requestBody:
+        description: "Role names."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResourcePermission"
+            example:
+              path: "/applications"
+              permissions:
+              - "put"
+              - "get"
+              - "delete"
+    get:
+      tags:
+      - "User Roles"
+      - "Permissions"
+      summary: "List permissions for resources associated with a role"
+      description: "Lists permissions for resources associated with the specified\
+        \ role.\n\nTo display information for a single resource, set the `path` query\
+        \ parameter to the name of the resource, such as `/applications`. For example:\n\
+        \n```\n{\n   \"organization\" : \"myorg\",\n   \"path\" : \"/applications\"\
+        ,\n   \"permissions\" : [\n     \"delete\",\n     \"get\",\n     \"put\"\n\
+        \   ]\n}\n```        \n\nIf you omit the `path` query parameter, then permissions\
+        \ for all resources associated with a role are returned."
+      operationId: "listPermissionsForResourcesAssoicatedRole"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/role_name"
+      - $ref: "#/components/parameters/path"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourcePermissions"
+              example:
+                resourcePermission:
+                - organization: "myorg"
+                  path: "/applications"
+                  permissions:
+                  - "delete"
+                  - "get"
+                  - "put"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/userroles/{role_name}/permissions/{permission}:
+    delete:
+      tags:
+      - "User Roles"
+      - "Permissions"
+      summary: "Delete permission for resource"
+      description: "Deletes a permission for a resource in the role specified. Permissions\
+        \ are case sensitive. Specify the permission as `get`, `put`, or `delete`."
+      operationId: "deletePermissionForResource"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/role_name"
+      - $ref: "#/components/parameters/permission"
+      - $ref: "#/components/parameters/path"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourcePermission"
+              example:
+                path: "/applications"
+                permissions:
+                - "delete"
+        "400":
+          description: "Bad request"
+    get:
+      tags:
+      - "User Roles"
+      - "Permissions"
+      summary: "Verify user role permission for resource"
+      description: "Verifies that a user role's permission exists for a specific resource.\
+        \ Returns a value of `true` or `false`."
+      operationId: "verifyUserRolePermissionForResource"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/role_name"
+      - $ref: "#/components/parameters/permission"
+      - $ref: "#/components/parameters/path"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                properties:
+                  value:
+                    type: "string"
+                    description: "Boolean value that specifies whether the permission\
+                      \ exists for the resource in the role."
+              example:
+                value: true
+        "400":
+          description: "Bad request"
+components:
+  securitySchemes:
+    Basic:
+      type: "http"
+      scheme: "basic"
+      description: "Multi-factor authentication is not supported."
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)"
+  parameters:
+    org_name:
+      in: "path"
+      name: "org_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Organization name."
+    role_name:
+      in: "path"
+      name: "role_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Role name."
+    user_email:
+      in: "path"
+      name: "user_email"
+      required: true
+      schema:
+        type: "string"
+      description: "Email address of the user."
+    permission:
+      in: "path"
+      name: "permission"
+      required: true
+      schema:
+        type: "string"
+      description: "Permission."
+    id:
+      in: "query"
+      name: "id"
+      required: true
+      schema:
+        type: "string"
+      description: "Email address of the user."
+    path:
+      in: "query"
+      name: "path"
+      required: false
+      schema:
+        type: "string"
+      description: "Resource path. For example: `/applications`"
+  schemas:
+    UserRoles:
+      description: "List of roles assigned to user."
+      type: "object"
+      properties:
+        emailId:
+          type: "string"
+          description: "Email address of the user."
+        firstName:
+          type: "string"
+          description: "First name of user."
+        lastName:
+          type: "string"
+          description: "Last name of user."
+        roles:
+          type: "array"
+          description: "List of roles."
+          items:
+            type: "object"
+            properties:
+              name:
+                type: "string"
+                description: "Name of the role."
+              organization:
+                type: "string"
+                description: "Name of the organization."
+    User:
+      description: "List of roles assigned to user."
+      type: "object"
+      properties:
+        emailId:
+          type: "string"
+          description: "Email address of the user."
+        firstName:
+          type: "string"
+          description: "First name of user."
+        lastName:
+          type: "string"
+          description: "Last name of user."
+    ResourcePermissions:
+      description: "Permissions for all resources."
+      type: "object"
+      properties:
+        resourcePermission:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              org:
+                type: "string"
+                description: "Output only. Organization name."
+              path:
+                type: "string"
+                description: "Resource path. See <a href=\"https://docs.apigee.com/api-platform/system-administration/permissions\"\
+                  >Permissions reference</a>"
+              permissions:
+                type: "array"
+                description: "List of permissions, such as `get`, `put`, or `delete`."
+                items:
+                  type: "string"
+    ResourcePermission:
+      description: "Permissions for resource."
+      type: "object"
+      properties:
+        path:
+          type: "string"
+          description: "Resource path. See <a href=\"https://docs.apigee.com/api-platform/system-administration/permissions\"\
+            >Permissions reference</a>"
+        permissions:
+          type: "array"
+          description: "List of permissions, such as `get`, `put`, or `delete`."
+          items:
+            type: "string"

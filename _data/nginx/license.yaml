@@ -1,0 +1,1330 @@
+openapi: 3.0.0
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+info:
+  title: License API
+  description: >-
+    Use the License API to manage the license(s) for NGINX
+    Controller.
+  version: v1
+paths:
+  /platform/license:
+    get:
+      tags:
+        - License
+      summary: Get a License
+      description: Gets information for the active NGINX Controller license.
+      operationId: getLicense
+      responses:
+        '200':
+          description: Successfully retrieved the active Controller license.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseResponse'
+              example:
+                metadata:
+                  name: license
+                desiredState:
+                  content: '******'
+                  items:
+                    - expiry: '2021-05-10T00:00:00Z'
+                      instanceCount: 250
+                      product: NGINX Controller Load Balancing
+                      serial: 20145
+                      type: PAID
+                      version: 1
+                      id: ADC
+                currentStatus:
+                  subscription:
+                    id: b6d7c577-b708-44ad-839c-9743f85fcf7c
+                  entitlement:
+                    features:
+                      - name: NGINX Controller Load Balancing
+                        limit: 20
+                        unitOfMeasure: WORKLOADS
+                        type: PAID
+                        id: ADC
+                        expiry: '1996-02-26T00:00:00.000Z'
+                        gracePeriodDays: 30
+                  state:
+                    currentInstance:
+                      id: 8ce9b80a-f7fc-48fd-ac28-8d5f3fe898d6
+                      type: NGINX Controller
+                      status: INVALID
+                      version: 3.3.0
+                      telemetryLastReported: '2021-05-10T00:00:00Z'
+                      features:
+                        - name: NGINX Controller Load Balancing
+                          used: 5
+                          aggregateUsed: 10
+                          remaining: 5
+                          unitOfMeasure: WORKLOADS
+                          id: ADC
+                          daysUntilExpiry: 20
+                          gracePeriodRemainingDays: 30
+                      configState:
+                        selfConfigState:
+                          isConfigured: true
+                          isConfiguring: false
+                          isError: false
+                          isDeleting: false
+                        conditions: []
+                  items:
+                    - expiry: '2021-05-10T00:00:00Z'
+                      instanceCount: 250
+                      product: NGINX Controller Load Balancing
+                      serial: 20145
+                      type: PAID
+                      version: 1
+                      id: ADC
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/Internal'
+    put:
+      tags:
+        - License
+      summary: Upload a License
+      description: >
+        Uploads an NGINX Controller license.
+
+
+        Provide your NGINX Controller license in the JSON request
+        body as a base64-encoded string or as an unencoded
+        customer association token.
+      operationId: putLicense
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutLicenseRequest'
+            example:
+              metadata:
+                name: license
+              desiredState:
+                content: >-
+                  <base-64-encoded-license-file-contents or
+                  association-token>
+      responses:
+        '200':
+          description: Successfully uploaded the license.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseResponse'
+              example:
+                metadata:
+                  name: license
+                desiredState:
+                  content: '******'
+                  items:
+                    - expiry: '2021-05-10T00:00:00Z'
+                      instanceCount: 250
+                      product: NGINX Controller Load Balancing
+                      serial: 20145
+                      type: PAID
+                      version: 1
+                      id: ADC
+                currentStatus:
+                  subscription:
+                    id: b6d7c577-b708-44ad-839c-9743f85fcf7c
+                  entitlement:
+                    features:
+                      - name: NGINX Controller Load Balancing
+                        limit: 20
+                        unitOfMeasure: WORKLOADS
+                        type: PAID
+                        id: ADC
+                        expiry: '2021-02-26T00:00:00.000Z'
+                        gracePeriodDays: 30
+                  state:
+                    currentInstance:
+                      id: 8ce9b80a-f7fc-48fd-ac28-8d5f3fe898d6
+                      type: NGINX Controller
+                      status: INVALID
+                      version: 3.3.0
+                      telemetryLastReported: '2021-05-10T00:00:00Z'
+                      features:
+                        - name: NGINX Controller Load Balancing
+                          used: 5
+                          aggregateUsed: 10
+                          remaining: 5
+                          unitOfMeasure: WORKLOADS
+                          id: ADC
+                          daysUntilExpiry: 20
+                          gracePeriodRemainingDays: 0
+                      configState:
+                        selfConfigState:
+                          isConfigured: true
+                          isConfiguring: false
+                          isError: false
+                          isDeleting: false
+                        conditions: []
+                  items:
+                    - expiry: '2021-05-10T00:00:00Z'
+                      instanceCount: 250
+                      product: NGINX Controller Load Balancing
+                      serial: 20145
+                      type: PAID
+                      version: 1
+                      id: ADC
+        '202':
+          description: >-
+            The request to upload a license succeeded. The License
+            resource will be created when the upload is complete.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseResponse'
+              example:
+                metadata:
+                  name: license
+                desiredState:
+                  content: '******'
+                  items:
+                    - expiry: '2021-05-10T00:00:00Z'
+                      instanceCount: 250
+                      product: NGINX Controller Load Balancing
+                      serial: 20145
+                      type: PAID
+                      version: 1
+                      id: ADC
+                currentStatus:
+                  subscription:
+                    id: b6d7c577-b708-44ad-839c-9743f85fcf7c
+                  entitlement:
+                    features:
+                      - name: NGINX Controller Load Balancing
+                        limit: 20
+                        unitOfMeasure: WORKLOADS
+                        type: PAID
+                        id: ADC
+                        expiry: '2021-02-26T00:00:00.000Z'
+                        gracePeriodDays: 30
+                  state:
+                    currentInstance:
+                      id: 8ce9b80a-f7fc-48fd-ac28-8d5f3fe898d6
+                      type: NGINX Controller
+                      status: INVALID
+                      version: 3.3.0
+                      telemetryLastReported: '2021-05-10T00:00:00Z'
+                      features:
+                        - name: NGINX Controller Load Balancing
+                          used: 5
+                          aggregateUsed: 10
+                          remaining: 5
+                          unitOfMeasure: WORKLOADS
+                          id: ADC
+                          daysUntilExpiry: 20
+                          gracePeriodRemainingDays: 0
+                      configState:
+                        selfConfigState:
+                          isConfigured: false
+                          isConfiguring: true
+                          isError: false
+                          isDeleting: false
+                        conditions: []
+                  items:
+                    - expiry: '2021-05-10T00:00:00Z'
+                      instanceCount: 250
+                      product: NGINX Controller Load Balancing
+                      serial: 20145
+                      type: PAID
+                      version: 1
+                      id: ADC
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/Internal'
+    delete:
+      tags:
+        - License
+      operationId: deleteLicense
+      summary: Delete a License
+      description: Deletes an NGINX Controller License resource.
+      responses:
+        '202':
+          description: >-
+            Successfully scheduled the request to delete the
+            license.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseResponse'
+              example:
+                metadata:
+                  name: license
+                desiredState:
+                  content: '******'
+                  items:
+                    - expiry: '2021-05-10T00:00:00Z'
+                      instanceCount: 250
+                      product: NGINX Controller Load Balancing
+                      serial: 20145
+                      type: PAID
+                      version: 1
+                      id: ADC
+                currentStatus:
+                  subscription:
+                    id: b6d7c577-b708-44ad-839c-9743f85fcf7c
+                  entitlement:
+                    features:
+                      - name: NGINX Controller Load Balancing
+                        limit: 20
+                        unitOfMeasure: WORKLOADS
+                        type: PAID
+                        id: ADC
+                        expiry: '2021-02-26T00:00:00.000Z'
+                        gracePeriodDays: 30
+                  state:
+                    currentInstance:
+                      id: 8ce9b80a-f7fc-48fd-ac28-8d5f3fe898d6
+                      type: NGINX Controller
+                      status: INVALID
+                      version: 3.3.0
+                      telemetryLastReported: '2021-05-10T00:00:00Z'
+                      features:
+                        - name: NGINX Controller Load Balancing
+                          used: 5
+                          aggregateUsed: 10
+                          remaining: 5
+                          unitOfMeasure: WORKLOADS
+                          id: ADC
+                          daysUntilExpiry: 20
+                          gracePeriodRemainingDays: 0
+                      configState:
+                        selfConfigState:
+                          isConfigured: false
+                          isConfiguring: false
+                          isError: false
+                          isDeleting: true
+                        conditions: []
+                  items:
+                    - expiry: '2021-05-10T00:00:00Z'
+                      instanceCount: 250
+                      product: NGINX Controller Load Balancing
+                      serial: 20145
+                      type: PAID
+                      version: 1
+                      id: ADC
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/Internal'
+  /platform/licenses/nginx-plus-licenses:
+    get:
+      tags:
+        - License
+      summary: List all NGINX+ Licenses.
+      description: Returns a list of all NGINX Plus licenses.
+      operationId: listNginxPlusLicenses
+      responses:
+        '200':
+          description: >
+            Successfully retrieved the list of NGINX Plus
+            licenses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxPlusLicensesList'
+              example:
+                items:
+                  - metadata:
+                      name: controller-provided
+                      ref: >-
+                        /platform/licenses/nginx-plus-licenses/controller-provided
+                      kind: license
+                    currenStatus:
+                      certKey: a valid certificate key for NGINX Plus
+                      privateKey: a valid private key for NGINX Plus
+                    desiredState:
+                      certKey: a valid certificate key for NGINX Plus
+                      privateKey: a valid private key for NGINX Plus
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/PaymentRequired'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/Internal'
+  '/platform/licenses/nginx-plus-licenses/{licenseName}':
+    get:
+      tags:
+        - License
+      summary: Get the NGINX Plus certificate and key bundle by name
+      description: >-
+        Gets the NGINX Plus certificate and key as a JSON or gzip
+        file.
+      operationId: getNginxPlusLicense
+      parameters:
+        - in: header
+          name: Content-Type
+          schema:
+            type: string
+            example: application/json
+        - name: licenseName
+          description: The name of the license.
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/LicenseName'
+      responses:
+        '200':
+          description: >-
+            Successfully retrieved the specified NGINX Plus
+            license.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxPlusLicenseResponse'
+              example:
+                metadata:
+                  name: controller-provided
+                  ref: >-
+                    /platform/licenses/nginx-plus-licenses/controller-provided
+                  kind: license
+                currenStatus:
+                  certKey: a valid certificate key for NGINX Plus
+                  privateKey: a valid private key for NGINX Plus
+                desiredState:
+                  certKey: a valid certificate key for NGINX Plus
+                  privateKey: a valid private key for NGINX Plus
+            application/gzip:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/PaymentRequired'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/FileNotFound'
+        '500':
+          $ref: '#/components/responses/Internal'
+  /platform/license-file:
+    post:
+      deprecated: true
+      tags:
+        - License
+      summary: Upload a License
+      description: >
+        Uploads an NGINX Controller license.
+
+
+        Accepts a single file (encoded as Base64) that may contain
+        one or more product licenses.
+      operationId: uploadLicense
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LicenseRequest'
+      responses:
+        '200':
+          description: Successfully uploaded a license.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/License'
+              example:
+                metadata:
+                  name: license
+                desiredState:
+                  items:
+                    - expiry: '2021-05-10T00:00:00Z'
+                      instanceCount: 20
+                      product: NGINX Controller API Management
+                      serial: 20145
+                      type: PRODUCTION
+                      version: 1
+                      id: APIM
+                currentStatus:
+                  items:
+                    - expiry: '2021-05-10T00:00:00Z'
+                      instanceCount: 20
+                      product: NGINX Controller API Management
+                      serial: 20145
+                      type: PRODUCTION
+                      version: 1
+                      id: APIM
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/Internal'
+components:
+  responses:
+    Internal:
+      description: >-
+        The request cannot be processed because of an internal
+        server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 4581
+            details:
+              - description: >-
+                  The request cannot be processed because of an
+                  internal server error.
+            message: >-
+              An internal error occurred while processing the
+              request. Try again later. If the issue continues,
+              contact your system administrator or NGINX Support.
+    Unauthorized:
+      description: User authentication is invalid or missing.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 401
+            message: authentication needed
+    PaymentRequired:
+      description: The request failed due to missing or expired license.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 4700
+            details:
+              - description: >-
+                  Error getting the NGINX Plus certificate and
+                  public key: the license is either expired or no
+                  license exists. Upload a valid license file and
+                  then try again.
+            message: payment required.
+    Forbidden:
+      description: The request failed due to insufficient privileges.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 403
+            message: unauthorized
+    BadRequest:
+      description: >-
+        Bad input parameter, or possibly a bad URI. Check the
+        input for typos and try again.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 4578
+            details:
+              - description: >-
+                  Bad input parameter, or possibly a bad URI.
+                  Check the input for typos and try again.
+            message: >-
+              Error processing the request: the license file has
+              an invalid signature. Check if the license file is
+              for NGINX Controller, then try again. If the issue
+              continues, contact NGINX Support.
+    FileNotFound:
+      description: The requested certificate and key could not be found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+          example:
+            code: 4600
+            details:
+              - description: >-
+                  The requested resource was not found or is
+                  unavailable.
+            message: >-
+              The requested NGINX Plus license is not found or is
+              unavailable.
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: session
+  schemas:
+    LicenseRequest:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+          format: password
+          description: 'License file contents, encoded as Base64'
+    PutLicenseRequest:
+      type: object
+      required:
+        - metadata
+        - desiredState
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          type: object
+          required:
+            - content
+          properties:
+            content:
+              type: string
+              format: password
+              description: >-
+                The customer association token or NGINX Controller
+                license, which can be downloaded from your
+                [MyF5](account.f5.com/myf5) account. The license
+                must be formatted as a base64-encoded string,
+                while the association token is unencoded.
+    License:
+      type: object
+      required:
+        - metadata
+        - desiredState
+        - currentStatus
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/LicenseData'
+        currentStatus:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/LicenseData'
+    LicenseResponse:
+      type: object
+      required:
+        - metadata
+        - desiredState
+        - currentStatus
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          type: object
+          properties:
+            content:
+              type: string
+              format: password
+              description: Redacted license information.
+            items:
+              type: array
+              deprecated: true
+              items:
+                $ref: '#/components/schemas/LicenseData'
+        currentStatus:
+          type: object
+          properties:
+            subscription:
+              $ref: '#/components/schemas/Subscription'
+            entitlement:
+              $ref: '#/components/schemas/Entitlement'
+            state:
+              type: object
+              required:
+                - currentInstance
+              properties:
+                currentInstance:
+                  $ref: '#/components/schemas/CurrentInstance'
+            items:
+              type: array
+              deprecated: true
+              items:
+                $ref: '#/components/schemas/LicenseData'
+    LicenseData:
+      type: object
+      required:
+        - product
+        - expiry
+        - instanceCount
+        - serial
+        - version
+        - type
+        - id
+      description: Defines the features of a given license
+      properties:
+        product:
+          type: string
+          description: The name of the product the license enables.
+          example: NGINX Controller Monitoring
+        expiry:
+          type: string
+          format: date-time
+          description: >-
+            The date on which the license expires. Represented in
+            Coordinated Universal Time (UTC), specifically using
+            the ISO 8601 standard.
+          example: '1996-02-26T00:00:00.000Z'
+        instanceCount:
+          type: integer
+          description: >-
+            The number of instances that are allowed by the
+            license.
+          example: 20
+        serial:
+          type: integer
+          description: A unique identifier for the license.
+          example: 20145
+        version:
+          type: integer
+          description: The product version number.
+          example: 1
+        type:
+          type: string
+          description: The license type. Lowercase values are deprecated.
+          enum:
+            - production
+            - beta
+            - internal
+            - partner
+            - trial
+            - PRODUCTION
+            - BETA
+            - INTERNAL
+            - PARTNER
+            - TRIAL
+            - PAID
+            - EVAL
+        id:
+          type: string
+          description: Unique identifier for a product.
+          enum:
+            - UNKNOWN
+            - ADC
+            - APIM
+            - ANALYTICS
+    Subscription:
+      type: object
+      required:
+        - id
+      description: Defines the features of a subscription.
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: b6d7c577-b708-44ad-839c-9743f85fcf7c
+          description: Subscription ID.
+    Entitlement:
+      type: object
+      required:
+        - features
+      description: Defines the elements of an entitlement.
+      properties:
+        features:
+          type: array
+          description: Product features.
+          items:
+            $ref: '#/components/schemas/Feature'
+    Feature:
+      type: object
+      required:
+        - name
+        - unitOfMeasure
+        - id
+        - type
+      description: >-
+        Defines a product feature, consumption metric, and metric
+        usage limit.
+      properties:
+        name:
+          type: string
+          description: Name of the feature.
+          example: NGINX Controller Load Balancing
+        limit:
+          type: integer
+          description: Maximum limit for the consumption metric.
+          example: 1
+          minimum: 0
+        unlimited:
+          type: boolean
+          description: >-
+            Indicates whether there is a limit for the consumption
+            metric or not.
+          example: true
+        unitOfMeasure:
+          $ref: '#/components/schemas/UnitOfMeasure'
+        type:
+          type: string
+          description: The license type.
+          example: PAID
+          enum:
+            - PRODUCTION
+            - BETA
+            - INTERNAL
+            - PARTNER
+            - TRIAL
+            - PAID
+            - EVAL
+        id:
+          $ref: '#/components/schemas/FeatureID'
+        expiry:
+          type: string
+          format: date-time
+          description: >-
+            The date on which the license expires. Represented in
+            Coordinated Universal Time (UTC), specifically using
+            the ISO 8601 standard.
+          example: '1996-02-26T00:00:00.000Z'
+        gracePeriodDays:
+          type: integer
+          description: Number of grace period days after the license expires.
+          example: 30
+          minimum: 0
+    CurrentInstance:
+      type: object
+      required:
+        - type
+        - version
+        - status
+        - features
+        - configState
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 8ce9b80a-f7fc-48fd-ac28-8d5f3fe898d6
+          description: Unique identifier for the current instance.
+        telemetryLastReported:
+          type: string
+          format: date-time
+          description: >-
+            Date and time when telemetry data was last reported
+            from the current instance. Represented in Coordinated
+            Universal Time (UTC), specifically using the ISO 8601
+            standard.
+          example: '1996-02-26T00:00:00.000Z'
+        type:
+          type: string
+          example: NGINX Controller
+          description: Product type.
+        status:
+          type: string
+          description: >
+            Status of the current instance with respect to the
+            license.
+
+
+            - `NONE`: The current instance is not yet licensed.
+
+            - `INVALID`: The current instance has at least one
+            entitlement in non-functional license status.
+
+            - `ENFORCED`: The current instance has at least one
+            entitlement in enforced license status and no
+            entitlements in non-functional status.
+
+            - `GRACE`: The current instance has at least one
+            entitlement in grace period license status and no
+            entitlements in enforced or non-functional status.
+
+            - `VALID`: The current instance has valid
+            entitlement(s) that have no adverse license statuses.
+
+            - `CORRUPTED`: The license for the current instance is
+            corrupted. Upload the license file again to rectify
+            the status.
+          enum:
+            - NONE
+            - INVALID
+            - ENFORCED
+            - GRACE
+            - VALID
+            - CORRUPTED
+        version:
+          type: string
+          example: 3.3.0
+          description: Product version.
+        configState:
+          $ref: '#/components/schemas/ConfigState'
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureStatus'
+          description: >-
+            List of the available features and their current
+            usage.
+    FeatureStatus:
+      type: object
+      required:
+        - name
+        - unitOfMeasure
+        - id
+      properties:
+        name:
+          type: string
+          description: Name of the product feature.
+          example: NGINX Controller Load Balancing
+        used:
+          type: number
+          description: >-
+            Amount of the feature used by the current NGINX
+            Controller instance.
+          example: 1
+          minimum: 0
+        aggregateUsed:
+          type: number
+          description: >-
+            Amount of the feature used by all NGINX Controller
+            instances in the bucket.
+          example: 1
+          minimum: 0
+        remaining:
+          type: number
+          description: Amount of the feature remaining.
+          example: 1
+          minimum: 0
+        unitOfMeasure:
+          $ref: '#/components/schemas/UnitOfMeasure'
+        id:
+          $ref: '#/components/schemas/FeatureID'
+        daysUntilExpiry:
+          type: integer
+          description: Defines when the current entitlement expires.
+          example: 20
+          minimum: 0
+        gracePeriodRemainingDays:
+          type: integer
+          description: >-
+            Defines the remaining grace period days after the
+            license expires.
+          minimum: 0
+    UnitOfMeasure:
+      type: string
+      enum:
+        - INSTANCES
+        - WORKLOADS
+        - DATA_PER_HOUR_IN_GB
+        - SUCCESSFUL_API_CALLS_IN_MILLIONS
+        - SUCCESSFUL_API_CALLS
+      description: Unit of measure used for computing consumption.
+      example: WORKLOADS
+    FeatureID:
+      type: string
+      enum:
+        - UNKNOWN
+        - ADC
+        - APIM
+        - ANALYTICS
+      example: ADC
+      description: Unique identifier for a product feature.
+    LicenseName:
+      type: string
+      description: Name of the License resource.
+      example: controller-provided
+    NginxPlusLicensesList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/NginxPlusLicenseResponse'
+    NginxPlusLicenseResponse:
+      type: object
+      required:
+        - metadata
+        - currentStatus
+        - desiredState
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        currentStatus:
+          $ref: '#/components/schemas/NginxPlusKeys'
+        desiredState:
+          $ref: '#/components/schemas/NginxPlusKeys'
+      example:
+        metadata:
+          name: controller-provided
+          ref: >-
+            /platform/licenses/nginx-plus-licenses/controller-provided
+          kind: license
+        currenStatus:
+          certKey: a valid certificate key for NGINX Plus
+          privateKey: a valid private key for NGINX Plus
+        desiredState:
+          certKey: a valid certificate key for NGINX Plus
+          privateKey: a valid private key for NGINX Plus
+    NginxPlusKeys:
+      type: object
+      required:
+        - certKey
+        - privateKey
+      properties:
+        certKey:
+          type: string
+          description: >
+            Contents of the certificate file that is required to
+            install NGINX Plus.
+        privateKey:
+          type: string
+          description: >
+            Contents of the key file that is required to install
+            NGINX Plus.
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          not:
+            type: string
+            enum:
+              - .
+              - ..
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+            - cannot be only `.` or `..`
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    ConfigStateTally:
+      type: object
+      properties:
+        isConfigured:
+          type: boolean
+          description: The configuration operation is complete.
+        isConfiguring:
+          type: boolean
+          description: >-
+            The configuration of the resource, or of its
+            child(ren), is in process.
+        isError:
+          type: boolean
+          description: >-
+            An error occurred while configuring the resource or
+            its child(ren).
+        isDeleting:
+          type: boolean
+          description: >-
+            A delete operation is in progress for the resource or
+            its child(ren).
+        total:
+          type: integer
+          description: >-
+            The total number of resources to which the
+            configuration operation applies.
+        configured:
+          type: integer
+          description: >-
+            The number of resources that have a complete and valid
+            configuration.
+        configuring:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being configured.
+        error:
+          type: integer
+          description: >-
+            The number of resources that have encountered an error
+            during the configuration process.
+        deleting:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being deleted.
+    ConfigCondition:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The condition type.
+        message:
+          type: string
+          description: >-
+            A human-readable message that provides additional
+            information about the configuration operation.
+    ConfigState:
+      type: object
+      description: >
+        A representation of the resource's current configuration
+        state 
+
+        that comprises the status of the resource itself
+        (`selfConfigState`) and any child 
+
+        resources (`childrenConfigState`).
+
+
+        The conditions array provides additional information
+        during configuration changes.
+      properties:
+        selfConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        childrenConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigCondition'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'

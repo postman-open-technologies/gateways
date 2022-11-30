@@ -1,0 +1,1112 @@
+openapi: 3.0.1
+info:
+  title: Metrics API
+  description: |
+    View metrics aggregated by API Monitoring. For more information, see <a href="https://docs.apigee.com/api-monitoring/metrics-api">View metrics data using the API</a>.
+  version: '1.0'
+servers:
+- url: https://apimonitoring.enterprise.apigee.com/metrics
+security:
+- OAuth: []
+paths:
+  /traffic:
+    get:
+      summary: Get traffic metrics
+      description: |
+        Gets traffic metrics. Specify filters such as proxy name, interval, time window,
+        target, status code, and many others.
+
+        **Setting groupBy and env**
+
+
+        The `groupBy` query parameter specifies how to aggregate metrics. The `env` query parameter filters results by a specific environment name. You must specify either `groupBy` to include the `env` option or specify an environment name using the `env` query parameter. For example:
+
+        ```
+
+        groupBy=env // env query param is empty
+
+        ```
+
+        or:
+
+        ```
+
+        env=envName // groupBy query param is empty; envName is the name of the env
+
+        ```
+
+
+
+        You can specify both query params. For example, the following settings aggregate metrics by environment, region, and organization and filters the results for the environment named `prod`:
+
+        ```
+
+        groupBy=env,region,org&env=prod
+        ```
+
+        **Setting interval**
+
+
+        The `interval` query parameter specifies the frequency that the metric is saved to the results. Each data point in the metric results is calculated over the preceding `interval` of time.
+
+
+        For example, if `interval` is 10 minutes, then the metric is calcluated over the previous 10 minutes, and written to the results every 10 minutes.
+
+
+        The `interval` query parameter value supports the following format:
+
+          * `<value><unit>` where:
+            * `<value>` – an integer
+            * `<unit>` – a time unit of: `u`, `ms`, `s`, `sec`, `m`, `h`, `d`, `w`
+
+        For example:
+
+          * `1m`
+          * `10h`
+          * `2d`
+
+
+        **Setting `to` and `from`**
+
+        By default, the API returns alerts for the previousz hour. Use the `from` and `to` query parameters to specify a different duration.
+
+
+        The `from` and `to` query parameter values support the following formats:
+
+
+          * `now` (current time)
+          * `-<value><unit>` specifes a time in the past (note the leading hyphen):
+            * `<value>` – an integer
+            * `<unit>` – a time unit of: `s`, `sec`, `second`, `m`, `min`, `minute`, `h`, `hr`, `hour`, `d`, `day`
+
+          * An ISO formatted date as either:
+             * `yyyy-mm-ddThh:mm:ssZ`
+             * `yyyy-mm-ddThh:mm:ss+00:00`
+
+
+        For example:
+
+          * `now`
+          * `-1h`
+          * `-10min`
+          * `2018-08-13T14:04:00+00:00`
+
+
+        **Note**: You can call this API at most **six times per minute**.
+
+        For more information and examples of this API, see
+        [View metrics data using the API](https://docs.apigee.com/api-monitoring/metrics-api).
+      parameters:
+      - $ref: '#/components/parameters/org'
+      - $ref: '#/components/parameters/interval'
+      - $ref: '#/components/parameters/groupBy'
+      - $ref: '#/components/parameters/env'
+      - $ref: '#/components/parameters/from'
+      - $ref: '#/components/parameters/to'
+      - $ref: '#/components/parameters/select'
+      - $ref: '#/components/parameters/region'
+      - $ref: '#/components/parameters/developerApp'
+      - $ref: '#/components/parameters/proxy'
+      - $ref: '#/components/parameters/target'
+      - $ref: '#/components/parameters/statusCode'
+      - $ref: '#/components/parameters/targetStatusCode'
+      - $ref: '#/components/parameters/faultCodeName'
+      - $ref: '#/components/parameters/faultCodeCategory'
+      - $ref: '#/components/parameters/faultCodeSubCategory'
+      - $ref: '#/components/parameters/collection'
+      responses:
+        200:
+          description: Query results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /latency:
+    get:
+      summary: Get latency metrics
+      description: |
+        Gets latency metrics for requests to Edge and to backend targets. Specify filters such as proxy name, interval, target, status code, and many others.
+
+
+        For this API:
+
+          * You must specify the `percentile` query parameter as `50`, `90`, `95`, or `99`. For example, if you specify `90`, the API returns the total response latency value in the 90th percentile.
+
+        **Setting interval**
+
+        The `interval` query parameter defines the update interval for the value in the results, where:
+
+          * `interval` specifies the frequency that the metric is saved to the results.
+            Must be set to multiples of 60 seconds, with a minimum value of 60 seconds and a
+            maximum value of 300 seconds (5 minutes).
+
+        The interval query parameter value supports the following format:
+
+          * `<value><unit>` where:
+            * `<value>` – an integer
+            * `<unit>` – a time unit of: `u`, `ms`, `s`, `sec`, `m`, `h`, `d`, `w`
+
+        For example:
+
+          * `1u`
+          * `2s`
+          * `5m`
+
+
+        **Setting `to` and `from`**
+
+        By default, the API returns alerts for the previous hour. Use the `from` and `to` query parameters to specify a different duration.
+
+
+        The `from` and `to` query parameter values support the following formats:
+
+
+          * `now` (current time)
+          * `-<value><unit>` specifes a time in the past (note the leading hyphen):
+            * `<value>` – an integer
+            * `<unit>` – a time unit of: `s`, `sec`, `second`, `m`, `min`, `minute`, `h`, `hr`, `hour`, `d`, `day`
+          * An ISO formatted date as either:
+             * `yyyy-mm-ddThh:mm:ssZ`
+             * `yyyy-mm-ddThh:mm:ss+00:00`
+
+
+        For example:
+
+          * `now`
+          * `-1h`
+          * `-10min`
+          * `2018-08-13T14:04:00+00:00`
+
+
+        **Note**: You can call this API at most **six times per minute**.
+
+
+        For more information and examples of this API, see
+        [View metrics data using the API](https://docs.apigee.com/api-monitoring/metrics-api).
+      parameters:
+      - $ref: '#/components/parameters/org'
+      - $ref: '#/components/parameters/percentile'
+      - $ref: '#/components/parameters/interval'
+      - $ref: '#/components/parameters/select'
+      - $ref: '#/components/parameters/groupBy'
+      - $ref: '#/components/parameters/from'
+      - $ref: '#/components/parameters/to'
+      - $ref: '#/components/parameters/region'
+      - $ref: '#/components/parameters/env'
+      - $ref: '#/components/parameters/proxy'
+      - $ref: '#/components/parameters/target'
+      - $ref: '#/components/parameters/collection'
+      responses:
+        200:
+          description: Query results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /targets:
+    get:
+      summary: List target domains
+      description: |
+        Lists target domains for a specific organization and environment.
+
+          
+        **Note**: You can call this API at most **six times per minute**. 
+        
+        
+        For more information and examples of this API, see
+        [View metrics data using the API](https://docs.apigee.com/api-monitoring/metrics-api).
+      parameters:
+      - $ref: '#/components/parameters/org'
+      - $ref: '#/components/parameters/env'
+      responses:
+        200:
+          description: Query results
+          content:
+            application/json:
+              schema:
+                title: Array of target endpoints
+                type: array
+                items:
+                  type: string
+                  example: abc.com
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /alerthistory:
+    get:
+      summary: Get alert history
+      description: |
+        Gets alert history metrics for a specific organization and time interval.
+        
+
+        The maximum duration of the time interval is seven days, meaning you can view alerts only for the past seven days. By default, the API returns alerts for the previous one hour. Use the `from` and `to` query parameters to specify a different duration.
+
+
+        The `from` and `to` query parameter values support the following formats:
+
+
+          * `now` (current time)
+          * `-<value><unit>` specifes a time in the past (note the leading hyphen):
+            * `<value>` – an integer
+            * `<unit>` – a time unit of: `s`, `sec`, `second`, `m`, `min`, `minute`, `h`, `hr`, `hour`, `d`, `day`
+          * An ISO formatted date as either:
+             * `yyyy-mm-ddThh:mm:ssZ`
+             * `yyyy-mm-ddThh:mm:ss+00:00`
+
+
+        For example:
+
+          * `now`
+          * `-1h`
+          * `-10min`
+          * `2018-08-13T14:04:00+00:00`
+
+
+        **Notes**: You can call this API at most **six times per minute**.
+
+
+        For more information and examples of this API, see
+        [View metrics data using the API](https://docs.apigee.com/api-monitoring/metrics-api).
+      parameters:
+      - $ref: '#/components/parameters/org'
+      - $ref: '#/components/parameters/alertId'
+      - $ref: '#/components/parameters/from'
+      - $ref: '#/components/parameters/to'
+      responses:
+        200:
+          description: Query results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Events'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /alertsummary:
+    get:
+      summary: Get alert count
+      description: |
+        Gets the total count of alerts for an organization and time interval.
+
+
+        By default, the API returns alerts for the previous hour. Use the `from` and `to` query parameters to specify a different duration.
+
+
+        The `from` and `to` query parameter values support the following formats:
+
+
+          * `now` (current time)
+          * `-<value><unit>` specifes a time in the past (note the leading hyphen):
+            * `<value>` – an integer
+            * `<unit>` – a time unit of: `s`, `sec`, `second`, `m`, `min`, `minute`, `h`, `hr`, `hour`, `d`, `day`
+          * An ISO formatted date as either:
+             * `yyyy-mm-ddThh:mm:ssZ`
+             * `yyyy-mm-ddThh:mm:ss+00:00`
+
+
+        For example:
+
+          * `now`
+          * `-1h`
+          * `-10min`
+          * `2018-08-13T14:04:00+00:00`
+
+
+        **Note**: You can call this API at most **six times per minute**.
+
+        For more information and examples of this API, see
+        [View metrics data using the API](https://docs.apigee.com/api-monitoring/metrics-api).
+      parameters:
+      - $ref: '#/components/parameters/org'
+      - $ref: '#/components/parameters/from'
+      - $ref: '#/components/parameters/to'
+      responses:
+        200:
+          description: Query results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    event:
+                      type: object
+                      properties:
+                        environment:
+                          type: string
+                          description: Environment name.
+                    count:
+                      type: integer
+                      description: Number of for the environment.
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /events:
+    get:
+      summary: Get events
+      description: >-
+        Gets all events in an organization for a specified time interval. The list of events includes anomalies detected by Edge and any triggered alerts. The alerts can include both fixed and anomaly alerts.
+
+
+        The `from` and `to` query parameter values support the following formats:
+
+
+          * `now` (current time)
+          * `-<value><unit>` specifes a time in the past (note the leading hyphen):
+            * `<value>` – an integer
+            * `<unit>` – a time unit of: `s`, `sec`, `second`, `m`, `min`, `minute`, `h`, `hr`, `hour`, `d`, `day`
+          * An ISO formatted date as either:
+             * `yyyy-mm-ddThh:mm:ssZ`
+             * `yyyy-mm-ddThh:mm:ss+00:00`
+
+
+        For example:
+
+          * `now`
+          * `-1h`
+          * `-10min`
+          * `2018-08-13T14:04:00+00:00`
+
+
+        **Note**: You can call this API at most **six times per minute**.
+
+        For more information and examples of this API, see
+        [View metrics data using the API](https://docs.apigee.com/api-monitoring/metrics-api).
+      parameters:
+      - $ref: '#/components/parameters/org'
+      - $ref: '#/components/parameters/from'
+      - $ref: '#/components/parameters/to'
+      - $ref: '#/components/parameters/alertId'
+      - $ref: '#/components/parameters/env'
+      - $ref: '#/components/parameters/name'
+      - $ref: '#/components/parameters/region'
+      - $ref: '#/components/parameters/type'
+      - $ref: '#/components/parameters/alertType'
+      - $ref: '#/components/parameters/alertSubType'
+      responses:
+        200:
+          description: Query results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Events'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /alertinstance/{instance_id}:
+    get:
+      summary: Get alert instance
+      description: |
+        Gets information about a triggered alert for an organization.
+        
+        
+        Use the <a href="/docs/metrics-api/1/routes/alerthistory/get">Get alert history API</a> (`/alerthistory`) to return information about triggered alerts, including alert IDs, for an organization.
+        
+        
+        **Note**: You can call this API at most **six times per minute**.
+        
+        
+        For more information and examples of this API, see
+        [View metrics data using the API](https://docs.apigee.com/api-monitoring/metrics-api).
+      parameters:
+      - $ref: '#/components/parameters/instance_id'
+      - $ref: '#/components/parameters/org'
+      responses:
+        200:
+          description: Query results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /faultcodenames:
+    get:
+      summary: List fault code names
+      description: |
+        Lists fault code names.
+        
+          
+        **Note**: You can call this API at most **six times per minute**. 
+        
+        
+        For more information and examples of this API, see
+        [View metrics data using the API](https://docs.apigee.com/api-monitoring/metrics-api).
+      responses:
+        200:
+          description: Query results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaultCodeNames'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /faultcodes:
+    get:
+      summary: List fault codes
+      description: |
+        Lists available fault codes.
+        
+          
+        **Note**: You can call this API at most **six times per minute**. 
+        
+        
+        For more information and examples of this API, see
+        [View metrics data using the API](https://docs.apigee.com/api-monitoring/metrics
+      responses:
+        200:
+          description: Query results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaultCodes'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /faultcodecategories:
+    get:
+      summary: List fault code categories
+      description: |
+        Lists available fault code categories.
+        
+          
+        **Note**: You can call this API at most **six times per minute**. 
+        
+        
+        For more information and examples of this API, see
+        [View metrics data using the API](https://docs.apigee.com/api-monitoring/metrics-api).
+      responses:
+        200:
+          description: Query results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaultCodeCategories'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /faultcodesubcategories:
+    get:
+      summary: List fault code subcategories
+      description: |
+        Lists available fault code subcategories.
+        
+          
+        **Note**: You can call this API at most **six times per minute**. 
+        
+        
+        For more information and examples of this API, see
+        [View metrics data using the API](https://docs.apigee.com/api-monitoring/metrics-api).
+      responses:
+        200:
+          description: Query results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FaultCodeSubCategories'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /faultcodedetails:
+    get:
+      summary: List fault code details
+      description: |
+        Lists available fault codes with details.
+
+          
+        **Note**: You can call this API at most **six times per minute**. 
+         
+        
+        For more information and examples of this API, see
+        [View metrics data using the API](https://docs.apigee.com/api-monitoring/metrics-api).
+      responses:
+        200:
+          description: Query results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FaultCodeDetail'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    OAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: >-
+        For OAuth, enter the following in the Key field: Bearer %your-token%
+        (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)
+  parameters:
+    instance_id:
+      name: instance_id
+      in: path
+      description: Alert instance ID
+      required: true
+      schema:
+        type: string
+    org:
+      name: org
+      in: query
+      description: Organization name.
+      required: true
+      schema:
+        type: string
+    from:
+      name: from
+      in: query
+      description: |
+        Start of the time interval for which alerts should be fetched. Defaults to the current time minus one hour. **Required for latency metrics.**
+      required: false
+      schema:
+        type: string
+        default: -1h
+    to:
+      name: to
+      in: query
+      description: |
+        End of the time interval for which alerts should be fetched. Defaults to the current time. 
+      required: false
+      schema:
+        type: string
+        default: now
+    alertId:
+      name: alertId
+      in: query
+      description: Filter alert history by the specified alert definition ID. To get a list of alert IDs, see <a href="/docs/alerts-api/1/routes/alerts/get">Get alerts</a>.
+      required: false
+      schema:
+        type: string
+    env:
+      name: env
+      in: query
+      description: Filter events by the specified environment.
+      required: false
+      schema:
+        type: string
+    region:
+      name: region
+      in: query
+      description: Filter events by the specified region.
+      required: false
+      schema:
+        type: string
+    type:
+      name: type
+      in: query
+      description: Filter events by the specified type. Valid values include `alert` and `anomaly`.
+      required: false
+      schema:
+        type: string
+    alertType:
+      name: alertType
+      in: query
+      description: |
+        Filter alert events by the specified alertType. The only valid value is `runtime`, which is the default.
+      required: false
+      schema:
+        type: string
+    alertSubType:
+      name: alertSubType
+      in: query
+      description: |
+        Filter alert events by the specified alertSubType. Valid values include `fixed` and `anomaly`. By default returns all alerts for the given type.
+      required: false
+      schema:
+        type: string
+    name:
+      name: name
+      in: query
+      description: Filter events by the specified name. The semantics of name depends
+          on the type of the event.
+      required: false
+      schema:
+        type: string
+    component:
+      name: component
+      in: query
+      description: Filter events by the specified component. The semantics of name
+          depends on the type of the event.
+      required: false
+      schema:
+        type: string
+    select:
+      name: select
+      in: query
+      description: |
+        Metrics to query. Valid values for latency metrics include `totalLatency` and `targetLatency`. Valid values for traffic metrics include `count`, `rate`, and `tps`. Specify multiple values as a comma-separated list. Required for latency metrics.
+      required: false
+      schema:
+        type: string
+    interval:
+      name: interval
+      in: query
+      description: |
+        For latency metrics, frequency that the latency metric is saved to the results. The maximum interval is 5 minutes (`5m`). For traffic metrics, frequency that the metric is saved to the results, and the interval over which the metric is calculated. 
+      required: true
+      schema:
+        type: string
+    groupBy:
+      name: groupBy
+      in: query
+      description: |
+        Tags to aggregate metrics by. Valid options include `org,env,region`, `org,env,region,proxy`, or `org,env,region,proxy,target`. **Required for latency metrics.**
+      required: true
+      schema:
+        type: string
+    percentile:
+      name: percentile
+      in: query
+      description: |
+        You must specify the `percentile` query parameter as `50`, `90`, `95`, or `99`.
+          For example, if you specify `90`, the API returns the total response latency value in the 90th percentile.
+      required: true
+      schema:
+        type: string
+    proxy:
+      name: proxy
+      in: query
+      description: Filter metrics by the specified API proxy name. Specify multiple
+          values as a comma-separated list.
+      schema:
+        type: string
+    target:
+      name: target
+      in: query
+      description: Filter metrics by the specified target domain name. Specify multiple values as a comma-separated list.
+      schema:
+        type: string
+    collection:
+      name: collection
+      in: query
+      description: Filter metrics by the collection ID. Specify
+          multiple values as a comma-separated list.
+      schema:
+        type: string
+    statusCode:
+      name: statusCode
+      in: query
+      description: |
+        Filter metrics by the specified HTTP status code. Values include:
+          `2xx`, `4xx`, `5xx`, and `errors`, which includes all HTTP 4xx and 5xx status codes. You can also specify a specific HTTP status code, such as `203` or `404`. Specify multiple values as a comma-separated list.
+      required: false
+      schema:
+        type: string
+    targetStatusCode:
+      name: targetStatusCode
+      in: query
+      description: |
+        Filter metrics by the specified HTTP status code returned by the target.
+          For example, `201`, `404`, or `501`. You must specify an explicit status code. You cannot use wildcards such as `4xx` or `5xx`. Specify multiple values as a comma-separated list. To set this value, you must also set `groupBy` to include the `target` option.
+      required: false
+      schema:
+        type: string
+    faultCodeName:
+      name: faultCodeName
+      in: query
+      description: Filter metrics by the specified fault code name. Specify multiple
+          values as a comma-separated list.
+      required: false
+      schema:
+        type: string
+    faultCodeCategory:
+      name: faultCodeCategory
+      in: query
+      description: Filter metrics by the specified fault code category. Specify
+          multiple values as a comma-separated list.
+      required: false
+      schema:
+        type: string
+    faultCodeSubCategory:
+      name: faultCodeSubCategory
+      in: query
+      description: Filter metrics by the specified fault code subcategory. Specify
+          multiple values as a comma-separated list.
+      schema:
+        type: string
+      required: false
+    developerApp:
+      name: developerApp
+      in: query
+      description: |
+        Filter metrics by the specified developer app name and developer email address. For example, `MyCoolDevapp(developer@example.com)`. Specify multiple values as a comma-separated list.
+      required: false
+      schema:
+        type: string
+  schemas:
+    Events:
+      type: array
+      items:
+        $ref: '#/components/schemas/Event'
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Alert ID.
+        shared_id:
+          type: string
+          description: TBD
+        entity_key:
+          type: string
+          description: Entity key.
+        entity_value:
+          type: string
+          description: Entity value.
+        dependent_entity_key:
+          type: string
+          description: Dependent entity key.
+        dependent_entity_value:
+          type: string
+          description: Dependent entity value.
+        component:
+          type: string
+          description: Component.
+        pod:
+          type: string
+          description: Pod.
+        region:
+          type: string
+          description: Region.
+        organization:
+          type: string
+          description: Organization name.
+        environment:
+          type: string
+          description: Environment name.
+        name:
+          type: string
+          description: Name of the alert.
+        type:
+          type: string
+          description: Type of event. Valid values include `alert` or `anomaly`.
+        source:
+          type: string
+          description: Source of the alert.
+        raw_payload:
+          description: Raw payload of the alert. For details, see <a href="/docs/alerts-api/1/types/Alert">Alert</a>.
+        time:
+          type: string
+          description: Time the alert was triggered.
+    Condition:
+      type: object
+      properties:
+        comparator:
+          type: string
+          description: |
+            Operator that is used to compare the metric value
+            against the `threshold` value to determine if this
+            condition is met. Valid values include:
+
+            * `>` or `gt` (greater than)
+
+            * `<` or `lt` (less than)
+
+            * `>=` or `gte` (greater than or equal to)
+
+            * `<=` or `lte` (less than or equal to)
+
+            * `==` (equal to)
+
+            Not valid for `anomaly` alert subtype.
+          example: '>='
+        uuid:
+          type: string
+          description: |
+            Output only. Unique identifier for this condition.
+          format: uuid
+          example: 926aa42e-afa6-11e7-abc4-cec278b6b50a
+        description:
+          maxLength: 1000
+          type: string
+          description: |
+            Description of alert condition.
+          example: |
+            Triggers when proxy 5xx rate for prod weatherapi is
+            over 1.5% for 30 seconds
+        dimensions:
+          type: object
+          description: |
+            Object with key-value pairs that identify
+            the metric resource(s). For example, an environment, API proxy, or
+            set of targets in an API proxy. Few keys like `statusCode` or
+            `faultCodes` not valid for latency alerts.
+          $ref: '#/components/schemas/Dimension'
+          example:
+            org: testOrg
+            env: testEnv
+            proxy: weatherapi
+            statusCode: 5xx
+        metric:
+          type: string
+          description: >-
+            Metric monitored for the resources specified by `dimension`. Valid values include `rate`, `count`, `tps`, `totalLatency` or `targetLatency`. `count` and `totalLatency` are only valid metric for the anomaly alert subtype.
+        threshold:
+          type: number
+          description: |
+            Threshold values that is compared against the
+            metric value using `comparator` to determine
+            if this condition is met. For `rate` metrics, this value is in the range 0-1.
+          example: 0.015
+        durationSeconds:
+          type: number
+          description: |
+            Duration time, in seconds, for which the metric value
+            must continuously match the `threshold` value using
+            the `comparator` operator to determine if this
+            condition is met.
+
+
+            For example, given the following parameters:
+
+            ```
+            {
+              "durationSeconds": 30,
+              "threshold": 0.015,
+              "comparator": ">="
+            }
+            ```
+
+
+            The condition is met when the metric is greater than
+            or equal to 0.015 for 30 seconds, and not below
+            that value at any time within that duration.
+
+            Valid values include:
+
+            * `60` (1 minute)
+
+            * `120` (2 minutes)
+
+            * `180` (3 minutes)
+
+            * `240` (4 minutes)
+
+            * `300` (5 minutes)
+
+            * `600` (10 minutes)
+
+            * `900` (15 minutes)
+
+            * `1200` (20 minutes)
+
+            * `1800` (30 minutes)
+
+            * `3600` (1 hour)
+          example: 30.0
+    Dimension:
+      type: object
+      properties:
+        collection:
+          type: string
+          description: Collection ID to monitor collection of targets or API proxies.
+        developerApp:
+          type: string
+          description: >-
+            Developer app name, or the special value `ANY` to monitor any developer app in the environment.
+        env:
+          type: string
+          description: Environment name.
+        faultCodeCategory:
+          type: string
+          description: >-
+            Fault code category. Valid in conjunction with `faultCodeSubCategory`. Not valid if `statusCode` is present. Not valid for latency alerts.
+        faultCodeName:
+          type: string
+          description: >-
+            Fault code name. Valid only if you specify a value for `faultCodeSubCategory`. Specify a specific name, ALL, or ANY. You can only specify a name if you specified an explicit subcategory to `faultCodeSubCategory`. That is, `faultCodeSubCategory` cannot be set to `ALL` or `ANY`. `ALL` specifies that all fault code names must have been violated for the alert to trigger. `ANY` specifies to trigger the alert if any fault code name has been violated.
+        faultCodeSubCategory:
+          type: string
+          description: >-
+            Fault code subcategory. Valid only if you specify a value for `faultCodeCategory`. Specify a specific subcategory, `ALL`, or `ANY`. `ALL` specifies that all subcategories must have been violated for the alert to trigger. `ANY` specifies to trigger the alert if any subcategory fault has been violated.
+        percentile:
+          type: string
+          description: >-
+            Percentile (50, 90, 95, 99) of the latency value that, if violated, the alert is fired.
+        proxy:
+          type: string
+          description: >-
+            API proxy name, or the special value `ANY` or `ALL` to monitor any API proxy in the environment.
+        region:
+          type: string
+          description: >-
+            Region.
+        statusCode:
+          type: string
+          description: >-
+            Status code, such as `5xx`, `4xx`, `404`, `2xx` on whose rate or count if violated the alert should be fired. Not valid for latency alerts.
+        target:
+          type: string
+          description: >-
+              Target name, or the special value `ANY` or `ALL` to monitor any target in the API proxy.
+    MetricsResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetricsResult'
+      example:
+        results:
+        - series:
+          - name: proxy
+            tags:
+              env: prod
+              mpHost: ALL
+              org: apigee-internal
+              percentile: '90'
+              proxy: ALL
+              region: us-east-1
+              target: ALL
+            columns:
+            - time
+            - totalLatency
+            values:
+              - - '2020-11-05T14:00:00Z'
+                - 12
+              - - '2020-11-05T14:05:00Z'
+                - 12
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+    MetricsResult:
+      type: object
+      properties:
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetricsSeries'
+    MetricsSeries:
+      type: object
+      properties:
+        name:
+          type: string
+        tags:
+          type: object
+          properties:
+            env:
+              type: string
+              description: Environments used to filter metrics.
+            mpHost:
+              type: string
+              description: MP host used to filter metrics.
+            org:
+              type: string
+              description: Organization used to filter metrics.
+            percentile:
+              type: string
+              description: Latency percentile used to filter metrics.
+            proxy:
+              type: string
+              description: Name of the API proxies used to filter metrics or `ALL`.
+            region:
+              type: string
+              description: Name of the regions used to filter metrics.
+            target:
+              type: string
+              description: Name of the target domains used to filter metrics.
+        columns:
+          description: Columns included.
+          type: array
+          items:
+            type: string
+        values:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+    FaultCodeNames:
+      type: object
+      properties:
+        faultCodeNames:
+          type: array
+          items:
+            type: string
+    FaultCodes:
+      type: object
+      properties:
+        faultCodes:
+          type: array
+          items:
+            type: string
+    FaultCodeCategories:
+      type: object
+      properties:
+        faultCodeCategories:
+          type: array
+          items:
+            type: string
+    FaultCodeSubCategories:
+      type: object
+      properties:
+        faultCodeSubCategories:
+          type: array
+          items:
+            type: string
+    FaultCodeDetail:
+      type: object
+      properties:
+        faultCode:
+          type: string
+        faultCodeCategory:
+          type: string
+        faultCodeSubCategory:
+          type: string
+        faultCodeName:
+          type: string
+        faultCodeDocumentLink:
+          type: string

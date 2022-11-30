@@ -1,0 +1,139 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Tyk
+  provider: Tyk
+  slug: tyk
+  rating: 1
+  license: Proprietary, Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    Our Gateway is secure, lightweight and highly performant. And it’s yours for free, forever. Legacy systems, REST, GraphQL, Kubernetes… whatever your architecture looks like, our 100% open source Gateway will enable you to achieve what you need to with ease. Deploy the Tyk stack anywhere to enjoy blistering performance and complete power and access control over your requests and responses, with no feature lockout. Ever.
+  platformCapabilities:
+    - Design
+    - Gateway
+    - Portal
+    - Documentation
+    - Analytics    
+    - Dashboards
+  gatewayCapabilities:
+    - Custom Code Execution
+    - Mediation
+    - Mocking
+    - OpenAPI Integration
+    - OpenAPI Enforcement
+    - Traffic Management
+    - Versioning
+    - Deprecation
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+    - SOAP
+    - GraphQL    
+  downstreamProtocols:
+    - HTTP/1.1
+    - SOAP
+    - GraphQL    
+  deliveryModels:
+    - Customer Managed (Cloud)
+    - Customer Managed (On-Premises)
+    - Hybrid
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Cache Eviction
+        - Cache Invalidation
+        - Cache Lookup
+        - Cache Population
+        - Cache Storage
+        - Cache Target Response
+        - Cache Validation
+        - Canary Release
+        - Circuit Breaker
+        - Conditional Routing
+        - Content-Based Routing
+        - Dynamic Routing
+        - GraphQL Caching
+        - Load Balancer Routing
+        - Mocking
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Regions
+        - Request Size Limiting
+        - Service Discovery
+        - Throttling
+        - Traffic Optimization
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Cache Eviction
+        - Cache Lookup
+        - Cache Store
+        - Custom Exception Handling
+        - GraphQL
+        - JSON Validation
+        - OpenAPI Validation
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - SOAP Validation
+        - URL Rewriting
+        - XML to JSON
+    - category: Security
+      capabilities:
+        - Auth0
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - IP Access Rules
+        - JWS
+        - JWT Validation
+        - JWT authorizers
+        - LDAP
+        - LDAP Authentication
+        - Message Inspection
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+        - Okta
+        - OpenID Connect
+        - Role Based Access Control (RBAC)
+        - Single Sign On (SSO)
+    - category: Extensions
+      capabilities:
+        - HTTP Callout
+        - HTTP integrations
+        - Kubernetes
+        - Notifications
+        - CI/CD 
+        - Events
+        - Prometheus
+        - Graphing        
+       
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://tyk.io/
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://tyk.io/
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/tyk.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/tyk.png     

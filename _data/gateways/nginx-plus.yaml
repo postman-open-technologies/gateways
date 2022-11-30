@@ -1,0 +1,119 @@
+---
+class:
+  - gateway
+
+properties:
+  name: NGINX Plus
+  provider: NGINX Plus
+  slug: nginx-plus
+  rating: 1
+  license: Proprietary, Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2021-10
+  description: >
+    Modern app infrastructure and dev teams love NGINX Plus. More than just the fastest web server around, NGINX Plus brings you everything you love about NGINX Open Source, adding enterprise‑grade features like high availability, active health checks, DNS system discovery, session persistence, and a RESTful API. NGINX Plus is a cloud‑native, easy-to-use reverse proxy, load balancer, and API gateway. Whether you need to integrate advanced monitoring, strengthen security controls, or orchestrate Kubernetes containers, NGINX Plus delivers with the five‑star support you expect from NGINX.
+  platformCapabilities:
+    - Gateway
+    - Analytics
+  gatewayCapabilities:
+    - Mediation
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+    - gRPC
+    - IMAP
+    - POP3
+    - SMTP
+    - TCP
+    - UDP    
+  downstreamProtocols:
+    - HTTP/1.1
+    - gRPC
+  deliveryModels:
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Cache Eviction
+        - Cache Invalidation
+        - Cache Lookup
+        - Cache Population
+        - Cache Storage
+        - Cache Target Response
+        - Cache Validation
+        - Conditional Routing
+        - Content-Based Routing
+        - DNS
+        - Health Checks
+        - Load Balancer Routing
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Reverse Proxy
+        - Service Mesh
+        - Service Discovery
+        - Session Persistence
+        - Throttling
+        - Traffic Optimization
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Cache Eviction
+        - Cache Lookup
+        - Cache Store
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - GZip
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - IP Access Rules
+        - JWS
+        - JWT Validation
+        - JWT authorizers
+        - JWT authorizers (Custom
+        - Mutual TLS
+    - category: Extensions
+      capabilities:
+        - HTTP Callout
+        - HTTP integrations
+        - Containers
+        - Content Deliver Network
+        - Kubernetes
+        - DNS
+        - App Dynamics
+        - Datadog
+        - Dynatrace
+        - Amazon Web Services
+        - Google Cloud
+        - Microsoft Azure
+        - FastCGI
+        - Memcached
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://www.nginx.com/products/nginx/
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://www.nginx.com/products/nginx/
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/nginx.png     

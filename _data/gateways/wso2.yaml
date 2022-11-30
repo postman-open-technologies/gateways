@@ -1,0 +1,123 @@
+---
+class:
+  - gateway
+
+properties:
+  name: WSO2
+  provider: WSO2
+  slug: wso2
+  rating: 2
+  license: Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    WSO2 Gateway provides a runtime and a backend component (an API proxy) for API calls. It secures, protects, manages, and scales API calls by intercepting API requests and applying policies, such as throttling and security, using handlers and managing API statistics. Upon validation of a policy, the Gateway passes Web service calls to the actual backend. If the service call is a token request, the Gateway passes it directly to the Key Manager.
+  platformCapabilities:
+    - Gateway
+    - Analytics
+    - Portal
+    - Documentation
+    - Monetization
+    - Monitoring
+    - SDK
+  gatewayCapabilities:
+    - Custom Code Execution
+    - Mediation
+    - Mocking
+    - OpenAPI Integration
+    - OpenAPI Enforcement
+    - Traffic Management
+    - Versioning  
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+    - GraphQL
+  downstreamProtocols:
+    - HTTP/1.1
+    - GraphQL
+  deliveryModels:
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Cache Eviction
+        - Cache Invalidation
+        - Cache Lookup
+        - Cache Population
+        - Cache Storage
+        - Cache Target Response
+        - Cache Validation
+        - Canary Release
+        - Circuit Breaker
+        - Conditional Routing
+        - Content-Based Routing
+        - Load Balancer Routing
+        - Mocking
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Throttling
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Cache Eviction
+        - Cache Lookup
+        - Cache Store
+        - GraphQL
+        - GraphQL to REST
+        - JSON Validation
+        - OpenAPI Validation
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - SOAP Validation
+        - URL Rewriting
+        - XML to JSON
+    - category: Security
+      capabilities:
+        - Auth0
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - Bot Detection
+        - Bot Detector
+        - CORS
+        - IP Access Rules
+        - JWT
+        - JWT Validation
+        - JWT authorizers
+        - LDAP
+        - LDAP Authentication
+        - Message Inspection
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+        - Okta
+        - OpenID Connect
+        - SAML Assertion
+    - category: Extensions
+      capabilities:
+        - HTTP Callout
+        - HTTP integrations
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://apim.docs.wso2.com/en/latest/deploy-and-publish/deploy-on-gateway/api-gateway/overview-of-the-api-gateway/
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://apim.docs.wso2.com/en/latest/deploy-and-publish/deploy-on-gateway/api-gateway/overview-of-the-api-gateway/
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/wso2.png     

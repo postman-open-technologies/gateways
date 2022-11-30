@@ -1,0 +1,486 @@
+openapi: 3.0.0
+servers:
+- url: https://api.enterprise.apigee.com/v1
+info:
+  title: Organizations API
+  description: >-
+    Manage organizations. The base entity for an account on Apigee Edge, an organization is a container for all managed entities, including APIs, API products, developers, apps, environments, and so on.
+  version: '1.0'
+security:
+- Basic: []
+- OAuth: []
+paths:
+  "/organizations":
+    get:
+      tags: ["Organization"]
+      summary: List organizations
+      description: >-
+        Lists all organizations. 
+        
+        
+        **Notes**: 
+        
+        * **Apigee Edge for Private Cloud only**. If you are using
+        Apigee Edge for Public Cloud, contact Apigee Support for assistance. 
+        
+        * **This API cannot be executed using the Try this API panel**.
+      operationId: 'listOrganizations'
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Bad request
+    post:
+      tags: ["Organization"]
+      summary: Create an organization
+      description: >-
+        Creates an organization. 
+        
+
+        **Notes**: 
+        
+        * **Apigee Edge for Private Cloud only**. If you are using
+        Apigee Edge for Public Cloud, contact Apigee Support for assistance. 
+        
+        * **This API cannot be executed using the Try this API panel**.
+        
+        
+        After you create the organization, you must: 
+        
+        
+        * <a href="/docs/organizations/1/routes/organizations/%7Borg_name%7D/pods/post">Associate the organization with a pod</a>
+        
+        * Add an organization administrator
+        
+        
+        Edge provides scripts and other tools that you can use as an alternative to making API calls directly. For example, for Edge 4.16.05 and later, see <a href="https://docs.apigee.com/private-cloud/latest/creating-organization-environment-and-virtual-host">Creating an organization, environment, and virtual host</a>.
+      operationId: 'createOrganization'
+      parameters: []
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+              example:
+                createdAt: 1394486446988
+                createdBy: noreply_admin@apigee.com
+                displayName: myorg
+                environments:
+                - prod
+                - test
+                - portal
+                lastModifiedAt: 1590113466345
+                lastModifiedBy: admin@example.com
+                name: mmyorg
+                properties:
+                  property:
+                  - name: features.isCpsEnabled
+                    value: 'true'
+                  - name: subscriptionType
+                    value: enterprise
+                type: paid
+        '400':
+          description: Bad request
+      requestBody:
+        description: Organization details.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationRequest'
+            example:
+              displayName: myorg
+              environments:
+              - prod
+              - test
+              - portal
+              name: myorg
+              properties:
+                property:
+                - name: features.isCpsEnabled
+                  value: 'true'
+                - name: subscriptionType
+                  value: enterprise
+              type: paid
+  "/organizations/{org_name}":
+    post:
+      tags: ["Organization"]
+      summary: Update organization properties
+      description: >-
+        Updates organization properties. 
+        
+        
+        **Notes**: 
+        
+        * **Apigee Edge for Private Cloud only**. If you are using
+        Apigee Edge for Public Cloud, contact Apigee Support for assistance. 
+        
+        * **This API cannot be executed using the Try this API panel**.
+        
+        
+        Some Edge functionality is controlled by properties set on an organization. For example, when defining resource paths in API products, you can change the way Edge treats a single forward slash (/) by setting an organization property.
+        
+        
+        **Caution**: When updating properties, you must pass all existing properties to the API, even if they are not being changed. If you omit existing properties from the payload in this API call, the properties are removed. To get the current list of properties for the environment, use the Get organization API. 
+        
+        
+        If you attempt to set a property but it doesn't appear in the response payload, then the property must be set by a user in the system administrator role. For Apigee Edg for Public Cloud, contact Apigee Support for assistance with setting properties requiring system administrator role. 
+        
+        
+        Some properties in your organization are reserved and unchangable. For example:
+        
+        
+        * `features.isMonetizationEnabled` - Monetization is a paid feature. You can't modify this value.
+        
+        
+        When you update other organization properties, you must include any existing reserved properties and their current values in order for this update call to succeed.
+        
+        
+        Available properties are described in the relevant sections of the Edge documentation.
+      operationId: 'updateOrganizationProperties'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+              example:
+                createdAt: 1394486446988
+                createdBy: noreply_admin@apigee.com
+                displayName: myorg
+                environments:
+                - prod
+                - test
+                - portal
+                lastModifiedAt: 1590113466345
+                lastModifiedBy: admin@example.com
+                name: mmyorg
+                properties:
+                  property:
+                  - name: subscriptionType
+                    value: enterprise
+                type: paid
+        '400':
+          description: Bad request
+      requestBody:
+        description: Organization details.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationProperties'
+            example:
+              properties:
+                property:
+                - name: subscriptionType
+                  value: enterprise
+    delete:
+      tags: ["Organization"]
+      summary: Delete an organization
+      description: >-
+        Deletes an organization.
+        
+        
+        **Notes**: 
+        
+        * **Apigee Edge for Private Cloud only**. If you are using
+        Apigee Edge for Public Cloud, contact Apigee Support for assistance. 
+        
+        * **This API cannot be executed using the Try this API panel**.
+        
+        
+        You can only delete an organization after you have:
+        
+        
+        * Deleted all virtual hosts in all environments in the organization
+        
+        * <a href="/docs/environments/1/routes/organizations/%7Borg_name%7D/environments/%7Benv_name%7D/delete">Deleted all environments in the organization</a>
+        
+        * <a href="/docs/organizations/1/routes/organizations/%7Borg_name%7D/pods/post">Disassociated the organization from all pods</a>
+      operationId: 'deleteOrganization'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+              example:
+                createdAt: 1394486446988
+                createdBy: noreply_admin@apigee.com
+                displayName: myorg
+                environments:
+                - prod
+                - test
+                - portal
+                lastModifiedAt: 1590113466345
+                lastModifiedBy: admin@example.com
+                name: mmyorg
+                properties:
+                  property:
+                  - name: features.isCpsEnabled
+                    value: 'true'
+                  - name: subscriptionType
+                    value: enterprise
+                type: paid
+        '400':
+          description: Bad request
+    get:
+      tags: ["Organization"]
+      summary: Get organization
+      description: >-
+        Gets the profile of a specific organization.
+        
+        
+        An organization is the base container for all objects in an API provider's account on Apigee Edge. An organization contains API proxies, API products, apps, and developers, and the other entities. A user account is required for each organization for which you may be a member. (Most users will have an account in only one organization.) You pass in your credentials and the name of your organization with each API request you submit.
+        
+        
+        In the response, the value of the type property is "trial" if you are requesting information about an organization associated with a free developer account, and "paid" for a paid account. 
+      operationId: 'getOrganization'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+              example:
+                createdAt: 1394486446988
+                createdBy: noreply_admin@apigee.com
+                displayName: myorg
+                environments:
+                - prod
+                - test
+                - portal
+                lastModifiedAt: 1590113466345
+                lastModifiedBy: admin@example.com
+                name: mmyorg
+                properties:
+                  property:
+                  - name: features.isCpsEnabled
+                    value: 'true'
+                  - name: subscriptionType
+                    value: enterprise
+                type: paid
+        '400':
+          description: Bad request
+  "/organizations/{org_name}/pods":
+    post:
+      tags: ["Organization", "Pods"]
+      summary: Associate or disassociate an organization and a pod
+      description: >-
+        Associates or disassociates an organization and a pod. 
+        
+        
+        **Notes**: 
+        
+        * **Apigee Edge for Private Cloud only**. If you are using
+        Apigee Edge for Public Cloud, contact Apigee Support for assistance. 
+        
+        * **This API cannot be executed using the Try this API panel**.
+        
+        
+        By default, the name of the region is `dc-1` and the name of the pod is `gateway`. This names are set by the following properties in the Edge config file when you installed Edge:
+        
+
+        ```
+        
+        MP_POD=gateway
+        
+        REGION=dc-1    
+        
+        ```
+        
+        
+        To associate a pod, pass the following string: `region={region_name}&pod={pod_name}`
+        
+        
+        To disassociate a pod, pass the following string: `region={region_name}&pod={pod_name}&action=remove`
+        
+        
+        For more information, see the Edge installation instructions. 
+      operationId: 'associatePod'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+      requestBody:
+        description: Pod details.
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: string
+    get:
+      tags: ["Organization", "Pods"]
+      summary: List pods associated with an organization
+      description: >-
+        Lists the pods associated with an organization. 
+        
+        
+        **Notes**: 
+        
+        * **Apigee Edge for Private Cloud only**. If you are using
+        Apigee Edge for Public Cloud, contact Apigee Support for assistance. 
+        
+        * **This API cannot be executed using the Try this API panel**.
+      operationId: 'getPods'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+components:
+  securitySchemes:
+    Basic:
+      type: http
+      scheme: basic
+      description: >-
+        Multi-factor authentication is not supported.
+    OAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: >-
+        For OAuth, enter the following in the Key field: Bearer %your-token%
+        (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)
+  parameters:
+    org_name:
+      in: path
+      name: org_name
+      required: true
+      schema:
+        type: string
+      description: Organization name.
+  schemas:
+    Organization:
+      description: Organization details.
+      type: object
+      required:
+      - name
+      properties:
+        createdAt:
+          format: int32
+          description: Output only. Time the organization was created in milliseconds since epoch.
+          type: integer
+        createdBy:
+          description: Output only. Email address of the admin that created the organization.
+          type: string
+        displayName:
+          description: Name of the organization used in the UI. Required when creating an organization.
+          type: string
+        environments:
+          description: >-
+            List of environments defined for the organization. 
+          type: array
+          items: 
+            type: string
+        lastModifiedAt:
+          format: int32
+          description: Output only. Time the organization was last modified in milliseconds since epoch.
+          type: integer
+        lastModifiedBy:
+          description: Output only. Email of admin that last modified the organization.
+          type: string
+        name:
+          description: >-
+            Name of the organization. The organization name must contain lowercase letters only; it should not contain spaces, underscores, or periods.
+          type: string
+        properties:
+          description: >-
+            List of properties that can be used to customize the organization. 
+          type: object
+          properties:
+            property:
+              description: Organization property names and values.
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    description: Name of property.
+                    type: string
+                  value:
+                    description: Set to `"true"` to enable or `"false"` to disable the property.
+                    type: string
+        type:
+          description: Type of subscription. Valid values are `paid` and `trial`. When creating an organization, set to `paid`. Required when creating an organization.
+          type: string
+    OrganizationProperties:
+      description: Organization properties update request.
+      type: object
+      properties:
+        properties:
+          description: >-
+            List of properties that can be used to customize the organization. 
+          type: object
+          properties:
+            property:
+              description: Organization property names and values.
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    description: Name of property.
+                    type: string
+                  value:
+                    description: Set to `"true"` to enable or `"false"` to disable the property.
+                    type: string
+    OrganizationRequest:
+      description: Organization request.
+      type: object
+      required:
+      - name
+      properties:
+        displayName:
+          description: Name of the organization used in the UI. Required when creating an organization.
+          type: string
+        environments:
+          description: >-
+            List of environments defined for the organization. 
+          type: array
+          items: 
+            type: string
+        name:
+          description: >-
+            Name of the organization. The organization name must contain lowercase letters only; it should not contain spaces, underscores, or periods.
+          type: string
+        properties:
+          description: >-
+            List of properties that can be used to customize the organization. 
+          type: object
+          properties:
+            property:
+              description: Organization property names and values.
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    description: Name of property.
+                    type: string
+                  value:
+                    description: Value of the property. For boolean property values, `true` to enable or `false` to disable the property.
+                    type: string
+        type:
+          description: Type of subscription. Valid values are `paid` and `trial`. When creating an organization, set to `paid`. Required when creating an organization.
+          type: string

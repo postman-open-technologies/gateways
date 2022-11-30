@@ -1,0 +1,125 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Akana
+  provider: Akana
+  slug: akana
+  rating: 2
+  license: Proprietary, Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    Akana is a provider of computer software products for application programming interface management. The company was founded as Digital Evolution and was later known as SOA Software. In November 2016, Akana was acquired by Rogue Wave Software.
+  platformCapabilities:
+    - Design
+    - Gateway
+    - Analytics
+    - Portal
+    - Documentation
+    - Governance
+  gatewayCapabilities:
+    - Mediation
+    - Protocol Transformation
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - AMQP  
+    - GraphQL
+    - HTTP/1.1
+    - SOAP
+    - JMS
+  downstreamProtocols:
+    - AMQP  
+    - GraphQL
+    - HTTP/1.1
+    - SOAP
+    - JMS
+  deliveryModels:
+    - Customer Managed (Cloud)
+    - Customer Managed (On-Premises)
+    - Hybrid
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Cache Eviction
+        - Cache Invalidation
+        - Cache Lookup
+        - Cache Population
+        - Cache Storage
+        - Cache Target Response
+        - Cache Validation
+        - Canary Release
+        - Conditional Routing
+        - Content-Based Routing
+        - Dynamic Routing
+        - GraphQL Caching
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Rate Limiting (Dynamic)
+        - Request Size Limiting
+        - Throttling
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Cache Eviction
+        - Cache Lookup
+        - Cache Store
+        - GraphQL
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - SOAP Validation
+        - URL Rewriting
+        - XML to JSON
+    - category: Security
+      capabilities:
+        - Auth0
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - IP Access Rules
+        - JWT Validation
+        - JWT authorizers
+        - JWT authorizers (Custom
+        - LDAP
+        - LDAP Authentication
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+        - Okta
+        - OpenID Connect
+        - PingFederate OAuth2.0 Token
+        - SAML Assertion
+    - category: Extensions
+      capabilities:
+        - AWS service integrations
+        - Kubernetes
+        - Docker
+    
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://www.akana.com/products/api-platform/api-gateway
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://www.akana.com/products/api-platform/api-gateway
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/akana.png     

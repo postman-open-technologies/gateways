@@ -1,0 +1,475 @@
+openapi: 3.0.0
+info:
+  title: Azure API Management - Tenant
+  description: Use these REST APIs for performing operations on tenant entity associated
+    with your Azure API Management deployment. Using this entity you can manage
+    properties and configuration that apply to the entire API Management service
+    instance.
+  version: 2017-03-01
+security:
+  - apim_key: []
+paths:
+  "/tenant/{accessName}":
+    get:
+      tags:
+        - TenantAccess
+      operationId: TenantAccess_Get
+      description: Get tenant access information details.
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+        - $ref: "#/components/parameters/AccessParameter"
+      responses:
+        "200":
+          description: Tenant Access information.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessInformationContract"
+    patch:
+      tags:
+        - TenantAccess
+      operationId: TenantAccess_Update
+      description: Update tenant access information details.
+      parameters:
+        - $ref: "#/components/parameters/AccessParameter"
+        - name: If-Match
+          in: header
+          required: true
+          description: The entity state (Etag) version of the property to update. A value
+            of "*" can be used for If-Match to unconditionally apply the
+            operation.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccessInformationUpdateParameters"
+        description: Parameters supplied to retrieve the Tenant Access Information.
+        required: true
+      responses:
+        "204":
+          description: Tenant's access information updated successfully.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/tenant/{accessName}/regeneratePrimaryKey":
+    post:
+      tags:
+        - TenantAccess
+      operationId: TenantAccess_RegeneratePrimaryKey
+      description: Regenerate primary access key.
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+        - $ref: "#/components/parameters/AccessParameter"
+      responses:
+        "204":
+          description: The primary key was successfully regenerated.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/tenant/{accessName}/regenerateSecondaryKey":
+    post:
+      tags:
+        - TenantAccess
+      operationId: TenantAccess_RegenerateSecondaryKey
+      description: Regenerate secondary access key.
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+        - $ref: "#/components/parameters/AccessParameter"
+      responses:
+        "204":
+          description: The secondary key was successfully regenerated.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/tenant/{accessName}/git":
+    get:
+      tags:
+        - TenantAccessGit
+      operationId: TenantAccessGit_Get
+      description: Gets the Git access configuration for the tenant.
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+        - $ref: "#/components/parameters/AccessParameter"
+      responses:
+        "200":
+          description: Git Access Information for the Service.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessInformationContract"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/tenant/{accessName}/git/regeneratePrimaryKey":
+    post:
+      tags:
+        - TenantAccessGit
+      operationId: TenantAccessGit_RegeneratePrimaryKey
+      description: Regenerate primary access key for GIT.
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+        - $ref: "#/components/parameters/AccessParameter"
+      responses:
+        "204":
+          description: The primary key was successfully regenerated.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/tenant/{accessName}/git/regenerateSecondaryKey":
+    post:
+      tags:
+        - TenantAccessGit
+      operationId: TenantAccessGit_RegenerateSecondaryKey
+      description: Regenerate secondary access key for GIT.
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+        - $ref: "#/components/parameters/AccessParameter"
+      responses:
+        "204":
+          description: The secondary key was successfully regenerated.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/tenant/{configurationName}/deploy":
+    post:
+      tags:
+        - TenantConfiguration
+      operationId: TenantConfiguration_Deploy
+      description: This operation applies changes from the specified Git branch to the
+        configuration database. This is a long running operation and could take
+        several minutes to complete.
+      externalDocs:
+        description: To deploy any service configuration changes to the API Management
+          service instance
+        url: https://azure.microsoft.com/en-us/documentation/articles/api-management-configuration-repository-git/#to-deploy-any-service-configuration-changes-to-the-api-management-service-instance
+      x-ms-long-running-operation: true
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+        - $ref: "#/components/parameters/ConfigurationParameter"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeployConfigurationParameters"
+        description: Deploy Configuration parameters.
+        required: true
+      responses:
+        "200":
+          description: Result of applying changes from Git branch to database.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperationResultContract"
+        "202":
+          description: "Accepted: Location header contains the URL where the status of the
+            long running operation can be checked."
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/tenant/{configurationName}/save":
+    post:
+      tags:
+        - TenantConfiguration
+      operationId: TenantConfiguration_Save
+      description: This operation creates a commit with the current configuration snapshot
+        to the specified branch in the repository. This is a long running
+        operation and could take several minutes to complete.
+      externalDocs:
+        description: To save the service configuration to the Git repository
+        url: https://azure.microsoft.com/en-us/documentation/articles/api-management-configuration-repository-git/#to-save-the-service-configuration-to-the-git-repository
+      x-ms-long-running-operation: true
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+        - $ref: "#/components/parameters/ConfigurationParameter"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SaveConfigurationParameter"
+        description: Save Configuration parameters.
+        required: true
+      responses:
+        "200":
+          description: Result of creating a commit in the repository.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperationResultContract"
+        "202":
+          description: "Accepted: Location header contains the URL where the status of the
+            long running operation can be checked."
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/tenant/{configurationName}/validate":
+    post:
+      tags:
+        - TenantConfiguration
+      operationId: TenantConfiguration_Validate
+      description: This operation validates the changes in the specified Git branch. This
+        is a long running operation and could take several minutes to complete.
+      x-ms-long-running-operation: true
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+        - $ref: "#/components/parameters/ConfigurationParameter"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeployConfigurationParameters"
+        description: Validate Configuration parameters.
+        required: true
+      responses:
+        "200":
+          description: Result of validating the changes in the specified Git branch.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperationResultContract"
+        "202":
+          description: "Accepted: Location header contains the URL where the status of the
+            long running operation can be checked."
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/tenant/{configurationName}/syncState":
+    get:
+      tags:
+        - TenantConfigurationSyncState
+      operationId: TenantConfiguration_GetSyncState
+      description: Gets the status of the most recent synchronization between the
+        configuration database and the Git repository.
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+        - $ref: "#/components/parameters/ConfigurationParameter"
+      responses:
+        "200":
+          description: Sync state result.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TenantConfigurationSyncStateContract"
+servers:
+  - url: "{apimBaseUrl}"
+    variables:
+      apimBaseUrl:
+        description: The management endpoint of the API Management service, for example
+          https://myapimservice.management.azure-api.net.
+        x-ms-skip-url-encoding: true
+        default: ""
+components:
+  parameters:
+    AccessParameter:
+      name: accessName
+      in: path
+      required: true
+      x-ms-enum:
+        modelAsString: true
+        name: AccessIdName
+      description: The identifier of the Access configuration.
+      x-ms-parameter-location: method
+      schema:
+        type: string
+        enum:
+          - access
+    ConfigurationParameter:
+      name: configurationName
+      in: path
+      required: true
+      x-ms-enum:
+        modelAsString: true
+        name: configurationIdName
+      description: The identifier of the Git Configuration Operation.
+      x-ms-parameter-location: method
+      schema:
+        type: string
+        enum:
+          - configuration
+  securitySchemes:
+    apim_key:
+      type: apiKey
+      name: Authorization
+      in: header
+  schemas:
+    AccessInformationContract:
+      properties:
+        id:
+          type: string
+          description: Identifier.
+        primaryKey:
+          type: string
+          description: Primary access key.
+        secondaryKey:
+          type: string
+          description: Secondary access key.
+        enabled:
+          type: boolean
+          description: Tenant access information of the API Management service.
+      description: Tenant access information contract of the API Management service.
+    AccessInformationUpdateParameters:
+      properties:
+        enabled:
+          type: boolean
+          description: Tenant access information of the API Management service.
+      description: Tenant access information update parameters of the API Management
+        service.
+    DeployConfigurationParameters:
+      properties:
+        branch:
+          type: string
+          description: The name of the Git branch from which the configuration is to be
+            deployed to the configuration database.
+        force:
+          type: boolean
+          description: The value enforcing deleting subscriptions to products that are
+            deleted in this update.
+      required:
+        - branch
+      description: Parameters supplied to the Deploy Configuration operation.
+    OperationResultContract:
+      properties:
+        id:
+          type: string
+          description: Operation result identifier.
+        status:
+          type: string
+          description: Status of an async operation.
+          enum:
+            - Started
+            - InProgress
+            - Succeeded
+            - Failed
+          x-ms-enum:
+            name: AsyncOperationStatus
+            modelAsString: false
+        started:
+          type: string
+          format: date-time
+          description: >
+            Start time of an async operation. The date conforms to the following
+            format: `yyyy-MM-ddTHH:mm:ssZ` as specified by the ISO 8601
+            standard.
+        updated:
+          type: string
+          format: date-time
+          description: >
+            Last update time of an async operation. The date conforms to the
+            following format: `yyyy-MM-ddTHH:mm:ssZ` as specified by the ISO
+            8601 standard.
+        resultInfo:
+          type: string
+          description: Optional result info.
+        error:
+          $ref: ./apimanagement.json#/definitions/ErrorResponse
+        actionLog:
+          type: array
+          items:
+            $ref: "#/components/schemas/OperationResultLogItemContract"
+          readOnly: true
+          description: This property if only provided as part of the
+            TenantConfiguration_Validate operation. It contains the log the
+            entities which will be updated/created/deleted as part of the
+            TenantConfiguration_Deploy operation.
+      description: Operation Result.
+    OperationResultLogItemContract:
+      properties:
+        objectType:
+          type: string
+          description: The type of entity contract.
+        action:
+          type: string
+          description: Action like create/update/delete.
+        objectKey:
+          type: string
+          description: Identifier of the entity being created/updated/deleted.
+      description: Log of the entity being created, updated or deleted.
+    SaveConfigurationParameter:
+      properties:
+        branch:
+          type: string
+          description: The name of the Git branch in which to commit the current
+            configuration snapshot.
+        force:
+          type: boolean
+          description: The value if true, the current configuration database is committed
+            to the Git repository, even if the Git repository has newer changes
+            that would be overwritten.
+      required:
+        - branch
+      description: Parameters supplied to the Save Tenant Configuration operation.
+    TenantConfigurationSyncStateContract:
+      properties:
+        branch:
+          type: string
+          description: The name of Git branch.
+        commitId:
+          type: string
+          description: The latest commit Id.
+        isExport:
+          type: boolean
+          description: value indicating if last sync was save (true) or deploy (false)
+            operation.
+        isSynced:
+          type: boolean
+          description: value indicating if last synchronization was later than the
+            configuration change.
+        isGitEnabled:
+          type: boolean
+          description: value indicating whether Git configuration access is enabled.
+        syncDate:
+          type: string
+          format: date-time
+          description: >
+            The date of the latest synchronization. The date conforms to the
+            following format: `yyyy-MM-ddTHH:mm:ssZ` as specified by the ISO
+            8601 standard.
+        configurationChangeDate:
+          type: string
+          format: date-time
+          description: >
+            The date of the latest configuration change. The date conforms to
+            the following format: `yyyy-MM-ddTHH:mm:ssZ` as specified by the ISO
+            8601 standard.
+      description: Tenant Configuration Synchronization State.

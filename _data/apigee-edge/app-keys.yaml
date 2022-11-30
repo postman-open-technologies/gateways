@@ -1,0 +1,484 @@
+openapi: 3.0.0
+servers:
+- url: https://api.enterprise.apigee.com/v1
+info:
+  title: "App keys: Developer"
+  description: >-
+    Manage consumer credentials for apps associated with individual developers.
+
+
+    Credential pairs consisting of consumer key and consumer secret are provisioned by Apigee Edge to apps for specific API products. Apigee Edge maintains the relationship between consumer keys and API products, enabling API products to be added to and removed from consumer keys. A single consumer key can be used to access multiple API products. Keys may be manually or automatically approved for API products--how they are issued depends on the API product configuration. A key must approved and approved for an API product to be capable of accessing any of the URIs defined in the API product.
+  version: '1.0'
+security:
+- Basic: []
+- OAuth: []
+paths:
+  '/organizations/{org_name}/developers/{developer_email}/apps/{app_name}/keys/create':
+    post:
+      tags: ["Developer", "Developer App", "Consumer Key"]
+      summary: Create a consumer key and secret
+      description: >-
+        Creates a custom consumer key and secret for a developer app. This is particularly useful if you want to migrate existing consumer keys/secrets to Edge from another system.
+
+
+        After creating the consumer key and secret, associate the key with an API product, as described in Add API Product to Key.
+
+
+        Consumer keys and secrets can contain letters, numbers, underscores, and hyphens. No other special characters are allowed.
+
+
+        **Note**: Be aware of the following size limits on API keys. By staying within these limits, you help avoid service disruptions.
+
+
+        * Consumer key (API key) size: 2 KB
+
+        * Consumer secret size: 2 KB
+
+
+        If a consumer key and secret already exist, you can either keep them or delete them, as described in Delete Key for a Developer App.
+
+
+        In addition, you can use this API if you have existing API keys and secrets that you want to copy into Edge from another system. For more information, see <a href="https://docs.apigee.com/developer-services/content/import-existing-consumer-keys-and-secrets">Import existing consumer keys and secrets</a>.
+      operationId: 'createDevAppKey'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/developer_email'
+      - $ref: '#/components/parameters/app_name'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Keys'
+              example:
+                apiProducts:
+                - apiproduct: Hotels
+                  status: approved
+                attributes: [{"name": "attribute1", "value": "value1"}]
+                consumerKey: <consumerKey>
+                consumerSecret: <consumerSecret>
+                expiresAt: -1
+                issuedAt: 1523971974806
+                scopes: ["scope1", "scope2"]
+                status: approved
+        '400':
+          description: Bad request
+      requestBody:
+        description: Consumer key and secret.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                consumerKey:
+                  description: Consumer key.
+                  type: string
+                consumerSecret:
+                  description: Consumer secret.
+                  type: string
+            example:
+              consumerKey: <consumerKey>
+              consumerSecret: <consumerSecret>
+  "/organizations/{org_name}/developers/{developer_email}/apps/{app_name}/keys/{consumer_key}":
+    get:
+      tags: ["Developer", "Developer App", "Consumer Key"]
+      summary: Get key details for a developer app
+      operationId: 'getDevAppKey'
+      description: >-
+        Gets details for a consumer key for a developer app, including the key and secret value, associated API products, and other information.
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/developer_email'
+      - $ref: '#/components/parameters/app_name'
+      - $ref: '#/components/parameters/consumer_key'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Keys'
+              example:
+                apiProducts:
+                - apiproduct: Hotels
+                  status: approved
+                attributes: [{"name": "attribute1", "value": "value1"}]
+                consumerKey: <consumerKey>
+                consumerSecret: <consumerSecret>
+                expiresAt: -1
+                issuedAt: 1523971974806
+                scopes: ["scope1", "scope2"]
+                status: approved
+        '400':
+          description: Bad request
+    post:
+      tags: ["Developer", "Developer App", "Consumer Key"]
+      description: >-
+        Enables you to perform one of the following tasks:
+
+
+        * Add an API product to a developer app key, enabling the app that holds the key to access the API resources bundled in the API product. You can also use this API to add attributes to the key. You must include all existing attributes, whether or not you are updating them, as well as any new attributes that you are adding. After adding the API product, you can use the same key to access all API products associated with the app.
+
+
+        * Approve or revoke a specific consumer key for an app. Call the API with the `action` query parameter set to `approve` or `revoke` (with no request body) and set the `Content-type` header to `application/octet-stream`. If successful, the HTTP status code for success is: `204 No Content` **Currently, this action cannot be executed using the Try this API panel**.
+
+
+          You can approve a consumer key that is currently revoked or pending. Once approved, the app can use the consumer key to access APIs. Revoking a consumer key renders it unusable for the app to use to access an API.
+
+
+          **Note**: Any access tokens associated with a revoked app key will remain active. However, Apigee Edge checks the status of the app key and if set to `revoked` it will not allow API calls to go through.
+      summary: Approve or revoke, or add an API product to a specific key for a developer app
+      operationId: 'approveRevokeDevAppKey'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/developer_email'
+      - $ref: '#/components/parameters/app_name'
+      - $ref: '#/components/parameters/consumer_key'
+      - $ref: '#/components/parameters/action'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Keys'
+              example:
+                apiProducts:
+                - apiproduct: Hotels
+                  status: approved
+                attributes: [{"name": "attribute1", "value": "value1"}]
+                consumerKey: <consumerKey>
+                consumerSecret: <consumerSecret>
+                expiresAt: -1
+                issuedAt: 1523971974806
+                scopes: ["scope1", "scope2"]
+                status: approved
+        '204':
+          description: No content
+        '400':
+          description: Bad request
+      requestBody:
+        description: List of API products and attributes.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                apiProducts:
+                  type: array
+                  description: List of API products associated with an API key. Required when adding an API product to a key.
+                  items:
+                    type: string
+                attributes:
+                  type: array
+                  description: List of attributes associated with an API key.
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the custom attribute.
+                      value:
+                        type: string
+                        description: Value of the custom attribute.
+            example:
+              apiProducts:
+              - Hotels
+              - Restaurants
+              attributes: [{"name": "attribute1", "value": "value1"}]
+    put:
+      tags: ["Developer", "Developer App", "Consumer Key"]
+      description: >-
+        Updates the allowed OAuth scopes associated with an app.
+
+
+        **Note**: Specify the complete list of scopes to apply. The specified list replaces the existing scopes on the app. Therefore, to add a scope, you must specify all of the existing scopes along with the added scope.
+
+
+        This API does not change the list of scopes in the API product(s) included in the app; rather, it sets allowed list of scopes in the scopes element under the `apiProducts` element in the attributes of the app.
+
+
+        **Important**: The specified scopes must already exist on the API product(s) associated with the app. You can't arbitrarily add a scope that does not already exist in an API product.  For example, if the app has one API product with these scopes: READ, WRITE. You can't use this API to add a new scope, such as DELETE (unless the app has another product with that scope). If you do this, you'll get a 400 Bad Request error. For example:
+
+        ```
+
+        {
+          "code": "keymanagement.service.InvalidScopes",
+          "message": "Invalid scopes. Scopes must be contained in [READ, WRITE]",
+          "contexts": []
+
+        }
+
+        ```
+
+        It would be allowed to remove one or both of the existing scopes, and later add one or both back.
+      summary: Updates the allowed OAuth scopes associated with an app
+      operationId: 'updateAllowedOAuthScopes'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/developer_email'
+      - $ref: '#/components/parameters/app_name'
+      - $ref: '#/components/parameters/consumer_key'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Keys'
+              example:
+                apiProducts:
+                - apiproduct: Hotels
+                  status: approved
+                attributes: [{"name": "attribute1", "value": "value1"}]
+                consumerKey: <consumerKey>
+                consumerSecret: <consumerSecret>
+                expiresAt: -1
+                issuedAt: 1523971974806
+                scopes: ["scope1", "scope2"]
+                status: approved
+        '400':
+          description: Bad request
+      requestBody:
+        description: List of OAuth scopes.
+        content:
+          application/json:
+            schema:
+              properties:
+                scopes:
+                  description: List of OAuth scopes.
+                  type: array
+                  items:
+                    type: string
+    delete:
+      tags: ["Developer App Keys"]
+      description: >-
+        Deletes a consumer key that belongs to an app, and removes all API products associated with the app. Once deleted, the consumer key cannot be used to access any APIs.
+
+
+        After you delete a consumer key, you may want to:
+
+
+        * <a href="https://docs-edgeapis.apigee.io/docs/edge-apis-developer-app-keys/1/routes/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email%7D/apps/%7Bapp_name%7D/keys/create/post">Create a new consumer key and secret</a> for the developer app, and subsequently <a href="https://docs-edgeapis.apigee.io/docs/edge-apis-developer-app-keys/1/routes/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email%7D/apps/%7Bapp_name%7D/keys/%7Bconsumer_key%7D/post">add an API product to the key</a>.
+
+
+        * <a href="https://docs-edgeapis.apigee.io/docs/developer-apps/1/routes/organizations/%7Borg_name%7D/developers/%7Bdeveloper_email%7D/apps/%7Bapp_name%7D/delete">Delete the developer app</a>, if it is no longer required.
+      summary: Delete key for a developer app
+      operationId: 'deleteDevAppKey'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/developer_email'
+      - $ref: '#/components/parameters/app_name'
+      - $ref: '#/components/parameters/consumer_key'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Keys'
+              example:
+                apiProducts:
+                - apiproduct: Hotels
+                  status: approved
+                attributes: [{"name": "attribute1", "value": "value1"}]
+                consumerKey: <consumerKey>
+                consumerSecret: <consumerSecret>
+                expiresAt: -1
+                issuedAt: 1523971974806
+                scopes: ["scope1", "scope2"]
+                status: approved
+        '400':
+          description: Bad request
+  "/organizations/{org_name}/developers/{developer_email}/apps/{app_name}/keys/{consumer_key}/apiproducts/{apiproduct_name}":
+    post:
+      tags: ["Developer", "Developer App", "Consumer Key"]
+      description: >-
+        Approves or revokes an API product for an API key.
+
+        Call the API with the `action` query parameter set to `approve` or `revoke` (with no request body) and set the `Content-type` header to `application/octet-stream`. If successful, the HTTP status code for success is: `204 No Content`
+
+
+        To consume API resources defined in an API product, an app's consumer key must be approved and it must also be approved for that specific API product.
+
+
+        **Notes**:
+
+        * The API product must already be associated with the app.
+
+
+        * Any access tokens associated with a revoked app key will remain active. However, Apigee Edge checks the status of the app key and if set to `revoked` it will not allow API calls to go through.
+
+
+        * * **This API cannot be executed using the Try this API panel**.
+      summary: Approve or Revoke API Product for an API Key
+      operationId: 'approveRevokeAPIProductForDevAppKey'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/developer_email'
+      - $ref: '#/components/parameters/app_name'
+      - $ref: '#/components/parameters/consumer_key'
+      - $ref: '#/components/parameters/apiproduct_name'
+      - $ref: '#/components/parameters/action'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Keys'
+              example:
+                apiProducts:
+                - apiproduct: Hotels
+                  status: approved
+                attributes: [{"name": "attribute1", "value": "value1"}]
+                consumerKey: <consumerKey>
+                consumerSecret: <consumerSecret>
+                expiresAt: -1
+                issuedAt: 1523971974806
+                scopes: ["scope1", "scope2"]
+                status: approved
+        '400':
+          description: Bad request
+    delete:
+      tags: ["Developer App Keys"]
+      description: >-
+        Removes an API product from an app's consumer key, and thereby renders the app unable to access the API resources defined in that API product.
+
+
+        Note that the consumer key itself still exists after this call. Only the association of the key with the API product is removed.
+      summary: Remove API []roduct for a specific ley
+      operationId: 'removeAPIProductForDevAppKey'
+      parameters:
+      - $ref: '#/components/parameters/org_name'
+      - $ref: '#/components/parameters/developer_email'
+      - $ref: '#/components/parameters/app_name'
+      - $ref: '#/components/parameters/consumer_key'
+      - $ref: '#/components/parameters/apiproduct_name'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Keys'
+              example:
+                apiProducts:
+                - apiproduct: Hotels
+                  status: approved
+                attributes: [{"name": "attribute1", "value": "value1"}]
+                consumerKey: <consumerKey>
+                consumerSecret: <consumerSecret>
+                expiresAt: -1
+                issuedAt: 1523971974806
+                scopes: ["scope1", "scope2"]
+                status: approved
+        '400':
+          description: Bad request
+components:
+  securitySchemes:
+    Basic:
+      type: http
+      scheme: basic
+      description: >-
+        Multi-factor authentication is not supported.
+    OAuth:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: >-
+        For OAuth, enter the following in the Key field: Bearer %your-token%
+        (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)
+  parameters:
+    org_name:
+      in: path
+      name: org_name
+      required: true
+      schema:
+        type: string
+      description: Organization name.
+    developer_email:
+      in: path
+      name: developer_email
+      required: true
+      schema:
+        type: string
+      description: Email address of the developer.
+    app_name:
+      in: path
+      name: app_name
+      required: true
+      schema:
+        type: string
+      description: Application name.
+    consumer_key:
+      in: path
+      name: consumer_key
+      required: true
+      schema:
+        type: string
+      description: Consumer key.
+    apiproduct_name:
+      in: path
+      name: apiproduct_name
+      required: true
+      schema:
+        type: string
+      description: API product name.
+    action:
+      in: query
+      name: action
+      required: false
+      schema:
+        type: string
+      description: Set to `approve` or `revoke`.
+  schemas:
+    Keys:
+      description: Consumer key and secret.
+      type: object
+      properties:
+        apiProducts:
+          type: array
+          description: List of API products associated with an API key. Required when adding an API product to a key.
+          items:
+            type: object
+            properties:
+              apiproduct:
+                type: string
+                description: Name of the API product.
+              status:
+                type: string
+                description: Status of the API product. Valid values include `approved` or `revoked`.
+        attributes:
+          type: array
+          description: List of attributes associated with an API key.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name of the custom attribute.
+              value:
+                type: string
+                description: Value of the custom attribute.
+        consumerKey:
+          description: Consumer key.
+          type: string
+        consumerSecret:
+          description: Consumer secret.
+          type: string
+        expiresAt:
+          type: integer
+          description: Time at which the consumer key and secret expire in milliseconds since epoch. Set to -1 to never expire.
+        issuedAt:
+          type: integer
+          description: Time at which the consumer key and secret were issues in millisenconds since epoch.
+        scopes:
+          type: array
+          description: List of OAuth scopes.
+          items:
+            type: string
+        status:
+          type: string
+          description: Status of the API key. Valid values include `approved` or `revoked`.

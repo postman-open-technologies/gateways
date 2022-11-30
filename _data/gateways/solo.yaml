@@ -1,0 +1,102 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Solo
+  provider: Solo
+  slug: solo
+  rating: 1
+  license: Proprietary, Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    Architecturally, API gateways have both a data plane and a control plane. The data plane is where traffic flows from your external clients through the proxies to the backend services. The control plane is where your configuration and policies are defined. These configurations are pushed to the proxies to adjust the flow of traffic or to add security checks like authentication. With adoption of Kubernetes containers and cloud-native architectures for modern applications, technologies like the open source Envoy Proxy and Istio have emerged to enable application networking for distributed systems. Envoy has become the most popular proxy at the edge, and also as the sidecar to handle internal traffic in an Istio service mesh.
+  platformCapabilities:
+    - Design
+    - Gateway
+    - Analytics
+    - Documentation
+    - Observability
+  gatewayCapabilities:
+    - Mediation
+    - Traffic Management
+  customCodeSupport:
+    - WASM
+  upstreamProtocols:
+    - HTTP/1.1
+  downstreamProtocols:
+    - HTTP/1.1
+  deliveryModels:
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:        
+        - Circuit Breaker
+        - Conditional Routing
+        - Content-Based Routing
+        - Dynamic Routing
+        - Failover
+        - Ingress Controller
+        - Egress Controller
+        - Load Balancer Routing
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Service Discovery
+        - Throttling
+        - Traffic Optimization
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Custom Resources
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - URL Rewriting
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Audit Logs
+        - Basic Authentication
+        - CORS
+        - IP Access Rules
+        - JWT Validation
+        - JWT authorizers
+        - Message Inspection
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+    - category: Extensions
+      capabilities:
+        - AWS Integrations
+        - HTTP Callout
+        - HTTP integrations
+        - Kubernetes
+        - Contains
+        - Azure
+        - Google Cloud
+        - Serverless
+        - Open Policy Agent
+        - Service Mesh 
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://www.solo.io
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://www.solo.io/overview/kubernetes-api-gateway/
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/solo.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/solo.png     

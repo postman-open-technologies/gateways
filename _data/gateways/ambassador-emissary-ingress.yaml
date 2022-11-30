@@ -1,0 +1,149 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Ambassador Emissary-Ingress
+  provider: Ambassador Emissary-Ingress
+  slug: ambassador-emissary-ingress
+  rating: 1
+  license: Proprietary, Open Source (Apache-2.0)
+  status: Pending Review
+  researchDate: 2021-10
+  description: >
+    Emissary-Ingress is an open-source Kubernetes-native Gateway + Layer 7 load balancer + Kubernetes Ingress built on Envoy Proxy. Emissary-ingress is a CNCF incubation project (and was formerly known as Ambassador Gateway).
+  platformCapabilities:
+    - Gateway
+    - Analytics
+    - Portal
+    - Documentation
+  gatewayCapabilities:
+    - Mediation
+    - OpenAPI Integration
+    - Protocol Transformation
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+    - HTTP/2
+    - HTTP/2.0
+    - WebSockets
+    - gRPC
+    - TCP    
+  downstreamProtocols:
+    - HTTP/1.1
+    - HTTP/2
+    - HTTP/2.0
+    - WebSockets
+    - gRPC
+    - TCP    
+  deliveryModels:
+    - Customer Managed (Cloud)
+    - Customer Managed (On-Premises)
+    - Hybrid
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Automatic Retries
+        - Canary Releases
+        - Circuit Breaker
+        - Clusters
+        - Concurrent Rate Limit
+        - Concurrent Rate Limiting
+        - Conditional Routing
+        - Global Rate Limiting
+        - Per-User Rate Limiting        
+        - Content-Based Routing
+        - Distributed Tracing
+        - Dynamic Routing
+        - Header-based routing
+        - Load Balancer Routing
+        - Progressive Delivery
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Rate Limiting (Dynamic)
+        - Request Size Limiting
+        - Service Mesh
+        - Service Discovery
+        - Traffic Shadowing
+        - Throttling
+        - Traffic Optimization
+    - category: Mediation
+      capabilities:
+        - Cross-Origin Resource Sharing (CORS)
+        - Custom Exception Handling
+        - Custom Request Filters
+        - Custom Resource Definitions (CRDs)
+        - Declarative Policy Engine
+        - Edge Policy Console
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - SOAP Validation
+        - URL Rewriting
+        - XML to JSON
+        - XSL Tranformations
+        - XSL Transformation
+    - category: Security
+      capabilities:
+        - Auth0
+        - ACL (Access Control List)
+        - API Key
+        - API Key Authentication
+        - Access Control Lists
+        - Audit Logs
+        - Automatic HTTPS
+        - Basic Authentication
+        - CORS
+        - HMAC
+        - IP Access Rules
+        - JWT Validation
+        - JWT Filter
+        - JWT Authorizers
+        - LDAP
+        - LDAP Authentication
+        - Multi-Domain Authentication
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+        - Okta
+        - OpenID Connect
+        - Role Based Access Control (RBAC)
+        - Session Management
+        - SAML Assertion
+        - WAF
+    - category: Extensions
+      capabilities:
+        - Auth0 Integration
+        - HTTP Callout
+        - HTTP integrations
+        - Kubernetes
+        - Envoy Proxy
+        - Kubernetes Ingress Controller
+        - Consul
+        - Istio
+        - LinkerD
+        - CI/CD
+
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://www.getambassador.io/products/api-gateway/
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://www.getambassador.io/products/api-gateway/
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/ambassador-emissary-ingress.png     

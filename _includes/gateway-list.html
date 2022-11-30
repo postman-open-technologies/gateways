@@ -1,0 +1,122 @@
+<h1>{{ gateway_title }}</h1>
+<hr>									  
+{% for gateway in gateways %}	
+    {% assign product_link = '' %}	
+    {% assign docs_lnk = '' %}	
+    {% assign logo_link = '' %}	
+    {% assign screenshot_link = '' %}
+    {% for link in gateway[1].links %}
+        {% if link.title == "Product" %}	
+            {% assign product_link = link.href %}
+        {% endif %}		
+        {% if link.title == "Documentation" %}	
+            {% assign docs_lnk = link.href %}
+        {% endif %}	
+        {% if link.title == "Logo" %}	
+            {% assign logo_link = link.href %}
+        {% endif %}	
+        {% if link.title == "Screenshot" %}	
+            {% assign screenshot_link = link.href %}
+        {% endif %}															
+    {% endfor %}
+    
+    {% if gateway[1].properties.rating == show_rating %}							
+
+        <a href="{{ product_link }}" target="_blank"><img src="{{ screenshot_link }}" width="400" align="right" style="padding: 15px;"></a>
+        <h2>{{ gateway[1].properties.name }}</h2>
+        <p>{{ gateway[1].properties.description | strip_html }}</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        {% for capability in gateway[1].properties.platformCapabilities %}
+            <li>{{ capability }}</li>
+        {% endfor %}
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        {% for capability in gateway[1].properties.gatewayCapabilities %}
+            <li>{{ capability }}</li>
+        {% endfor %}
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        {% for capability in gateway[1].properties.upstreamProtocols %}
+            <li>{{ capability }}</li>
+        {% endfor %}
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        {% for capability in gateway[1].properties.downstreamProtocols %}
+            <li>{{ capability }}</li>
+        {% endfor %}
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        {% for capability in gateway[1].properties.customCodeSupport %}
+            <li>{{ capability }}</li>
+        {% endfor %}
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        {% for capability in gateway[1].properties.deliveryModels %}
+            <li>{{ capability }}</li>
+        {% endfor %}
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        {% for policy in gateway[1].properties.policies %}
+            <h4>{{ policy.category }}</h4>
+            <ul>
+            {% for capability in policy.capabilities %}
+                <li>{{ capability }}</li>
+            {% endfor %}
+            </ul> 
+        {% endfor %}
+
+        <h3>API Resources</h3>
+        {% assign any = 0 %}
+        {% for file in site.data %}            
+            {% if file[0] == gateway[1].properties.slug %}	
+                <ul>
+                {% assign folder = file[1] %}
+                {% for openapi in folder %}
+                    <li>{{ openapi[1].info.title }}</li>
+                        <ul>
+                        {% for path in openapi[1].paths %}
+                            <li>{{ path[0] }}</li>
+                        {% endfor %}                         
+                        </ul>
+                        {% assign any = 0 %}
+                {% endfor %} 
+                </ul>
+            {% endif %}	            
+        {% endfor %} 
+        {% if any == 0 %}	
+                <ul><li>No API Resources</li></ul>
+        {% endif %}	  
+        
+                      
+        <p align="center">
+        {% if product_link != '' %}	
+            (<a href="{{ product_link }}" target="_blank">Product</a>)
+        {% endif %}	
+        {% if product_link != '' %}	
+            (<a href="{{ docs_lnk }}" target="_blank">Docs</a>)
+        {% endif %}			
+        </p>															
+
+        <hr>	
+    {% endif %}	
+{% endfor %}

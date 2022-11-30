@@ -1,0 +1,1895 @@
+openapi: 3.0.0
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+info:
+  title: Instance API
+  description: >-
+    Use the Instance API to manage NGINX Controller Instance
+    resources.
+  version: v1
+paths:
+  '/infrastructure/locations/{locationName}/instances':
+    get:
+      tags:
+        - Instances
+      summary: List all Instances in a Location
+      description: >-
+        Returns the status and metadata for all of the Instances
+        in the specified Location.
+      operationId: listInstances
+      parameters:
+        - $ref: '#/components/parameters/LocationName'
+      responses:
+        '200':
+          description: >-
+            Successfully returned the status and metadata for all
+            of the Instances in the specified Location.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListInstanceResponse'
+              examples:
+                INSTANCES:
+                  $ref: '#/components/examples/ListInstanceResponse'
+    post:
+      tags:
+        - Instances
+      summary: Create an Instance
+      description: Creates a new Instance resource.
+      operationId: createInstance
+      parameters:
+        - $ref: '#/components/parameters/LocationName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstanceRequest'
+            examples:
+              AWS_INSTANCE:
+                $ref: '#/components/examples/AWSInstanceRequest'
+              AZURE_INSTANCE:
+                $ref: '#/components/examples/AzureInstanceRequest'
+      responses:
+        '202':
+          description: >-
+            The Instance resource has been accepted for creation.
+            The Instance will be created after it is done
+            configuring.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInstanceResponse'
+              examples:
+                AWS_INSTANCE:
+                  $ref: '#/components/examples/AWSInstance'
+        '400':
+          description: >-
+            Bad input parameter or URI. Check the input for typos
+            and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                message: >-
+                  Error creating the instance: could not parse the
+                  request payload. Check the format of the
+                  request, then try again.
+                code: 120647
+        '409':
+          description: >-
+            The request failed due to a conflict with an existing
+            Instance resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                message: >-
+                  Error creating the instance: the instance
+                  already exists. Use a unique name for the
+                  instance, then try again.
+                code: 120652
+  '/infrastructure/locations/{locationName}/instances/{instanceName}':
+    get:
+      tags:
+        - Instances
+      summary: Get an Instance
+      description: Returns the status and metadata for a single Instance.
+      operationId: getInstance
+      parameters:
+        - $ref: '#/components/parameters/LocationName'
+        - $ref: '#/components/parameters/InstanceName'
+      responses:
+        '200':
+          description: Successfully returned the details for an Instance.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInstanceResponse'
+              examples:
+                OTHER_INSTANCE:
+                  $ref: '#/components/examples/OtherInstance'
+                AWS_INSTANCE:
+                  $ref: '#/components/examples/AWSInstance'
+                AZURE_INSTANCE:
+                  $ref: '#/components/examples/AzureInstance'
+        '404':
+          description: Instance not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                message: >-
+                  Error getting the instance: the specified
+                  instance does not exist. Check the instance
+                  name, then try again.
+                code: 120603
+    put:
+      tags:
+        - Instances
+      summary: Update an Instance
+      description: >-
+        Updates the description or display name of an existing
+        Instance.
+      operationId: updateInstance
+      parameters:
+        - $ref: '#/components/parameters/LocationName'
+        - $ref: '#/components/parameters/InstanceName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstanceRequest'
+            examples:
+              OTHER_INSTANCE:
+                $ref: '#/components/examples/InstanceUpdateRequest'
+              AWS_INSTANCE:
+                $ref: '#/components/examples/InstanceUpdateRequest'
+              AZURE_INSTANCE:
+                $ref: '#/components/examples/InstanceUpdateRequest'
+      responses:
+        '200':
+          description: Successfully updated the existing Instance.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInstanceResponse'
+              examples:
+                OTHER_INSTANCE:
+                  $ref: '#/components/examples/OtherInstance'
+                AWS_INSTANCE:
+                  $ref: '#/components/examples/AWSInstance'
+                AZURE_INSTANCE:
+                  $ref: '#/components/examples/AzureInstance'
+        '400':
+          description: >-
+            Bad input parameter or URI. Check the input for typos
+            and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                message: >-
+                  Error updating the instance: could not parse the
+                  request payload. Check the format of the
+                  request, then try again.
+                code: 120612
+        '404':
+          description: Instance not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                message: >-
+                  Error updating the instance: the specified
+                  instance does not exist. Check the instance
+                  name, then try again.
+                code: 120614
+    delete:
+      tags:
+        - Instances
+      summary: Delete an Instance
+      operationId: deleteInstance
+      description: Deletes the specified Instance.
+      parameters:
+        - $ref: '#/components/parameters/LocationName'
+        - $ref: '#/components/parameters/InstanceName'
+      responses:
+        '202':
+          description: Request for delete accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInstanceResponse'
+        '204':
+          description: >-
+            Successfully deleted the Instance. No content is
+            returned.
+        '404':
+          description: Instance not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                message: >-
+                  Error deleting the instance: the specified
+                  instance does not exist. Check the instance
+                  name, then try again.
+                code: 120609
+        '409':
+          description: >
+            Failed to delete the requested Instance resource.
+
+
+            The Instance is referenced by another resource. Remove
+            the references to the Instance, then try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              example:
+                message: >-
+                  Error deleting the instance: the NGINX instance
+                  is being configured. Try again later. If the
+                  problem persists, contact the system
+                  administrator.
+                code: 120640
+components:
+  parameters:
+    LocationName:
+      name: locationName
+      in: path
+      description: The name of the Location that contains the Instance.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    InstanceName:
+      name: instanceName
+      in: path
+      description: The name of the Instance.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+  schemas:
+    Instance:
+      type: object
+      description: An NGINX Instance.
+      required:
+        - metadata
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        currentStatus:
+          $ref: '#/components/schemas/InstanceCurrentStatus'
+        desiredState:
+          $ref: '#/components/schemas/InstanceDesiredState'
+    GetInstanceResponse:
+      allOf:
+        - $ref: '#/components/schemas/Instance'
+    ListInstanceResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Instance'
+    InstanceRequest:
+      allOf:
+        - $ref: '#/components/schemas/Instance'
+      description: Describes the Instance to update.
+    InstanceDesiredState:
+      oneOf:
+        - $ref: '#/components/schemas/OtherInstanceDesiredState'
+        - $ref: '#/components/schemas/AWSInstanceDesiredState'
+        - $ref: '#/components/schemas/AzureInstanceDesiredState'
+      discriminator:
+        propertyName: type
+        mapping:
+          OTHER_INSTANCE: '#/components/schemas/OtherInstanceDesiredState'
+          AWS_INSTANCE: '#/components/schemas/AWSInstanceDesiredState'
+          AZURE_INSTANCE: '#/components/schemas/AzureInstanceDesiredState'
+    InstanceCurrentStatus:
+      oneOf:
+        - $ref: '#/components/schemas/OtherInstanceCurrentStatus'
+        - $ref: '#/components/schemas/AWSInstanceCurrentStatus'
+        - $ref: '#/components/schemas/AzureInstanceCurrentStatus'
+      discriminator:
+        propertyName: type
+        mapping:
+          OTHER_INSTANCE: '#/components/schemas/OtherInstanceCurrentStatus'
+          AWS_INSTANCE: '#/components/schemas/AWSInstanceCurrentStatus'
+          AZURE_INSTANCE: '#/components/schemas/AzureInstanceCurrentStatus'
+    OtherInstanceDesiredState:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: >
+            OTHER_INSTANCE is an Instance pre-installed and
+            self-registered during NGINX installation.
+          enum:
+            - OTHER_INSTANCE
+        nginx:
+          $ref: '#/components/schemas/Nginx'
+    AWSInstanceDesiredState:
+      type: object
+      required:
+        - type
+        - templateRef
+      properties:
+        type:
+          type: string
+          description: >
+            AWS_INSTANCE is an Instance hosted in Amazon Web
+            Services (AWS).
+          enum:
+            - AWS_INSTANCE
+        templateRef:
+          $ref: '#/components/schemas/TemplateRef'
+        nginx:
+          $ref: '#/components/schemas/Nginx'
+    AzureInstanceDesiredState:
+      x-f5-experimental: true
+      type: object
+      required:
+        - type
+        - templateRef
+      properties:
+        type:
+          type: string
+          description: >-
+            AZURE_INSTANCE is an Instance hosted in Microsoft
+            Azure.
+          enum:
+            - AZURE_INSTANCE
+        templateRef:
+          $ref: '#/components/schemas/TemplateRef'
+        nginx:
+          $ref: '#/components/schemas/Nginx'
+    OtherInstanceCurrentStatus:
+      type: object
+      description: Contains the current status of the Other Instance.
+      required:
+        - type
+        - hostname
+        - version
+        - agent
+        - status
+        - muted
+      properties:
+        hostname:
+          type: string
+          description: The hostname of the Instance.
+        version:
+          type: string
+          description: The version of NGINX running on the Instance.
+        muted:
+          type: boolean
+          description: >
+            Indicates the status of notifications and alerts.
+
+            - 'True' means that notifications and alerts are
+            muted.
+
+            - 'False' means that notifications and alerts are
+            active.
+          deprecated: true
+        type:
+          type: string
+          description: >
+            OTHER_INSTANCE is an Instance pre-installed and
+            self-registered during NGINX installation.
+          enum:
+            - OTHER_INSTANCE
+        networkConfig:
+          $ref: '#/components/schemas/OtherNetworkConfig'
+        agent:
+          $ref: '#/components/schemas/Agent'
+        nginx:
+          $ref: '#/components/schemas/Nginx'
+        status:
+          deprecated: true
+          allOf:
+            - $ref: '#/components/schemas/ConfigState'
+        state:
+          $ref: '#/components/schemas/ConfigState'
+        legacyNginxMetadata:
+          deprecated: true
+          $ref: '#/components/schemas/LegacyNginxMetadata'
+        legacySystemMetadata:
+          deprecated: true
+          $ref: '#/components/schemas/LegacySystemMetadata'
+    AWSInstanceCurrentStatus:
+      type: object
+      description: Contains the current status of the AWS Instance.
+      required:
+        - type
+        - hostname
+        - version
+        - agent
+        - muted
+      properties:
+        hostname:
+          type: string
+          description: The hostname of the Instance.
+        instanceID:
+          type: string
+          description: The ID of the Instance.
+        version:
+          type: string
+          description: The version of NGINX running on the Instance.
+        muted:
+          type: boolean
+          description: >
+            Indicates the status of notifications and alerts.
+
+            - 'True' means that notifications and alerts are
+            muted.
+
+            - 'False' means that notifications and alerts are
+            active.
+          deprecated: true
+        type:
+          type: string
+          description: >
+            AWS_INSTANCE is an Instance hosted in Amazon Web
+            Services (AWS).
+          enum:
+            - AWS_INSTANCE
+        networkConfig:
+          $ref: '#/components/schemas/AWSNetworkConfig'
+        agent:
+          $ref: '#/components/schemas/Agent'
+        templateRef:
+          $ref: '#/components/schemas/TemplateRef'
+        nginx:
+          $ref: '#/components/schemas/Nginx'
+        state:
+          $ref: '#/components/schemas/ConfigState'
+        legacyNginxMetadata:
+          deprecated: true
+          $ref: '#/components/schemas/LegacyNginxMetadata'
+        legacySystemMetadata:
+          deprecated: true
+          $ref: '#/components/schemas/LegacySystemMetadata'
+    AzureInstanceCurrentStatus:
+      x-f5-experimental: true
+      type: object
+      description: Contains the current status of the Azure Instance.
+      required:
+        - type
+        - hostname
+        - version
+        - agent
+      properties:
+        hostname:
+          type: string
+          description: The hostname of the Instance.
+        instanceID:
+          type: string
+          description: The ID of the Instance.
+        version:
+          type: string
+          description: The version of NGINX running on the Instance.
+        muted:
+          type: boolean
+          description: >
+            Indicates the mute status of notifications and alerts.
+
+            - 'True' means that notifications and alerts are
+            muted.
+
+            - 'False' means that notifications and alerts are
+            active.
+          deprecated: true
+        type:
+          type: string
+          description: >-
+            AZURE_INSTANCE is an Instance hosted in Microsoft
+            Azure.
+          enum:
+            - AZURE_INSTANCE
+        networkConfig:
+          $ref: '#/components/schemas/AzureNetworkConfig'
+        agent:
+          $ref: '#/components/schemas/Agent'
+        templateRef:
+          $ref: '#/components/schemas/TemplateRef'
+        nginx:
+          $ref: '#/components/schemas/Nginx'
+        state:
+          $ref: '#/components/schemas/ConfigState'
+        legacyNginxMetadata:
+          deprecated: true
+          $ref: '#/components/schemas/LegacyNginxMetadata'
+        legacySystemMetadata:
+          deprecated: true
+          $ref: '#/components/schemas/LegacySystemMetadata'
+    TemplateRef:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ResourceRef'
+      description: >-
+        Reference to an existing Instance Template resource. This
+        field cannot be updated.
+    LegacySystemMetadata:
+      type: object
+      deprecated: true
+      description: >
+        Metadata that describe the operating system attributes and
+        properties of an Instance host system.  It is
+
+        intended for internal use only and is subject to change.
+      additionalProperties: true
+    LegacyNginxMetadata:
+      type: object
+      deprecated: true
+      description: >
+        Metadata that describe an Instance's NGINX process
+        configuration and properties.  It is intended
+
+        for internal use only and is subject to change.
+      additionalProperties: true
+    Agent:
+      type: object
+      description: >-
+        The properties of the Controller Agent running on the
+        Instance
+      required:
+        - version
+      properties:
+        version:
+          type: string
+          description: >-
+            The version of Controller Agent that is currently
+            running on the Instance.
+        online:
+          type: boolean
+          description: >-
+            The status of Controller Agent that is currently
+            running on the Instance.
+        credentials:
+          $ref: '#/components/schemas/AgentCredentials'
+    AgentCredentials:
+      type: object
+      description: >-
+        The credentials of the Controller Agent running on the
+        Instance.
+      properties:
+        hostname:
+          type: string
+          description: The hostname of the Agent.
+        uuid:
+          type: string
+          description: The uuid of the Agent.
+    OtherNetworkConfig:
+      type: object
+      description: The network config of a customer deployed Instance.
+      properties:
+        networkInterfaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/OtherNetworkInterface'
+    OtherNetworkInterface:
+      type: object
+      description: A network interface for a customer deployed Instance.
+      properties:
+        name:
+          type: string
+          description: >-
+            The name of the network interface attached to the
+            Instance.
+        privateDnsName:
+          type: string
+          description: >
+            The private, internal hostname of the instance, which
+            resolves to the Instance's private IP address.
+        privateIP:
+          type: string
+          description: The private IP address of the network interface.
+        privateIPv6:
+          type: string
+          description: The private IPv6 address of the network interface.
+        alternateIPList:
+          type: array
+          items:
+            type: string
+        alternateIPv6List:
+          type: array
+          items:
+            type: string
+        subnet:
+          type: object
+          description: The subnet that contains the interface.
+          properties:
+            cidrIPv4:
+              type: string
+              description: The IPv4 CIDR for the subnet.
+            cidrIPv6:
+              type: string
+              description: The IPv6 CIDR for the subnet.
+    AWSNetworkConfig:
+      type: object
+      description: The network config of an AWS Instance.
+      properties:
+        networkInterfaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/AWSNetworkInterface'
+    AWSNetworkInterface:
+      type: object
+      description: A network interface for an AWS Instance.
+      properties:
+        name:
+          type: string
+          description: >-
+            The name of the network interface attached to the
+            Instance.
+        privateDnsName:
+          type: string
+          description: >
+            The private, internal hostname of the instance, which
+            resolves to the Instance's private IP address. 
+        publicDnsName:
+          type: string
+          description: >
+            The public hostname of the instance, which resolves to
+            the public IP address of the Instance. 
+        privateIP:
+          type: string
+          description: The private IP address of the network interface.
+        publicIP:
+          type: string
+          description: The public IP address of the network interface.
+        subnet:
+          type: object
+          description: The subnet that contains the interface.
+          properties:
+            subnetID:
+              type: string
+              description: >-
+                The ID of the subnet into which the instance was
+                launched.
+            cidrIPv4:
+              type: string
+              description: The IPv4 CIDR for the subnet.
+            cidrIPv6:
+              type: string
+              description: The IPv6 CIDR for the subnet.
+    AzureNetworkConfig:
+      type: object
+      description: The network config of an Azure Instance.
+      properties:
+        networkInterfaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/AzureNetworkInterface'
+    AzureNetworkInterface:
+      type: object
+      description: A network interface associated with an Azure Instance.
+      properties:
+        name:
+          type: string
+          description: >-
+            The name of the network interface attached to the
+            Instance.
+        publicDnsName:
+          type: string
+          description: >
+            The public hostname of the instance, which resolves to
+            the public IP address of the Instance. 
+        privateIP:
+          type: string
+          description: The private IP address of the network interface.
+        publicIP:
+          type: string
+          description: The public IP address of the network interface.
+        privateIPv6:
+          type: string
+          description: The private IPv6 address of the network interface.
+        publicIPv6:
+          type: string
+          description: The public IPv6 address of the network interface.
+        subnet:
+          type: object
+          description: The subnet that contains the interface.
+          properties:
+            subnetID:
+              type: string
+              description: The ID of the subnet that contains the Instance.
+            cidrIPv4:
+              type: string
+              description: The IPv4 CIDR for the subnet.
+            cidrIPv6:
+              type: string
+              description: The IPv6 CIDR for the subnet.
+    Nginx:
+      type: object
+      description: |
+        Defines properties and configuration values for Nginx.
+      properties:
+        process:
+          $ref: '#/components/schemas/NginxProcess'
+    NginxProcess:
+      type: object
+      description: >
+        Defines configuration directives that are defined in the
+        main configuration context.
+      properties:
+        user:
+          type: string
+          description: |
+            Defines user credentials used by worker processes.
+          default: nginx
+        group:
+          type: string
+          description: >
+            Defines group credentials used by worker processes. 
+            This will be ignored if the user
+
+            property is not defined.
+          default: nginx
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    ConfigStateTally:
+      type: object
+      properties:
+        isConfigured:
+          type: boolean
+          description: The configuration operation is complete.
+        isConfiguring:
+          type: boolean
+          description: >-
+            The configuration of the resource, or of its
+            child(ren), is in process.
+        isError:
+          type: boolean
+          description: >-
+            An error occurred while configuring the resource or
+            its child(ren).
+        isDeleting:
+          type: boolean
+          description: >-
+            A delete operation is in progress for the resource or
+            its child(ren).
+        total:
+          type: integer
+          description: >-
+            The total number of resources to which the
+            configuration operation applies.
+        configured:
+          type: integer
+          description: >-
+            The number of resources that have a complete and valid
+            configuration.
+        configuring:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being configured.
+        error:
+          type: integer
+          description: >-
+            The number of resources that have encountered an error
+            during the configuration process.
+        deleting:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being deleted.
+    ConfigCondition:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The condition type.
+        message:
+          type: string
+          description: >-
+            A human-readable message that provides additional
+            information about the configuration operation.
+    ConfigState:
+      type: object
+      description: >
+        A representation of the resource's current configuration
+        state 
+
+        that comprises the status of the resource itself
+        (`selfConfigState`) and any child 
+
+        resources (`childrenConfigState`).
+
+
+        The conditions array provides additional information
+        during configuration changes.
+      properties:
+        selfConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        childrenConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigCondition'
+    NamedLinks:
+      allOf:
+        - $ref: '#/components/schemas/SelfLinks'
+        - type: object
+          description: >
+            Contains information about the object being referred
+            to.
+
+
+            These are generally details -- like the object name
+            and display name --
+
+            that are useful to a consumer of the API that performs
+            further
+
+            processing. 
+
+
+            This object is only present in responses.
+              
+          properties:
+            name:
+              type: string
+              example: production
+              description: |
+                The name of the linked resource.
+            displayName:
+              type: string
+              example: Production Environment
+              description: A user friendly resource name.
+    ResourceRef:
+      type: object
+      required:
+        - ref
+      properties:
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: |
+            A reference to another NGINX Controller resource.
+        links:
+          $ref: '#/components/schemas/NamedLinks'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+  examples:
+    AWSInstanceRequest:
+      value:
+        metadata:
+          name: nginx-dp-1
+          displayName: nginx-dp-1
+          tags:
+            - prod-1
+            - dev-1
+        desiredState:
+          type: AWS_INSTANCE
+          templateRef:
+            ref: >-
+              /infrastructure/locations/aws-east/instance-templates/small-dev-template
+    AzureInstanceRequest:
+      value:
+        metadata:
+          name: nginx-dp-1
+          displayName: nginx-dp-1
+          tags:
+            - prod-1
+            - dev-1
+        desiredState:
+          type: AZURE_INSTANCE
+          templateRef:
+            ref: >-
+              /infrastructure/locations/azure-westus2/instance-templates/small-dev-template
+    InstanceUpdateRequest:
+      value:
+        metadata:
+          name: nginx-dp-1
+          displayName: nginx-dp-1
+          description: An example NGINX Instance.
+          tags:
+            - prod-1
+            - dev-1
+    AWSInstance:
+      value:
+        metadata:
+          name: instance-1
+          displayName: My Instance
+          tags:
+            - prod-1
+            - dev-1
+          links:
+            rel: >-
+              /infrastructure/locations/unspecified/instances/instance-1
+          createTime: '2019-07-29T09:12:33.001Z'
+          updateTime: '2019-07-29T09:12:33.001Z'
+        desiredState:
+          type: AWS_INSTANCE
+          templateRef:
+            ref: >-
+              /infrastructure/locations/aws-uswest-2/instance-templates/my-t2-medium
+        currentStatus:
+          type: AWS_INSTANCE
+          state:
+            selfConfigState:
+              configured: 1
+              configuring: 0
+              deleting: 0
+              error: 0
+              isConfigured: true
+              isConfiguring: false
+              isDeleting: false
+              isError: false
+              total: 1
+          hostname: instance-1.mycloud.net
+          version: 1.17.3
+          muted: false
+          networkConfig:
+            networkInterfaces:
+              - name: eth0
+                privateDnsName: ip-172-16-0-71.us-west-2.compute.internal
+                publicDnsName: >-
+                  ec2-54-212-110-173.us-west-2.compute.amazonaws.com
+                privateIP: 172.16.0.71
+                publicIP: 54.212.110.173
+                subnet:
+                  subnetID: subnet-055d28be58feb0a7d
+                  cidrIPv4: 172.16.0.0/24
+          agent:
+            credentials:
+              hostname: instance-1.mycloud.net
+              uuid: c1088edfd9f35cd38d5b4ce109508fe9
+            version: 2.8
+          legacyNginxMetadata:
+            build: nginx-plus-r19
+            built_from_source: false
+            last_seen: '2019-11-12T23:47:52.966Z'
+            pid: 2749
+            properties:
+              conf-path: /etc/nginx/nginx.conf
+              error-log-path: /var/log/nginx/error.log
+              group: nginx
+              http-client-body-temp-path: /var/cache/nginx/client_temp
+              http-fastcgi-temp-path: /var/cache/nginx/fastcgi_temp
+              http-log-path: /var/log/nginx/access.log
+              http-proxy-temp-path: /var/cache/nginx/proxy_temp
+              http-scgi-temp-path: /var/cache/nginx/scgi_temp
+              http-uwsgi-temp-path: /var/cache/nginx/uwsgi_temp
+              loadable_modules: []
+              lock-path: /var/run/nginx.lock
+              modules-path: /usr/lib/nginx/modules
+              packages:
+                nginx-plus: 19-1~bionic
+              path:
+                bin: /usr/sbin/nginx
+                conf: /etc/nginx/nginx.conf
+              pid-path: /var/run/nginx.pid
+              prefix: /etc/nginx
+              sbin-path: /usr/sbin/nginx
+              status_module_enabled: false
+              stub_status_enabled: false
+              stub_status_url: null
+              user: nginx
+              with-cc-opt: >-
+                -g -O2
+                -fdebug-prefix-map=/data/builder/debuild/nginx-plus-1.17.3/debian/debuild-base/nginx-plus-1.17.3=.
+                -fstack-protector-strong -Wformat
+                -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2
+                -fPIC
+              with-compat: true
+              with-file-aio: true
+              with-http_addition_module: true
+              with-http_auth_jwt_module: true
+              with-http_auth_request_module: true
+              with-http_dav_module: true
+              with-http_f4f_module: true
+              with-http_flv_module: true
+              with-http_gunzip_module: true
+              with-http_gzip_static_module: true
+              with-http_hls_module: true
+              with-http_mp4_module: true
+              with-http_random_index_module: true
+              with-http_realip_module: true
+              with-http_secure_link_module: true
+              with-http_session_log_module: true
+              with-http_slice_module: true
+              with-http_ssl_module: true
+              with-http_stub_status_module: true
+              with-http_sub_module: true
+              with-http_v2_module: true
+              with-ld-opt: >-
+                -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now
+                -Wl,--as-needed -pie
+              with-mail: true
+              with-mail_ssl_module: true
+              with-stream: true
+              with-stream_realip_module: true
+              with-stream_ssl_module: true
+              with-stream_ssl_preread_module: true
+              with-threads: true
+            running: true
+            ssl:
+              built:
+                - OpenSSL
+                - 1.1.1
+                - 11 Sep 2018
+              run:
+                - OpenSSL
+                - 1.1.1
+                - 11 Sep 2018
+            start_time: 1573580604000
+          legacySystemMetadata:
+            boot: 1573580280000
+            disk_partitions:
+              - device: /dev/sda2
+                fstype: ext4
+                mountpoint: /
+              - device: /dev/sda1
+                fstype: ext3
+                mountpoint: /boot
+            network:
+              default: lo
+              interfaces:
+                ipv4:
+                  address: 127.0.0.1
+                  netmask: 255.0.0.0
+                  prefixlen: 8
+                ipv6:
+                  address: '::1'
+                  netmask: 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'
+                  prefixlen: 128
+                mac: '00:00:00:00:00:00'
+                name: lo
+            os-type: linux
+            processor:
+              architecture: x86_64
+              cache:
+                L1d: 32K
+                L1i: 32K
+                L2: 1024K
+                L3: 25344K
+              cores: 1
+              cpus: 4
+              hypervisor: VMware
+              mhz: 2300
+              model: Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz
+              virtualization: full
+            release:
+              codename: bionic
+              id: ubuntu
+              name: Ubuntu
+              version: 18.04.2 LTS (Bionic Beaver)
+              version_id: 18.04
+    AzureInstance:
+      value:
+        metadata:
+          name: instance-1
+          createTime: '2020-10-27T22:14:36.994172Z'
+          description: My Azure Instance
+          displayName: Instance-1
+          tags:
+            - prod-1
+            - dev-1
+          kind: instance
+          links:
+            rel: >-
+              /api/v1/infrastructure/locations/azure-westus2/instances/instance-1
+          ref: >-
+            /infrastructure/locations/azure-westus2/instances/instance-1
+          uid: 4ed722ec-1bc0-47a1-9772-87718fa9ddb8
+          updateTime: '2020-10-27T22:14:36.994172Z'
+        desiredState:
+          nginx:
+            process:
+              group: test
+              user: testuser
+          templateRef:
+            ref: >-
+              /infrastructure/locations/azure-westus2/instance-templates/azure-standard-ds1v2
+          type: AZURE_INSTANCE
+        currentStatus:
+          networkConfig:
+            networkInterfaces:
+              - name: my-nic-1
+                publicDnsName: myapp.westus2.cloudapp.azure.com
+                privateIP: 10.0.1.4
+                publicIP: 52.229.16.198
+                subnet:
+                  subnetID: subnet-test
+                  cidrIPv4: 10.0.1.0/24
+          agent:
+            credentials:
+              hostname: instance-1.mycloud.net
+              uuid: c1088edfd9f35cd38d5b4ce109508fe9
+            version: 3.12.5
+          hostname: instance-1
+          instanceID: ce266e67-42ec-41a0-b8f4-f4cd0be01828
+          legacyNginxMetadata:
+            build: nginx-plus-r22
+            built_from_source: true
+            id: 6
+            last_seen: '2020-10-27T22:30:34.376659Z'
+            pid: 1138
+            properties:
+              conf-path: /etc/nginx/nginx.conf
+              error-log-path: /var/log/nginx/error.log
+              group: nginx
+              http-client-body-temp-path: /var/cache/nginx/client_temp
+              http-fastcgi-temp-path: /var/cache/nginx/fastcgi_temp
+              http-log-path: /var/log/nginx/access.log
+              http-proxy-temp-path: /var/cache/nginx/proxy_temp
+              http-scgi-temp-path: /var/cache/nginx/scgi_temp
+              http-uwsgi-temp-path: /var/cache/nginx/uwsgi_temp
+              loadable_modules:
+                - ngx_http_f5_metrics_module-debug.so
+                - ngx_http_f5_metrics_module.so
+              lock-path: /var/run/nginx.lock
+              modules-path: /usr/lib/nginx/modules
+              packages:
+                nginx-plus: nginx-plus-r22
+              path:
+                bin: /usr/sbin/nginx
+                conf: /etc/nginx/nginx.conf
+              pid-path: /var/run/nginx.pid
+              prefix: /etc/nginx
+              sbin-path: /usr/sbin/nginx
+              status_module_enabled: false
+              stub_status_enabled: false
+              stub_status_url: ''
+              user: nginx
+              with-compat: true
+              with-file-aio: true
+              with-http_addition_module: true
+              with-http_auth_jwt_module: true
+              with-http_auth_request_module: true
+              with-http_dav_module: true
+              with-http_f4f_module: true
+              with-http_flv_module: true
+              with-http_gunzip_module: true
+              with-http_gzip_static_module: true
+              with-http_hls_module: true
+              with-http_mp4_module: true
+              with-http_random_index_module: true
+              with-http_realip_module: true
+              with-http_secure_link_module: true
+              with-http_session_log_module: true
+              with-http_slice_module: true
+              with-http_ssl_module: true
+              with-http_stub_status_module: true
+              with-http_sub_module: true
+              with-http_v2_module: true
+              with-ld-opt: >-
+                '-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now
+                -Wl,--as-needed -pie'
+              with-mail: true
+              with-mail_ssl_module: true
+              with-stream: true
+              with-stream_realip_module: true
+              with-stream_ssl_module: true
+              with-stream_ssl_preread_module: true
+              with-threads: true
+            running: true
+            ssl:
+              built:
+                - OpenSSL
+                - 1.1.1
+                - ' 11 Sep 2018'
+              run:
+                - OpenSSL
+                - 1.1.1
+                - ' 11 Sep 2018'
+            start_time: 1603836993
+            version: 1.19.0
+          legacySystemMetadata:
+            boot: 1603836911000
+            disk_partitions:
+              - device: /dev/sda1
+                fstype: ext4
+                mountpoint: /
+              - device: /dev/sda15
+                fstype: vfat
+                mountpoint: /boot/efi
+              - device: /dev/sdb1
+                fstype: ext4
+                mountpoint: /mnt
+            id: 5
+            network:
+              default: eth0
+              interfaces:
+                - ipv4:
+                    address: 127.0.0.1
+                    netmask: 255.0.0.0
+                    prefixlen: 8
+                  ipv6:
+                    address: '::1'
+                    netmask: 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'
+                    prefixlen: 128
+                  mac: '00:00:00:00:00:00'
+                  name: lo
+                - ipv4:
+                    address: 10.0.1.4
+                    netmask: 255.255.255.0
+                    prefixlen: 24
+                  ipv6:
+                    address: 'fe80::20d:3aff:fec5:3f80'
+                    netmask: 'ffff:ffff:ffff:ffff::'
+                    prefixlen: 64
+                  mac: '00:0d:3a:c5:3f:80'
+                  name: eth0
+            os-type: linux
+            processor:
+              architecture: x86_64
+              cache:
+                L1d: 32K
+                L1i: 32K
+                L2: 1024K
+                L3: 36608K
+              cores: '1'
+              cpus: '1'
+              hypervisor: Microsoft
+              mhz: '2095.191'
+              model: Intel(R) Xeon(R) Platinum 8171M CPU @ 2.60GHz
+              virtualization: full
+            release:
+              codename: bionic
+              id: ubuntu
+              name: Ubuntu
+              version: 18.04.5 LTS (Bionic Beaver)
+              version_id: '18.04'
+          muted: false
+          nginx:
+            process:
+              group: test
+              user: testuser
+          state:
+            conditions: []
+            selfConfigState:
+              configured: 1
+              configuring: 0
+              deleting: 0
+              error: 0
+              isConfigured: true
+              isConfiguring: false
+              isDeleting: false
+              isError: false
+              total: 1
+          templateRef:
+            ref: >-
+              /infrastructure/locations/azure-westus2/instance-templates/azure-standard-ds1v2
+          type: AZURE_INSTANCE
+          version: 1.19.0
+    OtherInstance:
+      value:
+        metadata:
+          name: test_instance_1
+          displayName: Test Instance 1
+          links:
+            rel: >-
+              /api/v1/infrastructure/locations/unspecified/instances/test_instance_1
+          createTime: '2020-05-20T20:02:18.107875Z'
+          updateTime: '2020-05-20T20:02:18.107875Z'
+        desiredState:
+          type: OTHER_INSTANCE
+        currentStatus:
+          type: OTHER_INSTANCE
+          state:
+            selfConfigState:
+              configured: 1
+              configuring: 0
+              deleting: 0
+              error: 0
+              isConfigured: true
+              isConfiguring: false
+              isDeleting: false
+              isError: false
+              total: 1
+          status:
+            selfConfigState:
+              configured: 1
+              configuring: 0
+              deleting: 0
+              error: 0
+              isConfigured: true
+              isConfiguring: false
+              isDeleting: false
+              isError: false
+              total: 1
+          agent:
+            credentials:
+              hostname: instance-1.mycloud.net
+              uuid: c1088edfd9f35cd38d5b4ce109508fe9
+            version: 999.0.0-1
+          hostname: test-fab4edf8-data-1.test
+          legacyNginxMetadata:
+            build: nginx-plus-r21
+            built_from_source: false
+            id: 2
+            last_seen: '2020-05-20T20:40:21.146894Z'
+            pid: 2995
+            properties:
+              conf-path: /etc/nginx/nginx.conf
+              error-log-path: /var/log/nginx/error.log
+              group: nginx
+              http-client-body-temp-path: /var/cache/nginx/client_temp
+              http-fastcgi-temp-path: /var/cache/nginx/fastcgi_temp
+              http-log-path: /var/log/nginx/access.log
+              http-proxy-temp-path: /var/cache/nginx/proxy_temp
+              http-scgi-temp-path: /var/cache/nginx/scgi_temp
+              http-uwsgi-temp-path: /var/cache/nginx/uwsgi_temp
+              loadable_modules:
+                - ngx_http_f5_metrics_module-debug.so
+                - ngx_http_f5_metrics_module.so
+              lock-path: /var/run/nginx.lock
+              modules-path: /usr/lib/nginx/modules
+              packages:
+                nginx-plus: 21-1~bionic
+              path:
+                bin: /usr/sbin/nginx
+                conf: /etc/nginx/nginx.conf
+              pid-path: /var/run/nginx.pid
+              prefix: /etc/nginx
+              sbin-path: /usr/sbin/nginx
+              status_module_enabled: false
+              stub_status_enabled: false
+              stub_status_url: null
+              user: nginx
+              with-cc-opt: >-
+                '-g -O2
+                -fdebug-prefix-map=/data/builder/debuild/nginx-plus-1.17.9/debian/debuild-base/nginx-plus-1.17.9=.
+                -fstack-protector-strong -Wformat
+                -Werror=format-security,-D_FORTIFY_SOURCE=2 -fPIC'
+              with-compat: true
+              with-file-aio: true
+              with-http_addition_module: true
+              with-http_auth_jwt_module: true
+              with-http_auth_request_module: true
+              with-http_dav_module: true
+              with-http_f4f_module: true
+              with-http_flv_module: true
+              with-http_gunzip_module: true
+              with-http_gzip_static_module: true
+              with-http_hls_module: true
+              with-http_mp4_module: true
+              with-http_random_index_module: true
+              with-http_realip_module: true
+              with-http_secure_link_module: true
+              with-http_session_log_module: true
+              with-http_slice_module: true
+              with-http_ssl_module: true
+              with-http_stub_status_module: true
+              with-http_sub_module: true
+              with-http_v2_module: true
+              with-ld-opt: >-
+                '-Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-z,now
+                -Wl,--as-needed -pie'
+              with-mail: true
+              with-mail_ssl_module: true
+              with-stream: true
+              with-stream_realip_module: true
+              with-stream_ssl_module: true
+              with-stream_ssl_preread_module: true
+              with-threads: true
+            running: true
+            ssl:
+              built:
+                - OpenSSL
+                - 1.1.1
+                - 11 Sep 2018
+              run:
+                - OpenSSL
+                - 1.1.1
+                - 11 Sep 2018
+            start_time: 1590004864000
+          legacySystemMetadata:
+            boot: 1590004492000
+            disk_partitions:
+              - device: /dev/sda2
+                fstype: ext4
+                mountpoint: /
+              - device: /dev/sda1
+                fstype: ext3
+                mountpoint: /boot
+            id: 1
+            network:
+              default: lo
+              interfaces:
+                - ipv4:
+                    address: 127.0.0.1
+                    netmask: 255.0.0.0
+                    prefixlen: 8
+                  ipv6:
+                    address: '::1'
+                    netmask: 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'
+                    prefixlen: 128
+                  mac: '00:00:00:00:00:00'
+                  name: lo
+                - ipv4:
+                    address: 192.0.10.1
+                    netmask: 255.255.255.0
+                    prefixlen: 24
+                  mac: '02:42:98:fb:40:48'
+                  name: docker0
+                - ipv4:
+                    address: 10.149.41.181
+                    netmask: 255.255.240.0
+                    prefixlen: 20
+                  ipv6:
+                    address: 'fe80::250:56ff:fe98:e2f1'
+                    netmask: 'ffff:ffff:ffff:ffff::'
+                    prefixlen: 64
+                  mac: '00:50:56:98:e2:f1'
+                  name: ens32
+            os-type: linux
+            processor:
+              architecture: x86_64
+              cache:
+                L1d: 32K
+                L1i: 32K
+                L2: 1024K
+                L3: 25344K
+              cores: '1'
+              cpus: '4'
+              hypervisor: VMware
+              mhz: '2300.000'
+              model: Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz
+              virtualization: full
+            release:
+              codename: bionic
+              id: ubuntu
+              name: Ubuntu
+              version: 18.04.2 LTS (Bionic Beaver)
+              version_id: '18.04'
+          muted: false
+          version: 1.17.9
+    ListInstanceResponse:
+      value:
+        items:
+          - currentStatus:
+              agent:
+                version: 3.7.44
+              hostname: i-563457274582
+              legacyNginxMetadata:
+                build: nginx-plus-r22
+                built_from_source: false
+                id: 2
+                last_seen: '2020-07-08T17:24:07.869745Z'
+                pid: 3104
+                properties:
+                  conf-path: /etc/nginx/nginx.conf
+                  error-log-path: /var/log/nginx/error.log
+                  group: nginx
+                  http-client-body-temp-path: /var/cache/nginx/client_temp
+                  http-fastcgi-temp-path: /var/cache/nginx/fastcgi_temp
+                  http-log-path: /var/log/nginx/access.log
+                  http-proxy-temp-path: /var/cache/nginx/proxy_temp
+                  http-scgi-temp-path: /var/cache/nginx/scgi_temp
+                  http-uwsgi-temp-path: /var/cache/nginx/uwsgi_temp
+                  loadable_modules:
+                    - ngx_http_f5_metrics_module-debug.so
+                    - ngx_http_f5_metrics_module.so
+                  lock-path: /var/run/nginx.lock
+                  modules-path: /usr/lib/nginx/modules
+                  packages: {}
+                  path:
+                    bin: /usr/sbin/nginx
+                    conf: /etc/nginx/nginx.conf
+                  pid-path: /var/run/nginx.pid
+                  prefix: /etc/nginx
+                  sbin-path: /usr/sbin/nginx
+                  status_module_enabled: false
+                  stub_status_enabled: false
+                  stub_status_url: ''
+                  user: nginx
+                  with-compat: true
+                  with-file-aio: true
+                  with-http_addition_module: true
+                  with-http_auth_jwt_module: true
+                  with-http_auth_request_module: true
+                  with-http_dav_module: true
+                  with-http_f4f_module: true
+                  with-http_flv_module: true
+                  with-http_gunzip_module: true
+                  with-http_gzip_static_module: true
+                  with-http_hls_module: true
+                  with-http_mp4_module: true
+                  with-http_random_index_module: true
+                  with-http_realip_module: true
+                  with-http_secure_link_module: true
+                  with-http_session_log_module: true
+                  with-http_slice_module: true
+                  with-http_ssl_module: true
+                  with-http_stub_status_module: true
+                  with-http_sub_module: true
+                  with-http_v2_module: true
+                  with-ld-opt: >-
+                    '-Wl,-Bsymbolic-functions -Wl,-z,relro
+                    -Wl,-z,now -Wl,--as-needed -pie'
+                  with-mail: true
+                  with-mail_ssl_module: true
+                  with-stream: true
+                  with-stream_realip_module: true
+                  with-stream_ssl_module: true
+                  with-stream_ssl_preread_module: true
+                  with-threads: true
+                running: true
+                ssl:
+                  built:
+                    - OpenSSL
+                    - 1.1.1
+                    - ''
+                    - '11'
+                    - Sep
+                    - '2018'
+                  run:
+                    - OpenSSL
+                    - 1.1.1
+                    - ''
+                    - '11'
+                    - Sep
+                    - '2018'
+                start_time: 0
+              legacySystemMetadata:
+                boot: 1594225800000
+                disk_partitions:
+                  - device: /dev/sda2
+                    fstype: ext4
+                    mountpoint: /
+                  - device: /dev/sda1
+                    fstype: ext3
+                    mountpoint: /boot
+                id: 1
+                network:
+                  default: ''
+                  interfaces:
+                    - ipv4:
+                        address: 127.0.0.1
+                        netmask: 255.0.0.0
+                        prefixlen: 8
+                      ipv6:
+                        address: '::1'
+                        netmask: 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff'
+                        prefixlen: 128
+                      mac: '00:00:00:00:00:00'
+                      name: lo
+                    - ipv4:
+                        address: 10.149.41.97
+                        netmask: 255.255.240.0
+                        prefixlen: 20
+                      ipv6:
+                        address: 'fe80::250:56ff:fe98:b512'
+                        netmask: 'ffff:ffff:ffff:ffff::'
+                        prefixlen: 64
+                      mac: '00:50:56:98:b5:12'
+                      name: ens32
+                    - ipv4:
+                        address: 192.0.10.1
+                        netmask: 255.255.255.0
+                        prefixlen: 24
+                      mac: '02:42:24:f1:ae:8a'
+                      name: docker0
+                os-type: linux
+                processor:
+                  architecture: x86_64
+                  cache:
+                    L1d: 32K
+                    L1i: 32K
+                    L2: 1024K
+                    L3: 25344K
+                  cores: '1'
+                  cpus: '4'
+                  hypervisor: VMware
+                  mhz: '2300.000'
+                  model: Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz
+                  virtualization: full
+                release:
+                  codename: bionic
+                  id: ubuntu
+                  name: Ubuntu
+                  version: 18.04.2 LTS (Bionic Beaver)
+                  version_id: '18.04'
+              muted: false
+              state:
+                selfConfigState:
+                  configured: 1
+                  configuring: 0
+                  deleting: 0
+                  error: 0
+                  isConfigured: true
+                  isConfiguring: false
+                  isDeleting: false
+                  isError: false
+                  total: 1
+              status:
+                selfConfigState:
+                  configured: 1
+                  configuring: 0
+                  deleting: 0
+                  error: 0
+                  isConfigured: true
+                  isConfiguring: false
+                  isDeleting: false
+                  isError: false
+                  total: 1
+              type: OTHER_INSTANCE
+              version: 1.19.0
+            desiredState:
+              type: OTHER_INSTANCE
+            metadata:
+              createTime: '2020-07-08T16:42:07.97301Z'
+              displayName: Test Instance 1
+              kind: instance
+              links:
+                rel: >-
+                  /api/v1/infrastructure/locations/unspecified/instances/instance-1
+              name: instance-1
+              ref: >-
+                /infrastructure/locations/unspecified/instances/instance-1
+              uid: ec8d8dac-10b6-4195-943b-1a5d65dd131c
+              updateTime: '2020-07-08T16:42:07.97301Z'

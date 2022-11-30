@@ -1,0 +1,687 @@
+openapi: 3.0.0
+info:
+  title: Azure API Management - Products
+  description: Use these REST APIs for performing operations on Product entity associated
+    with your Azure API Management deployment. The Product entity represents a
+    product in API Management. Products include one or more APIs and their
+    associated terms of use. Once a product is published, developers can
+    subscribe to the product and begin to use the product’s APIs.
+  version: 2017-03-01
+security:
+  - apim_key: []
+paths:
+  /products:
+    get:
+      tags:
+        - Products
+      operationId: Product_List
+      description: Lists a collection of products in the specified service instance.
+      parameters:
+        - name: $filter
+          in: query
+          required: false
+          description: >-
+            | Field       | Supported operators    | Supported
+            functions                         |
+
+            |-------------|------------------------|---------------------------------------------|
+
+            | id          | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | name        | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | description | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | terms       | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | state       | eq                     |                                             |
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/TopQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/SkipQueryParameter
+        - name: expandGroups
+          in: query
+          required: false
+          description: When set to true, the response contains an array of groups that have
+            visibility to the product. The default is false.
+          schema:
+            type: boolean
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: A Collection of the Product entities for the specified API
+            Management service instance.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductCollection"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+      x-ms-pageable:
+        nextLinkName: nextLink
+      x-ms-odata: "#/components/schemas/ProductContract"
+  "/products/{productId}":
+    get:
+      tags:
+        - Products
+      operationId: Product_Get
+      description: Gets the details of the product specified by its identifier.
+      parameters:
+        - $ref: "#/components/parameters/ProductIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: The response body contains the specified Product entity.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductContract"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    put:
+      tags:
+        - Products
+      operationId: Product_CreateOrUpdate
+      description: Creates or Updates a product.
+      parameters:
+        - $ref: "#/components/parameters/ProductIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductContract"
+        description: Create or update parameters.
+        required: true
+      responses:
+        "200":
+          description: Product was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductContract"
+        "201":
+          description: Product was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductContract"
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    patch:
+      tags:
+        - Products
+      operationId: Product_Update
+      description: Update product.
+      parameters:
+        - $ref: "#/components/parameters/ProductIdParameter"
+        - name: If-Match
+          in: header
+          required: true
+          description: ETag of the Product Entity. ETag should match the current entity
+            state from the header response of the GET request or it should be *
+            for unconditional update.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductUpdateParameters"
+        description: Update parameters.
+        required: true
+      responses:
+        "204":
+          description: No Content in case of Update Successful.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    delete:
+      tags:
+        - Products
+      operationId: Product_Delete
+      description: Delete product.
+      parameters:
+        - $ref: "#/components/parameters/ProductIdParameter"
+        - name: deleteSubscriptions
+          in: query
+          required: false
+          description: Delete existing subscriptions to the product or not.
+          schema:
+            type: boolean
+        - name: If-Match
+          in: header
+          required: true
+          description: ETag of the Product Entity. ETag should match the current entity
+            state from the header response of the GET request or it should be *
+            for unconditional update.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "204":
+          description: The product was successfully deleted.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/products/{productId}/apis":
+    get:
+      tags:
+        - ProductApis
+      operationId: ProductApi_ListByProduct
+      description: Lists a collection of the APIs associated with a product.
+      parameters:
+        - $ref: "#/components/parameters/ProductIdParameter"
+        - name: $filter
+          in: query
+          required: false
+          description: >
+            | Field       | Supported operators    | Supported
+            functions                         |
+
+            |-------------|------------------------|---------------------------------------------|
+
+            | id          | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | name        | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | description | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | serviceUrl  | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | path        | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/TopQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/SkipQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: The response body contains a collection of Api entities in the
+            product.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimapis.json#/definitions/ApiCollection
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+      x-ms-pageable:
+        nextLinkName: nextLink
+      x-ms-odata: ./apimapis.json#/definitions/ApiContract
+  "/products/{productId}/apis/{apiId}":
+    put:
+      tags:
+        - ProductApis
+      operationId: ProductApi_CreateOrUpdate
+      description: Adds an API to the specified product.
+      parameters:
+        - $ref: "#/components/parameters/ProductIdParameter"
+        - $ref: ./apimapis.json#/components/parameters/ApiIdParameter
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: The specified API is already added to the product.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimapis.json#/definitions/ApiContract
+        "201":
+          description: The API was successfully added to the product.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimapis.json#/definitions/ApiContract
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    delete:
+      tags:
+        - ProductApis
+      operationId: ProductApi_Delete
+      description: Deletes the specified API from the specified product.
+      parameters:
+        - $ref: "#/components/parameters/ProductIdParameter"
+        - $ref: ./apimapis.json#/components/parameters/ApiIdParameter
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "204":
+          description: The API was successfully removed from the product.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/products/{productId}/groups":
+    get:
+      tags:
+        - ProductGroups
+      operationId: ProductGroup_ListByProduct
+      description: Lists the collection of developer groups associated with the specified
+        product.
+      parameters:
+        - $ref: "#/components/parameters/ProductIdParameter"
+        - name: $filter
+          in: query
+          required: false
+          description: >-
+            | Field       | Supported operators    | Supported
+            functions                         |
+
+            |-------------|------------------------|---------------------------------------------|
+
+            | id          | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | name        | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | description | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | type        | eq, ne                 | N/A                                         |
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/TopQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/SkipQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: Lists a collection of Group entities.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimgroups.json#/definitions/GroupCollection
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+      x-ms-pageable:
+        nextLinkName: nextLink
+      x-ms-odata: ./apimgroups.json#/definitions/GroupContract
+  "/products/{productId}/groups/{groupId}":
+    put:
+      tags:
+        - ProductGroups
+      operationId: ProductGroup_CreateOrUpdate
+      description: Adds the association between the specified developer group with the
+        specified product.
+      parameters:
+        - $ref: "#/components/parameters/ProductIdParameter"
+        - $ref: ./apimgroups.json#/components/parameters/GroupIdParameter
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: The specified group is already associated with the product.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimgroups.json#/definitions/GroupContract
+        "201":
+          description: The group was successfully associated with the product.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimgroups.json#/definitions/GroupContract
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    delete:
+      tags:
+        - ProductGroups
+      operationId: ProductGroup_Delete
+      description: Deletes the association between the specified group and product.
+      parameters:
+        - $ref: "#/components/parameters/ProductIdParameter"
+        - $ref: ./apimgroups.json#/components/parameters/GroupIdParameter
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "204":
+          description: The group was successfully disassociated with the product.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/products/{productId}/subscriptions":
+    get:
+      tags:
+        - ProductSubscriptions
+      operationId: ProductSubscriptions_List
+      description: Lists the collection of subscriptions to the specified product.
+      parameters:
+        - $ref: "#/components/parameters/ProductIdParameter"
+        - name: $filter
+          in: query
+          required: false
+          description: >-
+            | Field        | Supported operators    | Supported
+            functions                         |
+
+            |--------------|------------------------|---------------------------------------------|
+
+            | id           | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | name         | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | stateComment | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | userId       | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | productId    | ge, le, eq, ne, gt, lt | substringof, contains, startswith, endswith |
+
+            | state        | eq                     |                                             |
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/TopQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/SkipQueryParameter
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "200":
+          description: Lists a collection of subscription entities.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimsubscriptions.json#/definitions/SubscriptionCollection
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+      x-ms-pageable:
+        nextLinkName: nextLink
+      x-ms-odata: ./apimsubscriptions.json#/definitions/SubscriptionContract
+  "/products/{productId}/policies":
+    get:
+      tags:
+        - ProductPolicy
+      operationId: ProductPolicy_ListByProduct
+      description: Get the policy configuration at the Product level.
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+        - $ref: "#/components/parameters/ProductIdParameter"
+      responses:
+        "200":
+          description: Product Policy information.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyCollection
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+  "/products/{productId}/policies/{policyId}":
+    get:
+      tags:
+        - ProductPolicy
+      operationId: ProductPolicy_Get
+      description: Get the policy configuration at the Product level.
+      parameters:
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+        - $ref: "#/components/parameters/ProductIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/PolicyIdParameter
+      responses:
+        "200":
+          description: Product Policy information.
+          headers:
+            ETag:
+              description: Current entity state version. Should be treated as opaque and
+                used to make conditional HTTP requests.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyContract
+            application/vnd.ms-azure-apim.policy+xml:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyContract
+            application/vnd.ms-azure-apim.policy.raw+xml:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyContract
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+            application/vnd.ms-azure-apim.policy+xml:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+            application/vnd.ms-azure-apim.policy.raw+xml:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    put:
+      tags:
+        - ProductPolicy
+      operationId: ProductPolicy_CreateOrUpdate
+      description: Creates or updates policy configuration for the Product.
+      parameters:
+        - $ref: "#/components/parameters/ProductIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/PolicyIdParameter
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ./apimanagement.json#/definitions/PolicyContract
+          application/vnd.ms-azure-apim.policy+xml:
+            schema:
+              $ref: ./apimanagement.json#/definitions/PolicyContract
+          application/vnd.ms-azure-apim.policy.raw+xml:
+            schema:
+              $ref: ./apimanagement.json#/definitions/PolicyContract
+        description: The policy contents to apply.
+        required: true
+      responses:
+        "200":
+          description: Product policy configuration of the tenant was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyContract
+        "201":
+          description: Product policy configuration was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/PolicyContract
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+    delete:
+      tags:
+        - ProductPolicy
+      operationId: ProductPolicy_Delete
+      description: Deletes the policy configuration at the Product.
+      parameters:
+        - $ref: "#/components/parameters/ProductIdParameter"
+        - $ref: ./apimanagement.json#/components/parameters/PolicyIdParameter
+        - name: If-Match
+          in: header
+          required: true
+          description: The entity state (Etag) version of the product policy to update. A
+            value of "*" can be used for If-Match to unconditionally apply the
+            operation.
+          schema:
+            type: string
+        - $ref: ./apimanagement.json#/components/parameters/ApiVersionParameter
+      responses:
+        "204":
+          description: Successfully deleted the policy configuration at the Product level.
+        default:
+          description: Error response describing why the operation failed.
+          content:
+            application/json:
+              schema:
+                $ref: ./apimanagement.json#/definitions/ErrorResponse
+servers:
+  - url: "{apimBaseUrl}"
+    variables:
+      apimBaseUrl:
+        description: The management endpoint of the API Management service, for example
+          https://myapimservice.management.azure-api.net.
+        x-ms-skip-url-encoding: true
+        default: ""
+components:
+  parameters:
+    ProductIdParameter:
+      name: productId
+      in: path
+      required: true
+      description: Product identifier. Must be unique in the current API Management service
+        instance.
+      x-ms-parameter-location: method
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 256
+        pattern: ^[^*#&+:<>?]+$
+  securitySchemes:
+    apim_key:
+      type: apiKey
+      name: Authorization
+      in: header
+  schemas:
+    ProductCollection:
+      properties:
+        value:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductContract"
+          description: Page values.
+        count:
+          type: integer
+          description: Total number of entities
+        nextLink:
+          type: string
+          description: Next page link if any.
+      description: Paged Products list representation.
+    ProductContract:
+      properties:
+        id:
+          type: string
+          description: Identifier of the Product entity.
+      allOf:
+        - $ref: "#/components/schemas/ProductContractProperties"
+      description: Product details.
+    ProductContractProperties:
+      properties:
+        name:
+          type: string
+          description: Product name.
+          minLength: 1
+          maxLength: 300
+      allOf:
+        - $ref: "#/components/schemas/ProductEntityBaseParameters"
+      required:
+        - name
+      description: Product profile.
+    ProductEntityBaseParameters:
+      properties:
+        description:
+          type: string
+          description: Product description. May include HTML formatting tags.
+          minLength: 1
+          maxLength: 1000
+        terms:
+          type: string
+          description: Product terms of use. Developers trying to subscribe to the product
+            will be presented and required to accept these terms before they can
+            complete the subscription process.
+        subscriptionRequired:
+          description: Whether a product subscription is required for accessing APIs
+            included in this product. If true, the product is referred to as
+            "protected" and a valid subscription key is required for a request
+            to an API included in the product to succeed. If false, the product
+            is referred to as "open" and requests to an API included in the
+            product can be made without a subscription key. If property is
+            omitted when creating a new product it's value is assumed to be
+            true.
+          type: boolean
+        approvalRequired:
+          description: whether subscription approval is required. If false, new
+            subscriptions will be approved automatically enabling developers to
+            call the product’s APIs immediately after subscribing. If true,
+            administrators must manually approve the subscription before the
+            developer can any of the product’s APIs. Can be present only if
+            subscriptionRequired property is present and has a value of true.
+          type: boolean
+        subscriptionsLimit:
+          type: integer
+          format: int32
+          description: Whether the number of subscriptions a user can have to this product
+            at the same time. Set to null or omit to allow unlimited per user
+            subscriptions. Can be present only if subscriptionRequired property
+            is present and has a value of true.
+        state:
+          type: string
+          description: whether product is published or not. Published products are
+            discoverable by users of developer portal. Non published products
+            are visible only to administrators. Default state of Product is
+            notPublished.
+          enum:
+            - notPublished
+            - published
+          x-ms-enum:
+            name: ProductState
+            modelAsString: false
+      description: Product Entity Base Parameters
+    ProductUpdateParameters:
+      properties:
+        name:
+          type: string
+          description: Product name.
+          maxLength: 300
+          minLength: 1
+      allOf:
+        - $ref: "#/components/schemas/ProductEntityBaseParameters"
+      description: Parameters supplied to the Update Product operation.

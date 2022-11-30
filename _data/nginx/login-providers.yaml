@@ -1,0 +1,59 @@
+openapi: 3.0.0
+info:
+  version: v1
+  title: Login Providers API
+  description: >-
+    Use the Login Providers API to retrieve a list of the
+    available authentication providers.
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+paths:
+  /platform/login-providers:
+    get:
+      tags:
+        - Login Providers
+      summary: List all Active Authentication Providers
+      description: >
+        Returns a list of all [authentication
+        providers](#tag/Authentication-Providers) that are
+        configured and ready for use.
+      operationId: listReadyProviders
+      responses:
+        '200':
+          description: >
+            Successfully returned a list of the available
+            authentication providers.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListReadyProviders'
+              example:
+                providers:
+                  - type: BASIC
+                    name: local
+components:
+  schemas:
+    ListReadyProviders:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleAuthProvider'
+    SimpleAuthProvider:
+      type: object
+      required:
+        - name
+        - type
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+            - BASIC
+            - ACTIVE_DIRECTORY
+            - AZURE_ACTIVE_DIRECTORY

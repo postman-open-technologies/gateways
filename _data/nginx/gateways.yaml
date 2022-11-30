@@ -1,0 +1,1512 @@
+openapi: 3.0.0
+servers:
+  - description: NGINX Controller API
+    url: 'https://{{CONTROLLER_FQDN}}/api/v1'
+info:
+  title: Gateways API
+  description: Use the Gateways API to manage Gateway resources.
+  version: v1
+paths:
+  '/services/environments/{environmentName}/gateways':
+    get:
+      tags:
+        - Gateways
+      summary: List all Gateways
+      description: >
+        Returns a list of all Gateways in the specified
+        Environment.
+      operationId: listGateways
+      responses:
+        '200':
+          description: >-
+            Successfully retrieved a list of all Gateways for the
+            specified Environment.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GatewayList'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      tags:
+        - Gateways
+      summary: Create a Gateway
+      description: |
+        Creates a new Gateway resource.
+      operationId: createGateway
+      requestBody:
+        description: Defines the Gateway resource to create.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Gateway'
+      responses:
+        '201':
+          description: Successfully created the specified Gateway resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gateway'
+        '202':
+          description: >-
+            The Gateway resource has been accepted for creation.
+            The Gateway will be created after it is done
+            configuring.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gateway'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '409':
+          description: >-
+            The request failed due to a naming conflict with an
+            existing resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '429':
+          description: >
+            The request to create a Gateway resource failed due to
+            exceeding request processing threshold.
+
+            Allow the server to process existing requests, then
+            try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    parameters:
+      - name: environmentName
+        description: >-
+          The name of the Environment that contains the Gateway
+          resource.
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/EnvironmentName'
+  '/services/environments/{environmentName}/gateways/{gatewayName}':
+    get:
+      tags:
+        - Gateways
+      summary: Get a Gateway
+      description: |
+        Returns information for the specified Gateway resource.
+      operationId: getGateway
+      responses:
+        '200':
+          description: Successfully retrieved the requested Gateway resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gateway'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    put:
+      tags:
+        - Gateways
+      summary: Upsert a Gateway
+      description: >
+        Creates a new Gateway or updates an existing Gateway
+        resource.
+      operationId: updateGateway
+      requestBody:
+        description: >-
+          Defines the Gateway resource to create or the updates to
+          make to an existing Gateway resource.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Gateway'
+      responses:
+        '200':
+          description: Successfully updated the specified Gateway resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gateway'
+        '201':
+          description: Successfully created the specified Gateway resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gateway'
+        '202':
+          description: >-
+            The Gateway resource has been accepted for creation or
+            update. The Gateway will be created or updated after
+            it is done configuring.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gateway'
+        '400':
+          description: >-
+            Bad input parameter, or possibly a bad URI. Check the
+            input for typos and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '429':
+          description: >
+            The request to update or create a Gateway resource
+            failed due to exceeding request processing threshold.
+
+            Allow the server to process existing requests, then
+            try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    delete:
+      tags:
+        - Gateways
+      summary: Delete a Gateway
+      description: Deletes the specified Gateway resource.
+      operationId: deleteGateway
+      responses:
+        '202':
+          description: >
+            The Gateway resource has been marked for deletion. The
+            Gateway will be deleted after the underlying resources
+            have been deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gateway'
+        '204':
+          description: >
+            Successfully deleted the specified Gateway resource.
+            No content is returned.
+        '404':
+          description: >-
+            The resource defined in the URI could not be found.
+            Check the URI for errors and try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '409':
+          description: >
+            The request to delete a Gateway resource failed.
+
+            The Gateway is referenced by an App Component(s) and
+            cannot be deleted.
+
+            Delete the App Component or remove the reference, then
+            try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+        '429':
+          description: >
+            The request to delete a Gateway resource failed due to
+            exceeding request processing threshold.
+
+            Allow the server to process existing requests, then
+            try again.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    parameters:
+      - name: environmentName
+        description: >-
+          The name of the Environment that contains the Gateway
+          resource.
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/EnvironmentName'
+      - name: gatewayName
+        description: The name of the Gateway.
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/GatewayName'
+components:
+  schemas:
+    GatewayName:
+      type: string
+    GatewayList:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gateway'
+    EnvironmentName:
+      type: string
+    SelfLinks:
+      type: object
+      description: >
+        The SelfLinks object contains a link from the resource to
+        itself.
+
+        This object is used only in responses.
+      properties:
+        rel:
+          type: string
+          example: /api/v1/services/environments/prod
+          description: >
+            `rel` contains the complete path fragment of a URI and
+            can be used
+
+            to construct a query to the object.
+    ResourceMeta:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^[^A-Z\s\x00-\x1f\x60\x7f\;\*\"\[\]\{\}\\\/%\?:=&\~\^|#<>]+$
+          minLength: 1
+          maxLength: 1024
+          example: resource-name
+          description: >
+            Resource name is a unique identifier for a resource
+            within the context of a namespace.
+
+            Resource names must conform to [RFC 1738 Section
+            2.2](https://www.ietf.org/rfc/rfc1738.txt) and have a
+            valid syntax for email addresses. The following rules
+            are enforced:
+
+
+            - do not utilize URL encoding;
+
+            - do not include spaces;
+
+            - do not use uppercase characters, for example, 'A-Z';
+            extended character sets are supported;
+
+            - do not use the following characters: `"`, `*`, `:`,
+            `;`, `/`, `\`, `%`, `?`, `hash`, `=`, `&`, `|`, `~`,
+            `^`, `{`, `}`, `[`, `]`, `<`, `>`;
+
+            - cannot start or end with an `@` sign;
+
+
+            For example: For a collection resource located at
+
+
+            `https://controller.example.com/api/v1/services/apps/shopping_@1`
+
+
+            the resource name is "shopping_@1".
+        displayName:
+          type: string
+          example: My Display Name
+          description: >
+            `displayName` is a user friendly resource name. It can
+            be used to define 
+
+            a longer, and less constrained, name for a resource.
+
+
+            Display names:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        description:
+          type: string
+          example: >-
+            This is a sample description string. It provides
+            information about the resource.
+          description: >
+            `description` is a free-form text property. You can
+            use it to provide information that helps 
+
+            to identify the resource.
+
+
+            Descriptions:
+
+
+            - are optional (defaults to an empty string if no
+            value is provided),
+
+            - do not have to be unique, 
+
+            - cannot be assigned by the server.
+        kind:
+          type: string
+          example: <collection>-<object>
+          description: >
+            Kind is a string representation of an API resource's
+            data type.
+
+            It is assigned by the server and cannot be changed. 
+
+
+            When creating a `kind`, the server uses hyphens to
+            connect word segments; 
+
+            singleton and collection item resources are not
+            pluralized.
+        uid:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: >
+            Unique Identifier (UID)
+
+
+            UID is a unique identifier in time and space for a
+            resource. 
+
+            When you create a resource, the server assigns a UID
+            to the resource.
+
+
+            Refer to [IETF RFC
+            4122](https://tools.ietf.org/html/rfc4122) for more
+            information.
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - production_public
+            - dev
+            - new_app
+            - us-west-1
+            - emea
+          description: >
+            You can assign `tags` to a resource as a way to help
+            map, scope, 
+
+            and organize resources. 
+
+
+            The system uses tag selectors to specify selection
+            criteria that 
+
+            match resources that have particular tags.
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: >
+            The `ref` field contains a reference to another NGINX
+            Controller resource.
+        links:
+          $ref: '#/components/schemas/SelfLinks'
+        createTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T09:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was created.
+
+
+            Create time is not guaranteed to be set in
+            "happens-before" order
+
+            across separate operations.
+
+
+            In JSON format, `create_time` type is encoded as a
+            string in the
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+
+
+            For example: 2018-04-01T01:30:15.01Z
+
+
+            Create Time is assigned by the server and cannot be
+            changed.
+        updateTime:
+          type: string
+          format: date-time
+          example: '2019-07-29T10:12:33.001Z'
+          description: >
+            A timestamp that represents the server time when the
+            resource was last modified.
+
+
+            Resources that have never been updated do not have an
+            `update_time` stamp.
+
+
+            The default value for resources that have never been
+            updated is the local 
+
+            language-specific equivalent of "null".
+
+
+            In JSON format, `update_time` type is encoded as a
+            string as described in 
+
+            [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt).
+    NamedLinks:
+      allOf:
+        - $ref: '#/components/schemas/SelfLinks'
+        - type: object
+          description: >
+            Contains information about the object being referred
+            to.
+
+
+            These are generally details -- like the object name
+            and display name --
+
+            that are useful to a consumer of the API that performs
+            further
+
+            processing. 
+
+
+            This object is only present in responses.
+              
+          properties:
+            name:
+              type: string
+              example: production
+              description: |
+                The name of the linked resource.
+            displayName:
+              type: string
+              example: Production Environment
+              description: A user friendly resource name.
+    ResourceRef:
+      type: object
+      required:
+        - ref
+      properties:
+        ref:
+          type: string
+          example: /services/environments/prod
+          description: |
+            A reference to another NGINX Controller resource.
+        links:
+          $ref: '#/components/schemas/NamedLinks'
+    GZip:
+      properties:
+        isEnabled:
+          type: boolean
+          externalDocs:
+            url: >-
+              http://nginx.org/en/docs/http/ngx_http_gzip_module.html#gzip
+        buffers:
+          type: object
+          properties:
+            number:
+              type: integer
+            size:
+              type: string
+              pattern: '^[0-9]+[k|K|m|M]{1}$'
+          externalDocs:
+            url: >-
+              http://nginx.org/en/docs/http/ngx_http_gzip_module.html#gzip_buffers
+        level:
+          type: integer
+          minimum: 1
+          maximum: 9
+          externalDocs:
+            url: >-
+              http://nginx.org/en/docs/http/ngx_http_gzip_module.html#gzip_comp_level
+        disabledUserAgents:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          uniqueItems: true
+          externalDocs:
+            url: >-
+              http://nginx.org/en/docs/http/ngx_http_gzip_module.html#gzip_disable
+        httpVersion:
+          type: string
+          pattern: '^[1-3]{1}\.[0-1]{1}$'
+          externalDocs:
+            url: >-
+              http://nginx.org/en/docs/http/ngx_http_gzip_module.html#gzip_http_version
+        minLength:
+          type: integer
+          externalDocs:
+            url: >-
+              http://nginx.org/en/docs/http/ngx_http_gzip_module.html#gzip_min_length
+        proxied:
+          type: string
+          enum:
+            - DISABLED
+            - EXPIRED
+            - NOCACHE
+            - NOSTORE
+            - PRIVATE
+            - NOLASTMODIFIED
+            - NOETAG
+            - AUTH
+            - ANY
+          externalDocs:
+            url: >-
+              http://nginx.org/en/docs/http/ngx_http_gzip_module.html#gzip_proxied
+        mimeTypes:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          uniqueItems: true
+          externalDocs:
+            url: >-
+              http://nginx.org/en/docs/http/ngx_http_gzip_module.html#gzip_types
+        vary:
+          type: string
+          enum:
+            - DISABLED
+            - ENABLED
+          externalDocs:
+            url: >-
+              http://nginx.org/en/docs/http/ngx_http_gzip_module.html#gzip_vary
+        static:
+          type: string
+          enum:
+            - DISABLED
+            - ENABLED
+            - ALWAYS
+          externalDocs:
+            url: >-
+              http://nginx.org/en/docs/http/ngx_http_gzip_static_module.html#gzip_static
+    Compression:
+      description: Gzip compression settings.
+      type: object
+      properties:
+        gzip:
+          $ref: '#/components/schemas/GZip'
+    GatewayWebState:
+      description: >-
+        Non-ingress settings in a Gateway that apply only to Web
+        Components.
+      type: object
+      properties:
+        errorSetRef:
+          $ref: '#/components/schemas/ResourceRef'
+        compression:
+          $ref: '#/components/schemas/Compression'
+    NginxDirective:
+      x-f5-experimental: true
+      required:
+        - directive
+      properties:
+        directive:
+          type: string
+          description: >
+            The name of the NGINX directive. For a list of NGINX
+            Directives, refer to [the NGINX
+            documentation](http://nginx.org/en/docs/dirindex.html).
+        args:
+          type: array
+          description: Directive arguments.
+          items:
+            type: string
+        block:
+          type: array
+          description: >-
+            The directives to include within a block directive or
+            context.
+          items:
+            $ref: '#/components/schemas/NginxDirective'
+    NginxConf:
+      x-f5-experimental: true
+      required:
+        - path
+        - op
+        - block
+      properties:
+        path:
+          type: string
+          description: >
+            Path is a JSONPath expression. See
+            [goessner.net/articles/JsonPath](https://goessner.net/articles/JsonPath/)
+            for more information on JSONPath.
+          example: '$..[?(@.directive==''server'')]'
+        op:
+          type: string
+          description: >
+            Indicates where to insert the block of directives in
+            relation to the directives
+
+            selected by the given path.
+
+
+            * `APPEND` - Add after the selected directives
+
+
+            * `APPEND_CHILD` - Add after the last directive in the
+            selected directives' block
+
+
+            * `PREPEND` - Add before the selected directives
+
+
+            * `PREPEND_CHILD` - Add before the first directive in
+            the selected directives' block
+          enum:
+            - APPEND
+            - APPEND_CHILD
+            - PREPEND
+            - PREPEND_CHILD
+        block:
+          type: array
+          description: >
+            Block contains a list of directives that you want to
+            add to the NGINX configuration.
+          items:
+            $ref: '#/components/schemas/NginxDirective'
+    NginxConfs:
+      x-f5-experimental: true
+      description: NGINX raw configuration
+      type: array
+      items:
+        $ref: '#/components/schemas/NginxConf'
+    HA:
+      description: Data path high availability settings
+      type: object
+      properties:
+        isEnabled:
+          type: boolean
+          description: >
+            Enables or disables HA.
+
+
+            When set to `true`, supports configuring instances in
+            an active‑passive, high‑availability (HA) setup.
+
+
+            To configure the gateway on HA mode:
+              - `keepalived` must be installed and configured on the desired instances.
+              - At least one listen IP address must be specified in the `listenIps` section within `InstanceRefs`
+
+              See the `listenIps` section for additional requirements for configuring HA.
+    GatewayStateCommon:
+      description: >-
+        Non-ingress settings in a Gateway that apply to Web and
+        TCP/UDP Components.
+      type: object
+      properties:
+        nginxConfs:
+          $ref: '#/components/schemas/NginxConfs'
+        ha:
+          $ref: '#/components/schemas/HA'
+    ServiceConfigState:
+      type: string
+      enum:
+        - ENABLED
+        - DISABLED
+      default: DISABLED
+    GatewaySocketSettings:
+      description: Socket settings in a Gateway.
+      type: object
+      properties:
+        setFib:
+          x-f5-experimental: true
+          type: integer
+        fastOpen:
+          x-f5-experimental: true
+          type: integer
+        acceptFilter:
+          x-f5-experimental: true
+          type: string
+          enum:
+            - DATA_READY
+            - HTTP_READY
+        deferred:
+          x-f5-experimental: true
+          $ref: '#/components/schemas/ServiceConfigState'
+        backlog:
+          x-f5-experimental: true
+          type: integer
+          default: -1
+        isIpv6Only:
+          x-f5-experimental: true
+          type: boolean
+          default: false
+        reusePort:
+          x-f5-experimental: true
+          $ref: '#/components/schemas/ServiceConfigState'
+        tcpKeepAlive:
+          type: object
+          properties:
+            state:
+              $ref: '#/components/schemas/ServiceConfigState'
+            idle:
+              type: string
+              pattern: '^[0-9]+[h|m|s]{1}$'
+            interval:
+              type: string
+              pattern: '^[0-9]+[h|m|s]{1}$'
+            count:
+              type: integer
+        receiveBufferSize:
+          type: string
+          pattern: '^[0-9]+[k|K|m|M]{1}$'
+        sendBufferSize:
+          type: string
+          pattern: '^[0-9]+[k|K|m|M]{1}$'
+    URIMatchMethod:
+      description: >-
+        Specifies how to determine a match between an incoming Web
+        URI and configured Web URI.
+      type: string
+      enum:
+        - PREFIX
+        - REGEX
+        - REGEX_CASE_SENSITIVE
+        - SUFFIX
+        - EXACT
+      default: PREFIX
+    TLS:
+      description: TLS settings applicable to URIs.
+      type: object
+      required:
+        - certRef
+      properties:
+        certRef:
+          $ref: '#/components/schemas/ResourceRef'
+        protocols:
+          type: array
+          items:
+            type: string
+            pattern: 'TLSv1|TLSv1\.[1-3]|SSLv2|SSLv3'
+        cipher:
+          type: string
+          example: >-
+            ALL:!aNULL:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP;
+        preferServerCipher:
+          $ref: '#/components/schemas/ServiceConfigState'
+        sessionCache:
+          type: string
+          enum:
+            - 'OFF'
+            - NONE
+            - BUILTIN
+            - SHARED
+          default: 'OFF'
+    IngressUri:
+      type: object
+      properties:
+        matchMethod:
+          $ref: '#/components/schemas/URIMatchMethod'
+        tls:
+          $ref: '#/components/schemas/TLS'
+        serverPoolPort:
+          x-f5-experimental: true
+          description: >-
+            The port number used when the IngressUri is deployed
+            to an Instance that's a member of a BIG-IP server
+            pool.
+          type: integer
+    IngressUris:
+      type: object
+      description: >
+        Defines the URI in Gateways and Components. The URI has
+        different requirements depending on where it is used.
+
+
+        For Web URIs in Gateways, `uris` must be a complete URI
+        that follows the format `<http|https>://host[:port]`;
+
+        additionally each URI can have a match method specified
+        and an HTTPS URI can include TLS information.
+          Examples:
+          - `http://www.f5.com`
+          - `https://www.f5.com`
+          - `http://www.f5.com:8080`
+          - `http://*.info.f5.com`
+
+        For Web URIs in Components, `uris` can be either a
+        complete URI that follows the format
+        `<http|https>://host[:port][/path]`
+
+        or a relative path that follows the format `/path[/...]`;
+
+        additionally each URI can have a match method specified
+        and an HTTPS URI can include TLS information.
+          Examples:
+          - `/images`
+          - `/*.jpg`
+          - `/locations/us/wa*`
+          - `http://www.f5.com:8080/sales`
+          - `http://*.f5.com:5050/testing`
+
+        For TCP/UDP URIs in Gateways and Components,`uris` must be
+        a complete URI that follows the format
+        `<tcp|udp|tcp+tls>://<*|IP>:<port|portRange>`;
+
+        additionally a tcp+tls URI can include TLS information.
+        Match method is not applicable to TCP/UDP URIs.
+          Examples:
+          - `tcp://192.168.1.1:12345`
+          - `tcp+tls://192.168.1.1:12346`
+          - `tcp://192.168.1.1:12345-12350`
+          - `tcp://*:12345`
+          - `udp://192.168.1.1:12345`
+          - `udp://*:12345`
+
+        In a TCP/UDP Component, URIs can either all have a
+        protocol of udp or a mix of TCP and tcp+tls.
+      additionalProperties:
+        description: Provide the URI associated with the resource.
+        $ref: '#/components/schemas/IngressUri'
+    InstanceRef:
+      allOf:
+        - $ref: '#/components/schemas/ResourceRef'
+        - type: object
+          properties:
+            listenIps:
+              x-f5-experimental: true
+              description: >
+                The list of Listen IP addresses.
+
+
+                Sets the IP address(es) on which the server
+                listens for and accepts requests.
+
+
+                When using Gateway in high availability (HA) mode,
+                this field has the following requirements:
+
+
+                - Requires `keepalived` to be installed and
+                configured on the instances. The `keepalived.conf`
+                file must
+                  be present at a standard location or a symlink must be provided at `/etc/nginx/keepalived.conf`.
+
+                - The `virtual_ipaddress` section within the
+                `keepalived.conf` file must be marked as follows:
+
+
+                ```
+
+                virtual_ipaddress {
+
+                  #NGINX_CONTROLLER_HA_BEGIN
+
+                  #NGINX_CONTROLLER_HA_END
+
+                }
+
+                ```
+              type: array
+              items:
+                type: string
+                pattern: >-
+                  ^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)$
+                example: 1.1.1.1
+    InstanceGroupRef:
+      x-f5-experimental: true
+      allOf:
+        - $ref: '#/components/schemas/ResourceRef'
+        - type: object
+          properties:
+            listenIps:
+              x-f5-experimental: true
+              description: >
+                The list of Listen IP addresses.
+
+                Sets the BIG-IP virtual address(es) on which the
+                server listens for and accepts requests.
+              type: array
+              items:
+                type: string
+                pattern: >-
+                  ^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)$
+                example: 1.1.1.1
+    Placement:
+      description: >-
+        Instances that have NGINX configuration applied
+        corresponding to the Gateway and associated Components
+        settings.
+      type: object
+      properties:
+        instanceRefs:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstanceRef'
+        instanceGroupRefs:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstanceGroupRef'
+    GatewayIngressCommon:
+      description: >-
+        Ingress settings in a Gateway that apply to Web and
+        TCP/UDP Components.
+      allOf:
+        - $ref: '#/components/schemas/GatewaySocketSettings'
+        - type: object
+          required:
+            - uris
+            - placement
+          properties:
+            uris:
+              $ref: '#/components/schemas/IngressUris'
+            tls:
+              $ref: '#/components/schemas/TLS'
+            placement:
+              $ref: '#/components/schemas/Placement'
+    HeaderMatchMethod:
+      type: string
+      enum:
+        - PREFIX
+        - REGEX
+        - REGEX_CASE_SENSITIVE
+        - SUFFIX
+        - EXACT
+      default: REGEX
+    IngressHeader:
+      type: object
+      properties:
+        name:
+          type: string
+        nameMatchMethod:
+          $ref: '#/components/schemas/HeaderMatchMethod'
+        value:
+          type: string
+        valueMatchMethod:
+          $ref: '#/components/schemas/HeaderMatchMethod'
+    WebIngressCommon:
+      description: >-
+        Ingress settings in a Gateway and Component that apply
+        only to Web Components.
+      type: object
+      properties:
+        methods:
+          description: Specifies the HTTP method to use in requests.
+          type: array
+          items:
+            type: string
+            enum:
+              - POST
+              - GET
+              - PUT
+              - DELETE
+              - PATCH
+              - HEAD
+              - TRACE
+              - OPTIONS
+              - CONNECT
+        clientMaxBodySize:
+          description: >-
+            Sets the maximum allowed size of the client request
+            body, specified in the “Content-Length” request header
+            field.
+          type: string
+          pattern: '^[0-9]+[k|K|m|M]{1}$'
+          deprecated: true
+          externalDocs:
+            url: >-
+              https://nginx.org/en/docs/http/ngx_http_core_module.html#client_max_body_size
+        headers:
+          description: >-
+            Specifies the match method for headers to be used in
+            requests.
+          x-f5-experimental: true
+          type: array
+          items:
+            $ref: '#/components/schemas/IngressHeader'
+        http2:
+          description: >
+            Enable or disable HTTP/2 connections on the port.
+            Normally, for this to work the `ssl` parameter should
+            be specified as well,
+
+            but NGINX can also be configured to accept HTTP/2
+            connections without SSL.
+
+            Possible values are `ENABLED` or `DISABLED`.
+          x-f5-experimental: true
+          $ref: '#/components/schemas/ServiceConfigState'
+          externalDocs:
+            url: >-
+              https://nginx.org/en/docs/http/ngx_http_core_module.html#listen
+        spdy:
+          description: >
+            Enables or disables acceptance of the SPDY connections
+            on the specified port.
+
+            Normally, for this to work the `ssl` parameter should
+            be specified as well,
+
+            but NGINX can also be configured to accept SPDY
+            connections without SSL. Possible values are `ENABLED`
+            or `DISABLED`.
+          x-f5-experimental: true
+          $ref: '#/components/schemas/ServiceConfigState'
+          externalDocs:
+            url: >-
+              https://nginx.org/en/docs/http/ngx_http_core_module.html#listen
+        proxyProtocol:
+          description: >
+            Enables or disables the proxy protocol for all
+            connections accepted on the specified port.
+
+            The `proxy protocol` enables NGINX and NGINX Plus to
+            receive client connection information passed through
+            proxy servers and load balancers,
+
+            such as HAproxy and Amazon Elastic Load Balancer
+            (ELB). The possible values are `ENABLED` or
+            `DISABLED`.
+          x-f5-experimental: true
+          $ref: '#/components/schemas/ServiceConfigState'
+          externalDocs:
+            url: >-
+              https://nginx.org/en/docs/http/ngx_http_core_module.html#listen
+        notFoundStatusCode:
+          x-f5-experimental: true
+          type: integer
+          default: 404
+        headersHashBucketSize:
+          description: >-
+            Sets the bucket size for hash tables used by the
+            `proxy_hide_header` and `proxy_set_header` directives.
+          type: integer
+          minimum: 1
+          externalDocs:
+            url: >-
+              https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_headers_hash_bucket_size
+        headersHashMaxSize:
+          description: >-
+            Sets the maximum size of hash tables used by the
+            `proxy_hide_header` and `proxy_set_header` directives.
+          type: integer
+          minimum: 1
+          externalDocs:
+            url: >-
+              https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_headers_hash_max_size
+    GatewayWebIngressClient:
+      description: >-
+        Non-buffer settings in a Gateway applicable to Web client
+        requests.
+      type: object
+      properties:
+        bodyInFileOnly:
+          description: >-
+            Determines whether NGINX Controller should save the
+            entire client request body into a file.
+          type: string
+          enum:
+            - ENABLED
+            - DISABLED
+            - CLEAN
+          default: DISABLED
+          externalDocs:
+            url: >-
+              https://nginx.org/en/docs/http/ngx_http_core_module.html#client_body_in_file_only
+        bodyTimeout:
+          description: Defines a timeout for reading the client request body.
+          type: string
+          pattern: '^[0-9]{1,12}[hms]?$'
+          externalDocs:
+            url: >-
+              https://nginx.org/en/docs/http/ngx_http_core_module.html#client_body_timeout
+        headerTimeout:
+          description: >-
+            Defines a timeout for reading the client request
+            header.
+          type: string
+          pattern: '^[0-9]{1,12}[hms]?$'
+          externalDocs:
+            url: >-
+              https://nginx.org/en/docs/http/ngx_http_core_module.html#client_header_timeout
+        maxBodySize:
+          description: >
+            Sets the maximum allowed size of the client request
+            body, specified in the “Content-Length” request header
+            field.
+
+
+            Disables checking of client request body size when set
+            to 0.
+          type: string
+          pattern: '^[0-9]{1,12}[kKmM]?$'
+          externalDocs:
+            url: >-
+              https://nginx.org/en/docs/http/ngx_http_core_module.html#client_max_body_size
+    WebIngressBuffersCommon:
+      description: >-
+        Buffer settings common to a Gateway and Component
+        applicable to web client requests.
+      type: object
+      properties:
+        clientBodyBufferingIsEnabled:
+          description: >-
+            Enables or disables buffering of a client request
+            body.
+          type: boolean
+          externalDocs:
+            url: >-
+              https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_request_buffering
+        clientBodyBufferSize:
+          description: >-
+            Sets the buffer size for reading the client request
+            body.
+          type: string
+          pattern: '^[0-9]{1,12}[kKmM]?$'
+          externalDocs:
+            url: >-
+              https://nginx.org/en/docs/http/ngx_http_core_module.html#client_body_buffer_size
+        clientBodyInSingleBuffer:
+          description: >-
+            Determines whether NGINX Controller should save the
+            entire client request body in a single buffer.
+          type: string
+          enum:
+            - ENABLED
+            - DISABLED
+          externalDocs:
+            url: >-
+              https://nginx.org/en/docs/http/ngx_http_core_module.html#client_body_in_single_buffer
+    GatewayWebIngress:
+      description: >-
+        Ingress settings in a Gateway that apply only to Web
+        Components.
+      type: object
+      properties:
+        client:
+          $ref: '#/components/schemas/GatewayWebIngressClient'
+        allowUnderscoresInHeaders:
+          type: boolean
+          default: false
+          description: >
+            Allows the use of underscores in client request header
+            fields.
+
+
+            When set to `disabled`, request headers with names
+            that contain underscores are considered invalid and
+            are ignored.
+        buffers:
+          allOf:
+            - $ref: '#/components/schemas/WebIngressBuffersCommon'
+            - type: object
+              properties:
+                clientHeaderBufferSize:
+                  description: >-
+                    Sets the buffer size for reading the client
+                    request header.
+                  type: string
+                  pattern: '^[0-9]{1,12}[kKmM]?$'
+                  externalDocs:
+                    url: >-
+                      https://nginx.org/en/docs/http/ngx_http_core_module.html#client_header_buffer_size
+    GatewayIngress:
+      description: Ingress settings in a Gateway.
+      allOf:
+        - $ref: '#/components/schemas/GatewayIngressCommon'
+        - $ref: '#/components/schemas/WebIngressCommon'
+        - $ref: '#/components/schemas/GatewayWebIngress'
+    GatewayDesiredState:
+      description: >-
+        The desired gateway settings that the user wants in the
+        configuration on NGINX instances referenced by this
+        Gateway.
+      allOf:
+        - $ref: '#/components/schemas/GatewayWebState'
+        - $ref: '#/components/schemas/GatewayStateCommon'
+        - type: object
+          required:
+            - ingress
+          properties:
+            ingress:
+              $ref: '#/components/schemas/GatewayIngress'
+    ConfigStateTally:
+      type: object
+      properties:
+        isConfigured:
+          type: boolean
+          description: The configuration operation is complete.
+        isConfiguring:
+          type: boolean
+          description: >-
+            The configuration of the resource, or of its
+            child(ren), is in process.
+        isError:
+          type: boolean
+          description: >-
+            An error occurred while configuring the resource or
+            its child(ren).
+        isDeleting:
+          type: boolean
+          description: >-
+            A delete operation is in progress for the resource or
+            its child(ren).
+        total:
+          type: integer
+          description: >-
+            The total number of resources to which the
+            configuration operation applies.
+        configured:
+          type: integer
+          description: >-
+            The number of resources that have a complete and valid
+            configuration.
+        configuring:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being configured.
+        error:
+          type: integer
+          description: >-
+            The number of resources that have encountered an error
+            during the configuration process.
+        deleting:
+          type: integer
+          description: >-
+            The number of resources that are in the process of
+            being deleted.
+    ConfigCondition:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The condition type.
+        message:
+          type: string
+          description: >-
+            A human-readable message that provides additional
+            information about the configuration operation.
+    ConfigState:
+      type: object
+      description: >
+        A representation of the resource's current configuration
+        state 
+
+        that comprises the status of the resource itself
+        (`selfConfigState`) and any child 
+
+        resources (`childrenConfigState`).
+
+
+        The conditions array provides additional information
+        during configuration changes.
+      properties:
+        selfConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        childrenConfigState:
+          $ref: '#/components/schemas/ConfigStateTally'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigCondition'
+    GatewayCurrentStatus:
+      description: >
+        The current snapshot of the gateway settings that are
+        reflected in the configuration on NGINX instances
+        referenced by this Gateway.
+
+        These settings should converge to those in Desired State
+        as the new configuration is applied unless there are
+        issues;
+
+        the State setting gives a summary of how the convergence
+        is proceeding.
+      allOf:
+        - $ref: '#/components/schemas/GatewayWebState'
+        - $ref: '#/components/schemas/GatewayStateCommon'
+        - type: object
+          properties:
+            ingress:
+              $ref: '#/components/schemas/GatewayIngress'
+            state:
+              $ref: '#/components/schemas/ConfigState'
+    Gateway:
+      type: object
+      description: >
+        A Gateway represents the initial network entry point of
+        application and/or API traffic into an NGINX instance that
+        is
+
+        in the data path of this traffic. Gateway settings are
+        combined with Component settings that reference the
+        Gateway;
+
+        the resulting composite config is sent to the NGINX
+        instances that the Gateway references.
+
+
+        A Gateway can be referenced by either web components
+        and/or TCP/UDP components. Web-only settings in the
+        Gateway (for example, web URIs)
+
+        apply only to web components. TCP/UDP-only settings in the
+        Gateway (for example, TCP/UDP URIs) apply only to TCP/UDP
+        components.
+
+        Web and TCP/UDP common settings in the Gateway (for
+        example, global TLS, socket) apply to both web and TCP/UDP
+        components.
+
+
+        Examples:
+
+        Gateway with web and TCP/UDP URIs, web-specific settings,
+        common settings. Web URIs and web settings apply to web
+        components.
+
+        Common settings apply to both component types. TCP/UDP
+        URIs apply only to TCP/UDP components –- presently, there
+        are no other TCP/UDP only settings.
+
+
+        Gateway web URIs (for example, https://www.xyz.com)
+        combined with web component URIs (for example, /blog)
+        define web URI config (https://www.xyz.com/blog).
+
+        Component TCP/UDP URIs define TCP/UDP URI config (for
+        example, tcp+tls://192.168.1.1:200); Gateway TCP/UDP URIs
+        can provide TLS info plus restrict
+
+        which TCP/UDP URIs can be in the component. Alternatively,
+        component URIs fully define the URI config if the Gateway
+        has no URIs.
+
+
+        If only a single URI type is in the Gateway, the URI
+        config for that type is determined by combining the
+        Gateway URIs with
+
+        the URIs from components of that type; only component URIs
+        are used for the URI config for the other type.
+
+
+        For HTTPS URIs, global Gateway TLS settings are used when
+        more specific TLS info is not present in the Gateway URIs,
+
+        or for component URIs that have an HTTPS protocol and
+        hostnames with no specific URI or component global TLS
+        settings defined.
+
+
+        For tcp+tls URIs, Gateway TLS settings are used when TLS
+        info is not defined in a component URI or component global
+        TLS.
+
+        A Gateway URI’s TLS info is used if it encompasses the
+        component URI. For example, tcp+tls://192.168.1.5:100-104
+        in the Gateway and
+
+        component URI of tcp+tls://192.168.1.5:100. Global Gateway
+        TLS is used if no other TLS settings apply.
+      required:
+        - metadata
+        - desiredState
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ResourceMeta'
+        desiredState:
+          $ref: '#/components/schemas/GatewayDesiredState'
+        currentStatus:
+          $ref: '#/components/schemas/GatewayCurrentStatus'
+    ErrorDetail:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: >-
+            Error doing <action>: <reason for error>. This can
+            lead to <potential consequences>. Try <action> to
+            resolve the issue.
+          description: >
+            A detailed error message returned by the server. 
+
+
+            These messages contain the following information,
+            where applicable:
+
+
+            - What happened.
+
+            - Why it happened.
+
+            - What the consequences are (if any).
+
+            - Recommended action to take to resolve the issue.
+    ErrorModel:
+      type: object
+      required:
+        - message
+        - code
+      properties:
+        message:
+          type: string
+          example: Error doing <action>.
+          description: >
+            A human-readable message, in English, that describes
+            the error.
+        code:
+          type: integer
+          example: 1234567
+          description: >
+            A numeric error code that can be used to identify
+            errors for support purposes.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'

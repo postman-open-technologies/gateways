@@ -1,0 +1,110 @@
+---
+class:
+  - gateway
+
+properties:
+  name: Apinizer
+  provider: Apinizer
+  slug: apinizer
+  rating: 2
+  license: Proprietary
+  status: Pending Review
+  researchDate: 2022-11
+  description: >
+    Apinizer helps enterprises tackle the hardest and most complex issues in building, connecting, and securing APIs. Helps digital transformation and provides secure and easy integration ability.
+  platformCapabilities:
+    - Gateway
+    - Design  
+    - Analytics  
+    - Threat Protection
+    - Templates
+    - Testing
+    - Monitoring
+  gatewayCapabilities:
+    - Mediation
+    - Protocol Transformation
+    - Traffic Management
+    - Versioning
+  customCodeSupport:
+    - None
+  upstreamProtocols:
+    - HTTP/1.1
+    - SOAP
+  downstreamProtocols:
+    - HTTP/1.1
+    - SOAP
+  deliveryModels:
+    - SaaS
+  policies:
+    - category: Traffic Management
+      capabilities:
+        - Cache Eviction
+        - Cache Invalidation
+        - Cache Lookup
+        - Cache Population
+        - Cache Storage
+        - Cache Target Response
+        - Cache Validation
+        - Circuit Breaker
+        - Conditional Routing
+        - Content-Based Routing
+        - Dynamic Routing
+        - GraphQL Caching
+        - Load Balancer Routing
+        - Quota
+        - Quota Reset
+        - Rate Limiting
+        - Request Size Limiting
+        - Throttling
+        - Traffic Optimization
+    - category: Mediation
+      capabilities:
+        - CORS
+        - Custom Exception Handling
+        - Redaction
+        - Request Size Limit
+        - Request Termination
+        - Request Transformation
+        - Response Transformation
+        - Regex Filters
+        - SOAP Validation
+        - URL Rewriting
+        - XML to JSON
+    - category: Security
+      capabilities:
+        - API Key
+        - API Key Authentication
+        - Access Control Lists (ACL)
+        - Basic Authentication
+        - CORS
+        - Digital Signature Verification
+        - IP Access Rules
+        - JWT Validation
+        - JWT authorizers
+        - JWT authorizers (Custom
+        - Mutual TLS
+        - OAuth 1.0
+        - OAuth 2.0
+        - OpenID Connect
+        - SAML Assertion
+    - category: Extensions
+      capabilities:
+        - HTTP integrations
+
+links:
+  - rel:
+      - urn:gateway:product
+    title: Product
+    href: https://www.apinizer.com/products/api-gateway/
+  - rel:
+      - urn:gateway:docs
+    title: Documentation
+    href: https://www.apinizer.com/products/api-gateway/
+  - rel:
+      - urn:gateway:logo
+    title: Logo
+    href: /images/gateways/name.svg
+  - rel:
+      - urn:gateway:screenshot
+    title: Screenshot
+    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/apinizer.png     

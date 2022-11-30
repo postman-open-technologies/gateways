@@ -1,0 +1,688 @@
+---
+openapi: "3.0.1"
+info:
+  title: "Alerts API"
+  description: "Set up alerts and notifications and obtain metrics and log information.\
+    \ For more information, see <a href=\"https://docs.apigee.com/api-monitoring/alerts-notifications-api\"\
+    >Managing alerts and notification using the API</a>.\n"
+  version: "1.0"
+servers:
+- url: "https://apimonitoring.enterprise.apigee.com"
+security:
+- OAuth: []
+paths:
+  /alerts:
+    get:
+      tags:
+      - "API Montoring"
+      summary: "List alerts for an organization"
+      description: "Lists alerts for an organization.\n\n\n**Note**: Edge imposes\
+        \ a quota on this API of 60 calls per minute per organization. This quota\
+        \ is calculated by multiplying 20 (number of allowed alerts) * 3 = 60 calls.\n\
+        \n\nFor more information and examples of this API, see <a href=\"https://docs.apigee.com/api-monitoring/alerts-notifications-api\"\
+        >Managing alerts and notifications using the API</a>.\n"
+      parameters:
+      - $ref: "#/components/parameters/org"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                title: "Array of alerts"
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Alert"
+              example:
+                uuid: "<uuid>"
+                name: "API 5xx error rate"
+                enabled: true
+                description: "Proxy for UI traffic going to back end services"
+                conditions:
+                - uuid: "<uuid>"
+                  description: ""
+                  dimensions:
+                    env: "prod"
+                    org: "myorg"
+                    proxy: "myproxy"
+                    region: "ANY"
+                    statusCode: "5xx"
+                  metric: "rate"
+                  threshold: 0.02
+                  durationSeconds: 600
+                  comparator: ">"
+                  updatedBy: "ahamilton@example.com"
+                playbook: "Link to playbook"
+                throttleIntervalSeconds: 3600
+                self: "/alerts/abcd1234"
+                feed: "/o/apigee-internal/events/abcd1234"
+                organization: "myorg"
+                environment: "prod"
+                notifications:
+                - channel: "email"
+                  destination: "ahamilton@example.com"
+                alertType: "runtime"
+                alertSubType: "fixed"
+                updatedAt: "2020-05-11T16:12:04.911775Z"
+                updatedBy: "ahamilton@example.com"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags:
+      - "API Montoring"
+      summary: "Create an alert"
+      description: "Creates an alert.\n\nYou can set up a **maximum of 20 alerts per\
+        \ organization**. The alert settings apply to all users in the organization;\
+        \ they are not per user. If you change the alert settings, they change for\
+        \ all users in your organization.\n\n**Note**: Edge imposes a quota on this\
+        \ API of 60 calls per minute per organization. This quota is calculated by\
+        \ multiplying 20 (number of allowed alerts) * 3 = 60 calls.\n\nFor more information\
+        \ and examples of this API, see <a href=\"https://docs.apigee.com/api-monitoring/alerts-notifications-api\"\
+        >Managing alerts and notifications using the API</a>."
+      requestBody:
+        description: "Alert details."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Alert"
+            example:
+              name: "API 5xx error rate"
+              enabled: true
+              description: "Proxy for UI traffic going to back end services"
+              conditions:
+              - description: ""
+                dimensions:
+                  env: "prod"
+                  org: "myorg"
+                  proxy: "myproxy"
+                  region: "ANY"
+                  statusCode: "5xx"
+                metric: "rate"
+                threshold: 0.02
+                durationSeconds: 600
+                comparator: ">"
+              playbook: "Link to playbook"
+              throttleIntervalSeconds: 3600
+              self: "/alerts/abcd1234"
+              feed: "/o/apigee-internal/events/abcd1234"
+              organization: "myorg"
+              environment: "prod"
+              notifications:
+              - channel: "email"
+                destination: "ahamilton@example.com"
+              alertType: "runtime"
+              alertSubType: "fixed"
+        required: true
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Alert"
+              example:
+                uuid: "<uuid>"
+                name: "API 5xx error rate"
+                enabled: true
+                description: "Proxy for UI traffic going to back end services"
+                conditions:
+                - uuid: "<uuid>"
+                  description: ""
+                  dimensions:
+                    env: "prod"
+                    org: "myorg"
+                    proxy: "myproxy"
+                    region: "ANY"
+                    statusCode: "5xx"
+                  metric: "rate"
+                  threshold: 0.02
+                  durationSeconds: 600
+                  comparator: ">"
+                  updatedBy: "ahamilton@example.com"
+                playbook: "Link to playbook"
+                throttleIntervalSeconds: 3600
+                self: "/alerts/abcd1234"
+                feed: "/o/apigee-internal/events/abcd1234"
+                organization: "myorg"
+                environment: "prod"
+                notifications:
+                - channel: "email"
+                  destination: "ahamilton@example.com"
+                alertType: "runtime"
+                alertSubType: "fixed"
+                updatedAt: "2020-05-11T16:12:04.911775Z"
+                updatedBy: "ahamilton@example.com"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-codegen-request-body-name: "alert"
+  /alerts/{alertId}:
+    get:
+      tags:
+      - "API Montoring"
+      summary: "Get an alert"
+      description: "Gets an alert definition.\n\n\n**Note**: Edge imposes a quota\
+        \ on this API of 60 calls per minute per organization. This quota is calculated\
+        \ by multiplying 20 (number of allowed alerts) * 3 = 60 calls.\n\n\nUse Get\
+        \ Alerts to get the UUIDs of all alerts for an organization.\n\n\nFor more\
+        \ information and examples of this API, see <a href=\"https://docs.apigee.com/api-monitoring/alerts-notifications-api\"\
+        >Managing alerts and notifications using the API</a>.\n"
+      parameters:
+      - $ref: "#/components/parameters/alertId"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Alert"
+              example:
+                uuid: "<uuid>"
+                name: "API 5xx error rate"
+                enabled: true
+                description: "Proxy for UI traffic going to back end services"
+                conditions:
+                - uuid: "<uuid>"
+                  description: ""
+                  dimensions:
+                    env: "prod"
+                    org: "myorg"
+                    proxy: "myproxy"
+                    region: "ANY"
+                    statusCode: "5xx"
+                  metric: "rate"
+                  threshold: 0.02
+                  durationSeconds: 600
+                  comparator: ">"
+                  updatedBy: "ahamilton@example.com"
+                playbook: "Link to playbook"
+                throttleIntervalSeconds: 3600
+                self: "/alerts/abcd1234"
+                feed: "/o/apigee-internal/events/abcd1234"
+                organization: "myorg"
+                environment: "prod"
+                notifications:
+                - channel: "email"
+                  destination: "ahamilton@example.com"
+                alertType: "runtime"
+                alertSubType: "fixed"
+                updatedAt: "2020-05-11T16:12:04.911775Z"
+                updatedBy: "ahamilton@example.com"
+        default:
+          description: "Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      tags:
+      - "API Montoring"
+      summary: "Update an alert"
+      description: "Updates an alert.\n\n\nUse Get Alerts to get the UUIDs of all\
+        \ alerts for an organization. For more information and examples of this API,\
+        \ see <a href=\"https://docs.apigee.com/api-monitoring/alerts-notifications-api\"\
+        >Managing alerts and notifications using the API</a>.\n\n**Notes**:\n\n\n\
+        * You cannot change the organization when updating the alert.\n\n* Edge imposes\
+        \ a quota on this API of 60 calls per minute per organization. This quota\
+        \ is calculated by multiplying 20 (number of allowed alerts) * 3 = 60 calls.\n\
+        \n* **This API cannot be executed using the Try this API panel**.\n"
+      parameters:
+      - $ref: "#/components/parameters/alertId"
+      requestBody:
+        description: "Updated alert payload\n"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Alert"
+            example:
+              name: "API 5xx error rate"
+              enabled: true
+              description: "Proxy for UI traffic going to back end services"
+              conditions:
+              - description: ""
+                dimensions:
+                  env: "prod"
+                  org: "myorg"
+                  proxy: "myproxy"
+                  region: "ANY"
+                  statusCode: "5xx"
+                metric: "rate"
+                threshold: 0.02
+                durationSeconds: 600
+                comparator: ">"
+              playbook: "Link to playbook"
+              throttleIntervalSeconds: 3600
+              self: "/alerts/abcd1234"
+              feed: "/o/apigee-internal/events/abcd1234"
+              organization: "myorg"
+              environment: "prod"
+              notifications:
+              - channel: "email"
+                destination: "ahamilton@example.com"
+              alertType: "runtime"
+              alertSubType: "fixed"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Alert"
+              example:
+                uuid: "<uuid>"
+                name: "API 5xx error rate"
+                enabled: true
+                description: "Proxy for UI traffic going to back end services"
+                conditions:
+                - uuid: "<uuid>"
+                  description: ""
+                  dimensions:
+                    env: "prod"
+                    org: "myorg"
+                    proxy: "myproxy"
+                    region: "ANY"
+                    statusCode: "5xx"
+                  metric: "rate"
+                  threshold: 0.02
+                  durationSeconds: 600
+                  comparator: ">"
+                  updatedBy: "ahamilton@example.com"
+                playbook: "Link to playbook"
+                throttleIntervalSeconds: 3600
+                self: "/alerts/abcd1234"
+                feed: "/o/apigee-internal/events/abcd1234"
+                organization: "myorg"
+                environment: "prod"
+                notifications:
+                - channel: "email"
+                  destination: "ahamilton@example.com"
+                alertType: "runtime"
+                alertSubType: "fixed"
+                updatedAt: "2020-05-11T16:12:04.911775Z"
+                updatedBy: "ahamilton@example.com"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-codegen-request-body-name: "alert"
+    delete:
+      tags:
+      - "API Montoring"
+      summary: "Delete an alert"
+      description: "Deletes an alert.\n\n\n**Notes**:\n\n\n* Edge imposes a quota\
+        \ on this API of 60 calls per minute per organization. This quota is calculated\
+        \ by multiplying 20 (number of allowed alerts) * 3 = 60 calls.\n\n* **This\
+        \ API cannot be executed using the Try this API panel**.\n\n\nUse Get Alerts\
+        \ to get the UUIDs of all alerts for an organization.\n\n\nFor more information\
+        \ and examples of this API, see <a href=\"https://docs.apigee.com/api-monitoring/alerts-notifications-api\"\
+        >Managing alerts and notifications using the API</a>.\n"
+      parameters:
+      - $ref: "#/components/parameters/alertId"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Alert"
+              example:
+                uuid: "<uuid>"
+                name: "API 5xx error rate"
+                enabled: true
+                description: "Proxy for UI traffic going to back end services"
+                conditions:
+                - uuid: "<uuid>"
+                  description: ""
+                  dimensions:
+                    env: "prod"
+                    org: "myorg"
+                    proxy: "myproxy"
+                    region: "ANY"
+                    statusCode: "5xx"
+                  metric: "rate"
+                  threshold: 0.02
+                  durationSeconds: 600
+                  comparator: ">"
+                  updatedBy: "ahamilton@example.com"
+                playbook: "Link to playbook"
+                throttleIntervalSeconds: 3600
+                self: "/alerts/abcd1234"
+                feed: "/o/apigee-internal/events/abcd1234"
+                organization: "myorg"
+                environment: "prod"
+                notifications:
+                - channel: "email"
+                  destination: "ahamilton@example.com"
+                alertType: "runtime"
+                alertSubType: "fixed"
+                updatedAt: "2020-05-11T16:12:04.911775Z"
+                updatedBy: "ahamilton@example.com"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  securitySchemes:
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)"
+  parameters:
+    alertId:
+      name: "alertId"
+      in: "path"
+      description: "Alert UUID."
+      required: true
+      schema:
+        type: "string"
+    org:
+      in: "query"
+      name: "org"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of the organization."
+  schemas:
+    Alert:
+      type: "object"
+      properties:
+        uuid:
+          type: "string"
+          description: "Output only. Unique identifier for this alert.\n"
+          format: "uuid"
+          example: "42e6c0d3-ad53-11e7-a6eb-a08cfdd8891d"
+        name:
+          maxLength: 100
+          type: "string"
+          description: "Alert name.\n"
+          example: "weatherapi 5xx rate is fatal"
+        enabled:
+          type: "boolean"
+          description: "Flag that specifies whether the alert is enabled.\nIf `true`,\
+            \ this alert will be triggered when conditions\nare met, and any configured\
+            \ notifications are\nsent. Defaults to `true`.\n"
+          default: true
+        description:
+          maxLength: 1000
+          type: "string"
+          description: "Alert description.\n"
+          example: "Triggers when proxy 5xx rate for prod weatherapi is\nover 1.5%\
+            \ for 30 seconds\n"
+        conditions:
+          type: "array"
+          description: "Conditions that must *all* be satisfied\nfor this alert to\
+            \ trigger. The minimum length is `1` and the\nmaximum length is `5`.\n"
+          items:
+            $ref: "#/components/schemas/Condition"
+        playbook:
+          type: "string"
+          description: "Message for consumers of this alert that\ncontains instructions\
+            \ and links for how to resolve\nthe root cause.\n"
+          example: "Check charts at http://example.com and restart\nbackend servers\n"
+        throttleIntervalSeconds:
+          minimum: 0
+          type: "integer"
+          description: "Minimum amount of time, in seconds, between\nrepeated notifications\
+            \ for a triggered alert. Values must be in increments of 60 seconds (one\
+            \ minute). For example, 300 (5 minutes), 360 (6 minutes), 420 (seven minutes),\
+            \ and so on. The minimum value is 300 seconds (5 minutes). The maximum\
+            \ value is 86400 seconds (24 hours).\n"
+          example: 300
+        self:
+          type: "string"
+          description: "Output only."
+          example: "/alerts/42e6c0d3-ad53-11e7-a6eb-a08cfdd8891d"
+        feed:
+          type: "string"
+          description: "Output only. Feed url on which notifications are posted\n"
+          example: "/o/demo/events/42e6c0d3-ad53-11e7-a6eb-a08cfdd8891d"
+        organization:
+          type: "string"
+          description: "Organization name. You cannot change the organization name\
+            \ when updating an alert.\n"
+          example: "testOrg"
+        environment:
+          type: "string"
+          description: "Environment name.\n"
+          example: "testEnv"
+        notifications:
+          type: "array"
+          description: "Notification endpoints that the alert will\nbe sent to when\
+            \ triggered. Notifications will fire repeatedly, at most\n`throttleIntervalSeconds`\
+            \ apart, while triggered.\n"
+          items:
+            $ref: "#/components/schemas/Notification"
+        alertType:
+          type: "string"
+          description: "Alert type. Set to `runtime`."
+        alertSubType:
+          type: "string"
+          description: "Alert subtype. Valid values are `anomaly` or `fixed`."
+        reportEnabled:
+          type: "boolean"
+          description: "Flag that specifies whether to create a custom report.\nIf\
+            \ `true`, a custom report is created based on\nalert condition. Defaults\
+            \ to `false`.\n"
+          default: false
+        reportUUID:
+          type: "string"
+          description: "Output only. Unique identifier for the UAP custom report generated\
+            \ for the alert. Only included if `reportEnabled` is set to `true`.\n"
+          format: "uuid"
+          example: "62e6c0d3-ad53-11e7-a6eb-a08cfdd8891d"
+        updatedAt:
+          type: "string"
+          description: "Output only. Time the alert was updated.\n"
+          format: "iso8601"
+          example: "2017-10-12T23:19:09Z"
+        updatedBy:
+          type: "string"
+          description: "Output only. Email address of the user that created or last\
+            \ modified\nthis alert.\n"
+          format: "email"
+          example: "user@example.com"
+      example:
+        uuid: "<uuid>"
+        name: "API 5xx error rate"
+        enabled: false
+        description: "Proxy for UI traffic going to back end services in apigee.com\
+          \ go/ue-how"
+        conditions:
+        - uuid: "<uuid>"
+          description: ""
+          dimensions:
+            env: "prod"
+            org: "myorg"
+            proxy: "myproxy"
+            region: "ANY"
+            statusCode: "5xx"
+          metric: "rate"
+          threshold: 0.02
+          durationSeconds: 600
+          comparator: ">"
+          updatedBy: "ahamilton@example.com"
+        playbook: "Link to playbook"
+        throttleIntervalSeconds: 3600
+        self: "/alerts/abcd1234"
+        feed: "/o/apigee-internal/events/abcd1234"
+        organization: "myorg"
+        environment: "prod"
+        notifications:
+        - channel: "email"
+          destination: "ahamilton@example.com"
+        alertType: "runtime"
+        alertSubType: "fixed"
+        updatedAt: "2020-05-11T16:12:04.911775Z"
+        updatedBy: "ahamilton@example.com"
+    Condition:
+      type: "object"
+      properties:
+        uuid:
+          type: "string"
+          description: "Output only. Unique identifier for this condition.\n"
+          format: "uuid"
+          example: "926aa42e-afa6-11e7-abc4-cec278b6b50a"
+        description:
+          maxLength: 1000
+          type: "string"
+          description: "Description of alert condition.\n"
+          example: "Triggers when proxy 5xx rate for prod weatherapi is\nover 1.5%\
+            \ for 30 seconds\n"
+        dimensions:
+          type: "object"
+          description: "Object with key-value pairs that identify\nthe metric resource(s).\
+            \ For example, an environment, API proxy, or\nset of targets in an API\
+            \ proxy. Few keys like `statusCode` or\n`faultCodes` not valid for latency\
+            \ alerts.\n"
+          $ref: "#/components/schemas/Dimension"
+          example:
+            org: "testOrg"
+            env: "testEnv"
+            proxy: "weatherapi"
+            statusCode: "5xx"
+        metric:
+          type: "string"
+          description: "Metric monitored for the resources specified by `dimension`.\
+            \ Valid values include `rate`, `count`, `tps`, `totalLatency` or `targetLatency`.\
+            \ `count` and `totalLatency` are only valid metric for the anomaly alert\
+            \ subtype."
+        threshold:
+          type: "number"
+          description: "Threshold values that is compared against the\nmetric value\
+            \ using `comparator` to determine\nif this condition is met. For `rate`\
+            \ metrics, this value is in the range 0-1.\n"
+          example: 0.015
+        durationSeconds:
+          type: "number"
+          description: "Duration time, in seconds, for which the metric value\nmust\
+            \ continuously match the `threshold` value using\nthe `comparator` operator\
+            \ to determine if this\ncondition is met.\n\n\nFor example, given the\
+            \ following parameters:\n\n```\n{\n  \"durationSeconds\": 30,\n  \"threshold\"\
+            : 0.015,\n  \"comparator\": \">=\"\n}\n```\n\n\nThe condition is met when\
+            \ the metric is greater than\nor equal to 0.015 for 30 seconds, and not\
+            \ below\nthat value at any time within that duration.\n\nValid values\
+            \ include:\n\n* `60` (1 minute)\n\n* `120` (2 minutes)\n\n* `180` (3 minutes)\n\
+            \n* `240` (4 minutes)\n\n* `300` (5 minutes)\n\n* `600` (10 minutes)\n\
+            \n* `900` (15 minutes)\n\n* `1200` (20 minutes)\n\n* `1800` (30 minutes)\n\
+            \n* `3600` (1 hour)\n"
+          example: 30.0
+        comparator:
+          type: "string"
+          description: "Operator that is used to compare the metric value\nagainst\
+            \ the `threshold` value to determine if this\ncondition is met. Valid\
+            \ values include:\n\n* `>` or `gt` (greater than)\n\n* `<` or `lt` (less\
+            \ than)\n\n* `>=` or `gte` (greater than or equal to)\n\n* `<=` or `lte`\
+            \ (less than or equal to)\n\n* `==` (equal to)\n\nNot valid for `anomaly`\
+            \ alert subtype.\n"
+          example: ">="
+        updatedAt:
+          type: "string"
+          description: "Output only. Time the condition was updated.\n"
+          format: "iso8601"
+          example: "2017-10-12T23:19:09Z"
+        updatedBy:
+          type: "string"
+          description: "Output only. Email address of the user that created or last\
+            \ modified\nthis condition.\n"
+          format: "email"
+          example: "user@example.com"
+    Notification:
+      type: "object"
+      properties:
+        channel:
+          type: "string"
+          description: "Channel on which to notify. Valid values include `email`,\
+            \ `pagerduty`, `slack`, or `webhook`.\n"
+          example: "email"
+        destination:
+          type: "string"
+          description: "Channel-specific destination to which the notification is\
+            \ sent.\n* For `email` channel, enter an email address\n\n* For `pagerduty`\
+            \ channel, enter a [PagerDuty Events API v2](https://v2.developer.pagerduty.com/docs/events-api-v2)\
+            \ integration (routing) key\n\n* For `slack` channel, enter a [Slack Incoming\
+            \ Webhook](https://api.slack.com/incoming-webhooks) URL"
+          example: "user@example.com"
+    Dimension:
+      type: "object"
+      properties:
+        collection:
+          type: "string"
+          description: "Collection ID to monitor collection of targets or API proxies."
+        developerApp:
+          type: "string"
+          description: "Developer app name, or the special value `ANY` to monitor\
+            \ any developer app in the environment."
+        env:
+          type: "string"
+          description: "Environment name."
+        faultCodeCategory:
+          type: "string"
+          description: "Fault code category. Valid in conjunction with `faultCodeSubCategory`.\
+            \ Not valid if `statusCode` is present. Not valid for latency alerts."
+        faultCodeName:
+          type: "string"
+          description: "Fault code name. Valid only if you specify a value for `faultCodeSubCategory`.\
+            \ Specify a specific name, ALL, or ANY. You can only specify a name if\
+            \ you specified an explicit subcategory to `faultCodeSubCategory`. That\
+            \ is, `faultCodeSubCategory` cannot be set to `ALL` or `ANY`. `ALL` specifies\
+            \ that all fault code names must have been violated for the alert to trigger.\
+            \ `ANY` specifies to trigger the alert if any fault code name has been\
+            \ violated."
+        faultCodeSubCategory:
+          type: "string"
+          description: "Fault code subcategory. Valid only if you specify a value\
+            \ for `faultCodeCategory`. Specify a specific subcategory, `ALL`, or `ANY`.\
+            \ `ALL` specifies that all subcategories must have been violated for the\
+            \ alert to trigger. `ANY` specifies to trigger the alert if any subcategory\
+            \ fault has been violated."
+        percentile:
+          type: "string"
+          description: "Percentile (50, 90, 95, 99) of the latency value that, if\
+            \ violated, the alert is fired."
+        proxy:
+          type: "string"
+          description: "API proxy name, or the special value `ANY` or `ALL` to monitor\
+            \ any API proxy in the environment."
+        statusCode:
+          type: "string"
+          description: "Status code, such as `5xx`, `4xx`, `404`, `2xx` on whose rate\
+            \ or count if violated the alert should be fired. Not valid for latency\
+            \ alerts."
+        target:
+          type: "string"
+          description: "Target name, or the special value `ANY` or `ALL` to monitor\
+            \ any target in the API proxy."
+    Error:
+      type: "object"
+      properties:
+        errorCode:
+          type: "integer"
+        status:
+          type: "integer"
+          description: "HTTP status code\n"
+          example: 500
+        message:
+          type: "string"
+    Delete:
+      type: "object"
+      properties:
+        status:
+          type: "integer"
+          description: "HTTP status code\n"
+          example: 200
+        message:
+          type: "string"
+          example: "delete `selfUrl` successful"

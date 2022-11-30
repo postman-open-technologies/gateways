@@ -1,0 +1,341 @@
+---
+openapi: "3.0.0"
+servers:
+- url: "https://api.enterprise.apigee.com/v1"
+info:
+  title: "Caches API"
+  description: "A cache is a lightweight persistence store that can be used by policies\
+    \ or code executing on Apigee Edge. To support data segregation, cache resources\
+    \ are scoped to environments. For more information, see <a href=\"https://docs.apigee.com/api-platform/cache/manage-caches-environment\"\
+    >Creating and editing an environment cache</a>."
+  version: "0.0.1"
+security:
+- basic: []
+- oauth2: []
+paths:
+  /organizations/{org_name}/environments/{env_name}/caches:
+    get:
+      tags:
+      - "Cache"
+      summary: "List caches in an environment"
+      description: "Lists caches in an environment."
+      operationId: "listCaches"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+        "400":
+          description: "Bad request"
+    post:
+      tags:
+      - "Cache"
+      summary: "Create a cache in an environment"
+      description: "Creates a cache in an environment.\nCaches are created per environment.\
+        \ For data segregation, a cache created in 'test', for example, cannot be\
+        \ accessed by API proxies deployed in 'prod'.\nTo create a cache with the\
+        \ default settings, pass an empty request body."
+      operationId: "createCache"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/name"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cache"
+        "400":
+          description: "Bad request"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Cache"
+        description: "Cache details."
+  /organizations/{org_name}/environments/{env_name}/caches/{cache_name}:
+    put:
+      tags:
+      - "Cache"
+      summary: "Update a cache in an environment"
+      description: "Updates a cache in an environment.\nYou must specify the complete\
+        \ definition of the cache, including the properties that you want to change\
+        \ and the ones that retain their current value. Any properties omitted from\
+        \ the request body are reset to their default value. Get information about\
+        \ the cache to view the current value of all properties, then pass the full\
+        \ set and change only those that you want to update."
+      operationId: "updateCache"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/cache_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cache"
+        "400":
+          description: "Bad request"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Cache"
+        description: "Cache details."
+    delete:
+      tags:
+      - "Cache"
+      summary: "Delete a cache"
+      description: "Deletes a cache."
+      operationId: "deleteCache"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/cache_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cache"
+        "400":
+          description: "Bad request"
+    get:
+      tags:
+      - "Cache"
+      summary: "Get information about a cache"
+      description: "Gets information about a cache."
+      operationId: "getCache"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/cache_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cache"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/environments/{env_name}/caches/{cache_name}/entries:
+    post:
+      tags:
+      - "Cache"
+      summary: "Clear all cache entries"
+      description: "Clears all cache entries."
+      operationId: "clearCacheEntries"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/cache_name"
+      - $ref: "#/components/parameters/action"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/octet-stream:
+              schema:
+                $ref: "#/components/schemas/ClearCache"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/environments/{env_name}/caches/{cache_name}/entries/{entry}:
+    post:
+      tags:
+      - "Cache"
+      summary: "Clear a cache entry"
+      description: "Clears a cache entry, which is identified by the full CacheKey\
+        \ prefix and value. For more on cache keys, see <a href=\"https://docs.apigee.com/api-platform/reference/policies/working-cachekeys\"\
+        >Working with cache keys</a>.\n\nTo learn how to clear a cache using policies,\
+        \ see <a href=\"https://docs.apigee.com/docs/api-services/reference/optimize-performance-using-cache\"\
+        >Example: General purpose caching</a>.\n\nTo use the API call, specify the\
+        \ complete **CacheKey** (any Prefix and KeyFragments) and the value of the\
+        \ entry that you want to clear.\n\nFor example, for the following Cache entry:\n\
+        \n```\napifactory__test__cacheforecast__8__default__12797282\n```\nClear the\
+        \ cache entry with the following endpoint:\n\n```\nhttps://api.enterprise.apigee.com/v1/organization/apifactory/environment/test/caches/cacheforecast/entries/apifactory__test__cacheforecast__8__default__1279728?action=clear\n\
+        ```\n\nCacheKey is specified in the Cache or ResponseCache policy responsible\
+        \ for interacting with the specified Cache resource."
+      operationId: "clearCacheEntry"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/cache_name"
+      - $ref: "#/components/parameters/entry"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+components:
+  securitySchemes:
+    basic:
+      type: "http"
+      scheme: "basic"
+    oauth2:
+      type: "oauth2"
+      description: "<a href=\"https://docs.apigee.com/api-platform/system-administration/management-api-tokens\"\
+        >Get an OAuth2 token</a>."
+      flows:
+        password:
+          tokenUrl: "https://login.apigee.com/oauth/token"
+  parameters:
+    org_name:
+      in: "path"
+      name: "org_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of organization."
+    env_name:
+      in: "path"
+      name: "env_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of environment."
+    cache_name:
+      in: "path"
+      name: "cache_name"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of cache. Restrict the characters used in the name to the\
+        \ following: A-Za-z0-9._\\-$ %."
+    entry:
+      in: "path"
+      name: "entry"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of cache entry."
+    name:
+      in: "query"
+      name: "name"
+      required: true
+      schema:
+        type: "string"
+      description: "Name of the cache."
+    action:
+      in: "query"
+      name: "action"
+      required: true
+      schema:
+        type: "string"
+      description: "Action to take against the entries in the specified cache. The\
+        \ only valid value is 'clear'."
+  schemas:
+    Cache:
+      description: "Cache details."
+      type: "object"
+      properties:
+        compression:
+          description: "Deprecated. Size threshold above which cache entries will\
+            \ be compressed. If not specified, compression is disabled."
+          type: "object"
+          properties:
+            minimumSizeInKB:
+              description: "Size threshold, in KBs, above which cache entries will\
+                \ be compressed."
+              type: "integer"
+        description:
+          description: "Description of the cache resource."
+          type: "string"
+        diskSizeInMB:
+          description: "Deprecated. This value is ignored. Disk space used for the\
+            \ cache in MBs."
+          type: "integer"
+          default: 0
+        distributed:
+          description: "Output only. Flag that specifies whether the cache is distributed."
+          type: "string"
+          default: true
+        expirySettings:
+          description: "Enables different expiration mechanisms to be applied to entries\
+            \ in the cache. Cache entries can be expired a certain number of seconds\
+            \ after creation, at a specific time of day each day, or on a specific\
+            \ date."
+          type: "object"
+          properties:
+            expirySetting:
+              type: "object"
+              properties:
+                value:
+                  type: "string"
+                  description: "Specified as `ss`, `hh:mm:ss`, or `mm-dd-yyyy`."
+              description: "Set to one of the following: `timeoutInSec`, `timeOfDay`\
+                \ or `expiryDate`."
+            valuesNull:
+              type: "boolean"
+              description: "The Populate cache policy also lets you set expiry settings.\
+                \ The `valuesNull` property controls which expiry settings are applied\
+                \ for each entry.\n\n* If `valuesNull = false` (default), expiry settings\
+                \ in the PopulateCache policy are used.\n\n* If `valuesNull = true`,\
+                \ expiry settings in the PopulateCache policy are ignored."
+              default: false
+        inMemorySizeInKB:
+          description: "Deprecated. This value is ignored. Size threshold, in KBs,\
+            \ above which cache entries will be compressed."
+          type: "integer"
+          default: 0
+        maxElementsInMemory:
+          description: "Deprecated. Maximum number of entries the cache keeps in memory.\
+            \ Upon reaching the maximum limit the entries are evicted using the LRU\
+            \ algorithm."
+          type: "integer"
+          default: 0
+        maxElementsOnDisk:
+          description: "Deprecated. This value is ignored. Upon reaching the max limit\
+            \ the entries are evicted using the LRU algorithm."
+          type: "integer"
+          default: 0
+        name:
+          description: "Output only. Name of cache."
+          type: "string"
+        overflowToDisk:
+          description: "Flag that specifies to overflow the in-memory cache to disk."
+          type: "string"
+          default: false
+        persistent:
+          description: "Deprecated. This value is ignored. Use expirySettings."
+          type: "boolean"
+          default: false
+        skipCacheIfElementSizeInKBExceeds:
+          description: "Size limit, in KBs, for cache entries. Data exceeding the\
+            \ limit will not be cached."
+          type: "integer"
+      example:
+        description: "My cache"
+        diskSizeInMB: 0
+        distributed: true
+        expirySettings:
+          expiryDate:
+            value: "09-18-2021"
+          valuesNull: "true"
+        inMemorySizeInKB: 0
+        maxElementsInMemory: 0
+        maxElementsOnDisk: 0
+        name: "mycache"
+        overflowToDisk: false
+        persistent: false
+        skipCacheIfElementSizeInKBExceeds: 1000
+    ClearCache:
+      description: "Clear cache."
+      type: "object"
+      properties:
+        action:
+          description: "Action. Set to `ClearCacheEntries`."
+        resourceName:
+          description: "Name of cache."

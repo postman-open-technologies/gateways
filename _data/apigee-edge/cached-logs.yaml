@@ -1,0 +1,166 @@
+---
+openapi: "3.0.0"
+servers:
+- url: "https://api.enterprise.apigee.com/v1"
+info:
+  title: "Cached Logs API"
+  description: "Access cached log for an API."
+  version: "1.0"
+security:
+- Basic: []
+- OAuth: []
+paths:
+  /organizations/{org_name}/environments/{env_name}/apis/{api_name}/cachedlogs/categories:
+    get:
+      tags:
+      - "Cached Log"
+      summary: "List cached log categories"
+      description: "Lists the names of the available cached log categories for the\
+        \ specified API.\n\nCategories include:\n\n* `nodejs`\n* `hostedtarget-build`\n\
+        * `hostedtarget-runtime`"
+      operationId: "getCachedLogs"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/api_name"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+        "400":
+          description: "Bad request"
+  /organizations/{org_name}/environments/{env_name}/apis/{api_name}/cachedlogs/categories/{category_name}:
+    get:
+      tags:
+      - "Cached Log"
+      summary: "Get Cached Logs"
+      description: "Gets the most recent log records for the specified API and category.\n\
+        \nSupported categories include:\n\n* `nodejs` - Logs for <a href=\"https://docs.apigee.com/api-platform/nodejs/overview-nodejs-apigee-edge\"\
+        >Node.js proxy applications</a>. \n* `hostedtarget-build` - Build logs for\
+        \ <a href=\"https://docs.apigee.com/api-platform/hosted-targets/hosted-targets-overview\"\
+        >Hosted Targets applications</a>.Shows you output related to deploying and\
+        \ building the `Node.js` app. \n* `hostedtarget-runtime` - Runtime logs for\
+        \ for <a href=\"https://docs.apigee.com/api-platform/hosted-targets/hosted-targets-overview\"\
+        >Hosted Targets applications</a>. Shows output related to the running app.\
+        \ Runtime logs are scoped to the environment and return logs for the currently\
+        \ deployed proxy revision. \n\nThe exact number of log records returned may\
+        \ change depending on system configuration, but it will typically be 500 for\
+        \ each message processor or 1000 in most configurations. Hosted Target logs\
+        \ are retained for 7 days or 50 GBs per month, whichever comes first.\n\n\
+        The response format is as follows:\n\n`[TIMESTAMP CATEGORY SERVER] Record...`\n\
+        \nWhere:\n\n* `TIMESTAMP`: Time at which the log record was generated.\n*\
+        \ `CATEGORY`: Log category (`nodejs`, `hostedtarget-build`, or `hostedtarget-runtime`)\
+        \ and whether the log went to `stdout` or `stderr`.\n* `SERVER`:\n    * For\
+        \ `Node.js`, uniquely identifies the server within Apigee Edge where the log\
+        \ was generated. For example: `[2014-10-09T00:58:17.619Z nodejs/stdout svr.701]Hello,\
+        \ World!`\n    * For Hosted Targets, `SERVER`  is always reported as: `svr.0`\n\
+        \    \n\nExample Hosted Targets runtime log output:\n\n``` [2018-01-19T18:09:06.733Z\
+        \ hostedtarget-runtime/stdout svr.0] Node HTTP server is listening\n[2018-01-19T18:09:18.118Z\
+        \ hostedtarget-runtime/stdout svr.0] GET /\n[2018-01-19T18:09:21.286Z hostedtarget-runtime/stdout\
+        \ svr.0] The time is  2018-01-19T18:06:18.182Z\n```\n\nExample Hosted Targets\
+        \ build log output:\n\n\n``` [2018-01-19T18:03:53.000Z hostedtarget-build/stdout\
+        \ svr.0] BUILD\n[2018-01-19T18:03:53.000Z hostedtarget-build/stdout svr.0]\
+        \ Starting Step #0\n[2018-01-19T18:03:53.000Z hostedtarget-build/stdout svr.0]\
+        \ Step #0: Pulling image: gcr.io/turbo-validators/nodevalidation:0.0.1\n[2018-01-19T18:03:53.000Z\
+        \ hostedtarget-build/stdout svr.0] Step #0: 0.0.1: Pulling from turbo-validators/nodevalidation\n\
+        ```"
+      operationId: "getCachedLogs"
+      parameters:
+      - $ref: "#/components/parameters/org_name"
+      - $ref: "#/components/parameters/env_name"
+      - $ref: "#/components/parameters/api_name"
+      - $ref: "#/components/parameters/category_name"
+      - $ref: "#/components/parameters/getState"
+      - $ref: "#/components/parameters/state"
+      - $ref: "#/components/parameters/tz"
+      responses:
+        "200":
+          description: "OK"
+        "400":
+          description: "Bad request"
+components:
+  securitySchemes:
+    Basic:
+      type: "http"
+      scheme: "basic"
+      description: "Multi-factor authentication is not supported."
+    OAuth:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      description: "For OAuth, enter the following in the Key field: Bearer %your-token%\
+        \ (see https://docs.apigee.com/api-platform/system-administration/using-oauth2#get-the-tokens)"
+  parameters:
+    org_name:
+      name: "org_name"
+      in: "path"
+      required: true
+      schema:
+        type: "string"
+      description: "Organization name."
+    env_name:
+      name: "env_name"
+      in: "path"
+      required: true
+      schema:
+        type: "string"
+      description: "Environment name."
+    api_name:
+      name: "api_name"
+      in: "path"
+      required: true
+      schema:
+        type: "string"
+      description: "API name."
+    category_name:
+      name: "category_name"
+      in: "path"
+      required: true
+      schema:
+        type: "string"
+      description: "Category name. Valid values include:\n* `nodejs` - Logs for <a\
+        \ href=\"https://docs.apigee.com/api-platform/nodejs/overview-nodejs-apigee-edge\"\
+        >Node.js proxy applications</a>.\n* `hostedtarget-build` - Build logs for\
+        \ <a href=\"https://docs.apigee.com/api-platform/hosted-targets/hosted-targets-overview\"\
+        >Hosted Targets applications</a>, including data related to deploying and\
+        \ building the Node.js app. See also runtime logs.\n* `hostedtarget-runtime`\
+        \ - Runtime logs for for <a href=\"https://docs.apigee.com/api-platform/hosted-targets/hosted-targets-overview\"\
+        >Hosted Targets applications</a>, including data related to the running app.\
+        \ Runtime logs are scoped to the environment and return logs for the currently\
+        \ deployed proxy revision. See also <a href=\"https://docs.apigee.com/api-platform/hosted-targets/hosted-targets-reference#about-log-files\"\
+        \ target=\"_blank\">runtime logs</a>."
+    getState:
+      name: "getState"
+      in: "query"
+      required: false
+      schema:
+        type: "boolean"
+      description: "Set to true to have the last line of the log output use the following\
+        \ format: `[state XXXX,]`, where `XXXX` is an opaque value that represents\
+        \ the current position in the log. For example: `[state 4-Li2Msq8PDg8sn9mlxcHEfYBBafBbEB]`."
+    state:
+      name: "state"
+      in: "query"
+      required: false
+      schema:
+        type: "string"
+      description: "Set to the state returned from a previous log request using `getState=true`\
+        \ to return only log records that were created since that point.\n\nNote that\
+        \ each API call to cachedlogs/categories/nodejs may return a different state\
+        \ value.\n\nA script that wishes to `tail -f` the logs must add `getState=true`\
+        \ to each API call and then pass the new state every time.\n\nFor example:\
+        \ `.../cachedlogs/categories/nodejs?getState=true&state=4-Li2Msq8PDg8sn9mlxcHEfYBBafBbEB`."
+    tz:
+      name: "tz"
+      in: "query"
+      required: false
+      schema:
+        type: "string"
+      description: "Enter a standard time zone abbreviation to express the `TIMESTAMP`\
+        \ value in that time zone. For example, enter `EST` or `PST`. By default,\
+        \ the timestamp value is expressed in UTC/GMT time."
