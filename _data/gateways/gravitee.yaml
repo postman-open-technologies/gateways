@@ -6,7 +6,7 @@ properties:
   name: Gravitee
   provider: Gravitee
   slug: gravitee
-  rating: 1
+  rating: 2
   license: Proprietary, Open Source (Apache-2.0)
   status: Pending Review
   researchDate: 2022-11

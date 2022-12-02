@@ -6,7 +6,7 @@ properties:
   name: KrakenD
   provider: KrakenD
   slug: krakend
-  rating: 1
+  rating: 2
   license: Apache/2.0, Proprietary
   status: Pending Review
   researchDate: 2021-10

@@ -5,7 +5,7 @@ class:
 properties:
   name: NGINX Plus
   provider: NGINX Plus
-  slug: nginx-plus
+  slug: nginx
   rating: 1
   license: Proprietary, Open Source (Apache-2.0)
   status: Pending Review

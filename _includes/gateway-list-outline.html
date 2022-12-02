@@ -1,0 +1,27 @@
+<h1>{{ gateway_title }}</h1>
+<ul>									  
+{% for gateway in gateways %}	
+    {% assign product_link = '' %}	
+    {% assign docs_lnk = '' %}	
+    {% assign logo_link = '' %}	
+    {% assign screenshot_link = '' %}
+    {% for link in gateway[1].links %}
+        {% if link.title == "Product" %}	
+            {% assign product_link = link.href %}
+        {% endif %}		
+        {% if link.title == "Documentation" %}	
+            {% assign docs_lnk = link.href %}
+        {% endif %}	
+        {% if link.title == "Logo" %}	
+            {% assign logo_link = link.href %}
+        {% endif %}	
+        {% if link.title == "Screenshot" %}	
+            {% assign screenshot_link = link.href %}
+        {% endif %}															
+    {% endfor %}
+    
+    {% if gateway[1].properties.rating == show_rating %}							        
+        <li><a href="{{ product_link }}" target="_blank">{{ gateway[1].properties.name }}</a></li>		
+    {% endif %}	
+{% endfor %}
+</ul>

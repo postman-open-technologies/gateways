@@ -6,7 +6,7 @@ properties:
   name: App42
   provider: App42
   slug: app42
-  rating: 2
+  rating: 3
   license: Proprietary
   status: Pending Review
   researchDate: 2022-11

@@ -6,7 +6,7 @@ properties:
   name: IBM API Connect
   provider: IBM API Connect
   slug: ibm-api-connect
-  rating: 2
+  rating: 3
   license: Proprietary, Open Source (Apache-2.0)
   status: Pending Review
   researchDate: 2021-10

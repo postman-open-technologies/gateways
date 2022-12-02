@@ -6,7 +6,7 @@ properties:
   name: Boomi
   provider: Boomi
   slug: boomi
-  rating: 3
+  rating: 4
   license: Proprietary
   status: Pending Review
   researchDate: 2022-11

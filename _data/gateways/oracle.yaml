@@ -6,7 +6,7 @@ properties:
   name: Oracle
   provider: Oracle
   slug: oracle
-  rating: 2
+  rating: 3
   license: Proprietary
   status: Pending Review
   researchDate: 2022-11

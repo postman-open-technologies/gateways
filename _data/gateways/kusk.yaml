@@ -6,7 +6,7 @@ properties:
   name: Kusk
   provider: Kusk
   slug: kusk
-  rating: 1
+  rating: 2
   license: Proprietary, Open Source (Apache-2.0)
   status: Pending Review
   researchDate: 2021-10

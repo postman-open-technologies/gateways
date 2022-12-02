@@ -1,0 +1,1994 @@
+
+<!doctype html>
+<html lang="en" class="h-100">
+<head>
+
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="description" content="">
+   <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+   <meta name="generator" content="Hugo 0.88.1">
+   
+   <title>Gateways</title>
+
+   <!---<link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/sticky-footer-navbar/">--->
+   <link href="http://localhost:4000/assets/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+   <meta name="theme-color" content="#7952b3">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Cookies.js - http://github.com/ScottHamper/Cookies -->
+    <script src="http://localhost:4000/assets/js/cookies.js"></script>
+
+    <script>
+
+        function getUrlVar(key){
+            var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search);
+            return result && unescape(result[1]) || "";
+        }
+
+    </script>
+
+  </head>
+  <body class="d-flex flex-column h-100">
+    
+<header>
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="http://localhost:4000/">Gateways</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/providers/">Providers</a>
+          </li>   
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/providers/outline/">Outline</a>
+          </li>                   
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/capabilities/">Capabilities</a>
+          </li>              
+          <li class="nav-item">
+            <a class="nav-link" href="http://localhost:4000/policies/">Policies</a>
+          </li>                                                                                             
+        </ul>
+        <form class="d-flex">
+          <!--<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>-->
+        </form>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main class="flex-shrink-0">	
+<div class="container" style="padding-top: 70px;">
+	<div class="row align-top">
+		<div class="col-2"></div>
+		<div class="col-8">
+
+				
+				
+			<h1>Priority One</h1>
+<hr>									  
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://aws.amazon.com/api-gateway/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/amazon-api-gateway.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Amazon Gateway</h2>
+        <p>Amazon is one of the first cloud providers to offer an Gateway. The gateway supports a few different options: HTTP, REST, and WebSockets. Integrations with other AWS services are abundant.  Amazon Gateway includes a set of [OpenAPI extensions](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-swagger-extensions.html) to make integration more seamless.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://aws.amazon.com/api-gateway/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://aws.amazon.com/api-gateway/resources/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://docs.apigee.com/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/apigee-edge.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Apigee Edge</h2>
+        <p>Apigee Edge is a first-generation, commercial gateway platform.  It includes a fully-integrated API Provider experience along with API Consumer management via a [Portal](../../platform-capabilities/developer-portal/).  While Apigee Edge comes with a number of different delivery options,  newer SaaS deliveries seem to be getting pushed more towards [Apigee X](../apigee-x/). Policies for Apigee Edge Gateways are configured with XML and can be accessed via a UI, CLI, and API. Apigee Edge has a few different gateway offerings, including both a microgateway  hybrid approach.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://docs.apigee.com/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://docs.apigee.com/api-platform/get-started/get-started" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://cloud.google.com/apigee" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/apigee-x.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Apigee X</h2>
+        <p>The Apigee X platform is a newer release than the [Apigee Edge](../apigee-edge/) platform.  It is a SaaS-only delivery with a few different policy options than what's provided by Apigee Edge.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://cloud.google.com/apigee" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://cloud.google.com/apigee/docs/api-platform/get-started/what-apigee" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://docs.axway.com/bundle/axway-open-docs/page/docs/api_mgmt_overview/api_mgmt_components/apigateway/index.html" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/axway.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Axway</h2>
+        <p>Axway Software is a French-American publicly held information technology company that provides software tools for enterprise software, enterprise application integration, business activity monitoring, business analytics, mobile application development and web API management.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://docs.axway.com/bundle/axway-open-docs/page/docs/api_mgmt_overview/api_mgmt_components/apigateway/index.html" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://docs.axway.com/bundle/axway-open-docs/page/docs/api_mgmt_overview/api_mgmt_components/apigateway/index.html" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://azure.microsoft.com/en-us/services/api-management/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/azure-api-management.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Azure API Management</h2>
+        <p>Azure API Management is a service provided by Microsoft Azure. Its policies are fewer in number than some competitors, and yet  it still suits many use cases.  Integrations are managed via [Dapr](https://dapr.io/).
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://azure.microsoft.com/en-us/services/api-management/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://docs.microsoft.com/en-us/azure/api-management/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.cloudflare.com/products/api-gateway/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/cloudflare.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>CloudFlare</h2>
+        <p>At Cloudflare, we know APIs make the world go around. That is why we make our massive global network your API gateway. With API discovery, integrated API management and analytics, and layered API defenses, Cloudflare ensures APIs drive business success like never before.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.cloudflare.com/products/api-gateway/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.cloudflare.com/products/api-gateway/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://konghq.com/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/kong.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Kong</h2>
+        <p>Kong is presented as both an open source Gateway and as an enterprise platform named Kong Konnect.  The platform consists of an Gateway,  a Service Mesh, a Portal, an API client, and more. Kong has gained a strong footing for internal use cases, leading to its integrations with Kubernetes and Envoy.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://konghq.com/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://docs.konghq.com/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.mulesoft.com/platform/enterprise-integration" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/mulesoft-anypoint-platform.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>MuleSoft Anypoint Platform</h2>
+        <p>MuleSoft offers a broad suite of products to deliver integration solutions.  The Anypoint platform is often  listed in the iPaaS category, and as part of that, it contains Gateway functionality.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.mulesoft.com/platform/enterprise-integration" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://docs.mulesoft.com/general/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.nginx.com/products/nginx/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/nginx.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>NGINX Plus</h2>
+        <p>Modern app infrastructure and dev teams love NGINX Plus. More than just the fastest web server around, NGINX Plus brings you everything you love about NGINX Open Source, adding enterprise‑grade features like high availability, active health checks, DNS system discovery, session persistence, and a RESTful API. NGINX Plus is a cloud‑native, easy-to-use reverse proxy, load balancer, and API gateway. Whether you need to integrate advanced monitoring, strengthen security controls, or orchestrate Kubernetes containers, NGINX Plus delivers with the five‑star support you expect from NGINX.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.nginx.com/products/nginx/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.nginx.com/products/nginx/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://tyk.io/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/tyk.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Tyk</h2>
+        <p>Our Gateway is secure, lightweight and highly performant. And it’s yours for free, forever. Legacy systems, REST, GraphQL, Kubernetes… whatever your architecture looks like, our 100% open source Gateway will enable you to achieve what you need to with ease. Deploy the Tyk stack anywhere to enjoy blistering performance and complete power and access control over your requests and responses, with no feature lockout. Ever.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://tyk.io/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://tyk.io/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+
+				
+				
+			<h1>Priority Two</h1>
+<hr>									  
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://megaease.com/easegress/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/easegress.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Easegress</h2>
+        <p>Easegress is a Cloud Native traffic orchestration system designed for High Availability -  Built-in Raft consensus & leader election provides 99.99% availability. Traffic Orchestration -  Simple orchestration of various filters for each traffic pipeline. High Performance -  Lightweight and essential features speed up the performance. Observability -  There are many meaningful statistics periodically in a readable way. Extensibility -  It's easy to develop your own filter or controller with high-level programming language. Integration -  The simple interfaces make it easy to integrate with other systems, such as Kubernetes, Ingress, EaseMesh sidecar, Workflow, etc.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://megaease.com/easegress/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://megaease.com/easegress/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://getenroute.io/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/enroute.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>EnRoute</h2>
+        <p>EnRoute makes is simple to expose services running in Kubernetes using one helm command. L7 policy can be specified using simple switches to enable/disable functionality.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://getenroute.io/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://getenroute.io/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://gateway.envoyproxy.io/v0.2.0/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/envoy.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Envoy</h2>
+        <p>Originally built at Lyft, Envoy is a high performance C++ distributed proxy designed for single services and applications, as well as a communication bus and “universal data plane” designed for large microservice “service mesh” architectures. Built on the learnings of solutions such as NGINX, HAProxy, hardware load balancers, and cloud load balancers, Envoy runs alongside every application and abstracts the network by providing common features in a platform-agnostic manner.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://gateway.envoyproxy.io/v0.2.0/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://github.com/envoyproxy/gateway" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.gravitee.io/platform/api-management" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/gravitee.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Gravitee</h2>
+        <p>Manage, secure, and govern synchronous and asynchronous APIs with the world's first-ever event-native API Management platform.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.gravitee.io/platform/api-management" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.gravitee.io/platform/api-management" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.krakend.io" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/krakend.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>KrakenD</h2>
+        <p>KrakenD offers two different editions, KrakenD CE (Community Edition)  and KrakenD EE (Enteprise Edition).  The Gateway engine of KrakenD,  an open source project, has joined the Linux Foundation as [Lura](https://github.com/luraproject/lura). KrakenD touts that it's built for performance.  This Gateway is often deployed as a backend-for-frontend or a façade aggregator on top of many different microservices. KrakenD is primarily used as a stateless component in user infrastructure.  There's no data store dependency required for most operations, which may simplify deployment and management. Message transformation can be configured using the [Martian DSL](https://github.com/google/martian) while message validation can benefit from Google's [Common Expression Language CEL)](https://github.com/google/cel-spec). KrakenD has a JSON-based file configuration with a Web-based editor in KrakenD Designer (CE) or KrakenD Studio (EE). Enterprise features include commercial support, KrakenD studio, and enterprise plugins.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.krakend.io" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.krakend.io/docs/overview/introduction/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://kusk.io/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/kusk.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Kusk</h2>
+        <p>Develop, validate, deploy and monitor your APIs in a matter of minutes. The one-stop shop for building modern REST APIs based on Envoy Proxy running on your Kubernetes cluster.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://kusk.io/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://kusk.io/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://accenture.github.io/reactive-interaction-gateway/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/reactive-interaction-gateway.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Reactive Interaction Gateway</h2>
+        <p>The REactive Interaction Gatewy is focused on optimizing microservice operations, decoupling the services using some kind of messaging service, like Kafka; now the backend-for-frontends service simply listens to the Kafka stream, where all other services publish their events to. Providing a gateway that subscribes to Kafka topics, while holding connections to all active frontends, forwarding events to the users they're addressed to, all in a scalable way. And on top of that, it also handles authorization, so your services don't have to care about that either.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://accenture.github.io/reactive-interaction-gateway/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://github.com/Accenture/reactive-interaction-gateway" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.solo.io" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/solo.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Solo</h2>
+        <p>Architecturally, API gateways have both a data plane and a control plane. The data plane is where traffic flows from your external clients through the proxies to the backend services. The control plane is where your configuration and policies are defined. These configurations are pushed to the proxies to adjust the flow of traffic or to add security checks like authentication. With adoption of Kubernetes containers and cloud-native architectures for modern applications, technologies like the open source Envoy Proxy and Istio have emerged to enable application networking for distributed systems. Envoy has become the most popular proxy at the edge, and also as the sidecar to handle internal traffic in an Istio service mesh.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.solo.io" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.solo.io/overview/kubernetes-api-gateway/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.softwareag.cloud/site/product/webmethods-io-integration.html" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/webmethods.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>webMethods</h2>
+        <p>webMethods API Gateway enables an organization to securely expose APIs to external developers, partners, and other consumers for use in building their own applications on their desired platforms. It provides a dedicated, web-based user interface to perform all the administration and API related tasks such as creating APIs, defining and activating policies, creating applications, and consuming APIs. API Gateway gives you rich dashboard capabilities for API Analytics.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.softwareag.cloud/site/product/webmethods-io-integration.html" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://docs.webmethods.io/api/10.7.0/webmethods_api_cloud__api_gateway_user_s_guide/chapter1/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://zuplo.com" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/zuplo.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Zuplo API Management</h2>
+        <p>Zuplo is a fresh take on the traditional API Management/Gateway platform: designed for developers and made for the edge, Zuplo offers effortless programmability and GitOps integration. Merge a PR to deploy to the edge at over 200 data-centers worldwide in <20s. Deep integration with OpenAPI including linting, automated testing and more. 
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://zuplo.com" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://zuplo.com/docs" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+			
+				
+				
+			<h1>Priority Three</h1>
+<hr>									  
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.akana.com/products/api-platform/api-gateway" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/akana.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Akana</h2>
+        <p>Akana is a provider of computer software products for application programming interface management. The company was founded as Digital Evolution and was later known as SOA Software. In November 2016, Akana was acquired by Rogue Wave Software.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.akana.com/products/api-platform/api-gateway" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.akana.com/products/api-platform/api-gateway" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.getambassador.io/products/api-gateway/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/ambassador-emissary-ingress.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Ambassador Emissary-Ingress</h2>
+        <p>Emissary-Ingress is an open-source Kubernetes-native Gateway + Layer 7 load balancer + Kubernetes Ingress built on Envoy Proxy. Emissary-ingress is a CNCF incubation project (and was formerly known as Ambassador Gateway).
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.getambassador.io/products/api-gateway/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.getambassador.io/products/api-gateway/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.apinizer.com/products/api-gateway/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/apinizer.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Apinizer</h2>
+        <p>Apinizer helps enterprises tackle the hardest and most complex issues in building, connecting, and securing APIs. Helps digital transformation and provides secure and easy integration ability.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.apinizer.com/products/api-gateway/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.apinizer.com/products/api-gateway/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://apisix.apache.org/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/apisix.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>APISIX</h2>
+        <p>Apache APISIX provides rich traffic management features like Load Balancing, Dynamic Upstream, Canary Release, Circuit Breaking, Authentication, Observability, etc.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://apisix.apache.org/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://apisix.apache.org/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://apigateway.shephertz.com/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/app42.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>App42</h2>
+        <p>ShepHertz helps enterprises in their digital transformation journey by providing multiple solutions as one single platform. The platform not only provides APIs to build Omni-Channel Apps but also provides Actionable Big Data solution (Marketing Automation & Lead/Campaign Management) to grow their digital properties by increasing user acquisition, engagement, retention & conversion.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://apigateway.shephertz.com/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://apigateway.shephertz.com/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.ibm.com/in-en/cloud/api-connect" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/ibm-api-connect.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>IBM API Connect</h2>
+        <p>IBM® API Connect® is a secure API management solution that utilizes an intuitive experience to help consistently create, manage, secure, socialize and monetize APIs, helping power digital transformation on premises and across clouds. This means you and your customers can power digital apps and spur innovation in real time. IBM API Connect is also available with other capabilities as part of IBM Cloud Pak® for Integration, which can help you automate application modernization and API management as part of your journey to cloud.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.ibm.com/in-en/cloud/api-connect" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.ibm.com/in-en/cloud/api-connect" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://nevatech.com/how-it-works/api-gateway" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/nevatech.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Nevatech</h2>
+        <p>Nevatech Sentinet is a powerful, flexible, lightweight and scalable API Management and API Governance software platform that will comprehensively address all your API Management needs. Think of any API Management feature or deployment model - and you will find it covered by Sentinet with unprecedented ease of use and completeness of capabilities.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://nevatech.com/how-it-works/api-gateway" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://nevatech.com/how-it-works/api-gateway" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://docs.oracle.com/en-us/iaas/Content/APIGateway/home.htm" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/oracle.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Oracle</h2>
+        <p>The Gateway service enables you to publish APIs with private endpoints that are accessible from within your network, and which you can expose with public IP addresses if you want them to accept internet traffic. The endpoints support API validation, request and response transformation, CORS, authentication and authorization, and request limiting.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://docs.oracle.com/en-us/iaas/Content/APIGateway/home.htm" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://docs.oracle.com/en-us/iaas/Content/APIGateway/home.htm" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.sensedia.com" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/sensedia.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Sensedia</h2>
+        <p>Sensedia is a leading integration solutions provider with more than +200 enterprise clients across a range of sectors. Its world-class portfolio includes: an API Management Platform, Adaptive Governance, Events Hub, Service Mesh, Cloud Connectors and Strategic Professional Services' teams.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.sensedia.com" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.sensedia.com/api-management-platform" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.snaplogic.com/products/api-management-development" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/snaplogic.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>SnapLogic</h2>
+        <p>SnapLogic is a commercial software company that provides integration platform as a service tools for connecting Cloud data sources, SaaS applications and on-premises business software applications. SnapLogic was founded in 2006, and its headquarters are in San Mateo, CA.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.snaplogic.com/products/api-management-development" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.snaplogic.com/products/api-management-development" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://spring.io/projects/spring-cloud-gateway" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/spring-cloud.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Spring Cloud</h2>
+        <p>This project provides an Gateway built on top of the Spring Ecosystem, including: Spring 5, Spring Boot 2 and Project Reactor. Spring Cloud Gateway aims to provide a simple, yet effective way to route to APIs and provide cross cutting concerns to them such as: security, monitoring/metrics, and resiliency.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://spring.io/projects/spring-cloud-gateway" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://spring.io/projects/spring-cloud-gateway" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.tibco.com/products/api-management/gateway" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/tibco.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Tibco</h2>
+        <p>Employ a wide range of policies to gain control over how, when, and from where your user community can access your APIs. The API Management Control Center lets you fully control your APIs. The traffic manager polices your servers to safeguard them against unauthorized access and overloading. The gateway is available across on-premises and cloud environments, allowing for a single view of all gateways.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.tibco.com/products/api-management/gateway" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.tibco.com/products/api-management/gateway" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://apim.docs.wso2.com/en/latest/deploy-and-publish/deploy-on-gateway/api-gateway/overview-of-the-api-gateway/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/wso2.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>WSO2</h2>
+        <p>WSO2 Gateway provides a runtime and a backend component (an API proxy) for API calls. It secures, protects, manages, and scales API calls by intercepting API requests and applying policies, such as throttling and security, using handlers and managing API statistics. Upon validation of a policy, the Gateway passes Web service calls to the actual backend. If the service call is a token request, the Gateway passes it directly to the Key Manager.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://apim.docs.wso2.com/en/latest/deploy-and-publish/deploy-on-gateway/api-gateway/overview-of-the-api-gateway/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://apim.docs.wso2.com/en/latest/deploy-and-publish/deploy-on-gateway/api-gateway/overview-of-the-api-gateway/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+
+				
+				
+			<h1>Priority Four</h1>
+<hr>									  
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.3scale.net/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/3scale.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>3Scale</h2>
+        <p>Red Hat 3scale API Management makes it easy to manage your APIs for internal or external users. Share, secure, distribute, control, and monetize your APIs on an infrastructure platform built with performance, customer control, and future growth in mind. 3scale components can be deployed on-premise, in the cloud, as a managed service, or on any combination required.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.3scale.net/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.redhat.com/en/technologies/jboss-middleware/3scale" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://api-umbrella.readthedocs.io/en/latest/admin/other-docs.html" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/api-umbrella.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>API Umbrella</h2>
+        <p>API Umbrella is an open source API management platform for exposing web service APIs. The basic goal of API Umbrella is to make life easier for both API creators and API consumers.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://api-umbrella.readthedocs.io/en/latest/admin/other-docs.html" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://api-umbrella.readthedocs.io/en/latest/admin/other-docs.html" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://boomi.com/platform/api-management#/3f0574" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/boomi.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Boomi</h2>
+        <p>Boomi is a software company that specializes in integration platform as a service, API management, master data management and data preparation. Boomi was founded in Berwyn, Pennsylvania, and first launched its services in 2007.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://boomi.com/platform/api-management#/3f0574" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://boomi.com/platform/api-management#/3f0574" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.broadcom.com/products/software/api-management/layer7-api-gateways" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/broadcom-layer7.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Broadcom Layer7</h2>
+        <p>Transform legacy, connect systems and apply consistent security and governance to your APIs. Layer7 Gateways are an extensible, scalable, high-performance gateway to connect your most important data and applications across any combination of cloud, container or on-premises environments. Layer7 Gateways are available as a standalone solution or as part of Layer7 API Management.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.broadcom.com/products/software/api-management/layer7-api-gateways" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.broadcom.com/products/software/api-management/layer7-api-gateways" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.fiorano.com/products/fiorano_api_management" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/fiorano.png" width="400" align="right" style="padding: 15px;"></a>
+        <h2>Fiorano</h2>
+        <p>APIs are the backbone of the digital ecosystem and critical to reaching digital maturity. Accelerate development velocity, respond to digital disruption, improve customer experience and scale your enterprise – all with Fiorano.
+</p>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.fiorano.com/products/fiorano_api_management" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.fiorano.com/products/fiorano_api_management" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+			
+
+		</div>				
+	</div>
+	<div class="col-2"></div>	
+</div>
+
+
+</main>
+
+<footer class="footer mt-auto py-3 bg-light">
+  <div class="container">
+    <span class="text-muted">Footer</span>
+  </div>
+</footer>
+
+<script src="http://localhost:4000/assets/js/bootstrap.js"></script>    
+
+  </body>
+</html>

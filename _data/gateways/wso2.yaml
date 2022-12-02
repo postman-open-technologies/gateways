@@ -6,7 +6,7 @@ properties:
   name: WSO2
   provider: WSO2
   slug: wso2
-  rating: 2
+  rating: 3
   license: Open Source (Apache-2.0)
   status: Pending Review
   researchDate: 2022-11

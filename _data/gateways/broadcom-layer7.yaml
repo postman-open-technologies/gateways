@@ -6,7 +6,7 @@ properties:
   name: Broadcom Layer7
   provider: Broadcom Layer7
   slug: broadcom-layer7
-  rating: 3
+  rating: 4
   license: Proprietary
   status: Pending Review
   researchDate: 2022-11

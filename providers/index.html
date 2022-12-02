@@ -1,0 +1,32 @@
+---
+layout: default
+title: Gateways
+---
+{% assign gateways = site.data.gateways | sort %}	
+<div class="container" style="padding-top: 70px;">
+	<div class="row align-top">
+		<div class="col-2"></div>
+		<div class="col-8">
+
+			{% assign gateway_title = 'Priority One' %}	
+			{% assign show_rating = 1 %}	
+			{% include gateway-list.html %}
+
+			{% assign gateway_title = 'Priority Two' %}	
+			{% assign show_rating = 2 %}	
+			{% include gateway-list.html %}
+			
+			{% assign gateway_title = 'Priority Three' %}	
+			{% assign show_rating = 3 %}	
+			{% include gateway-list.html %}
+
+			{% assign gateway_title = 'Priority Four' %}	
+			{% assign show_rating = 4 %}	
+			{% include gateway-list.html %}			
+
+		</div>				
+	</div>
+	<div class="col-2"></div>	
+</div>
+
+
