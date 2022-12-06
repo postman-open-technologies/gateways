@@ -1,0 +1,3913 @@
+
+<!doctype html>
+<html lang="en" class="h-100">
+<head>
+
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="description" content="">
+   <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+   <meta name="generator" content="Hugo 0.88.1">
+   
+   <title>Gateways</title>
+
+   <!---<link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/sticky-footer-navbar/">--->
+   <link href="http://localhost:4000/assets/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+   <meta name="theme-color" content="#7952b3">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Cookies.js - http://github.com/ScottHamper/Cookies -->
+    <script src="http://localhost:4000/assets/js/cookies.js"></script>
+
+    <script>
+
+        function getUrlVar(key){
+            var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search);
+            return result && unescape(result[1]) || "";
+        }
+
+    </script>
+
+  </head>
+  <body class="d-flex flex-column h-100">
+    
+<header>
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="http://localhost:4000/">Gateways</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/providers/">Providers</a>
+          </li>   
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/providers/two/">2</a>
+          </li>     
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/providers/three/">3</a>
+          </li> 
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/providers/four/">4</a>
+          </li>                           
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/providers/outline/">Outline</a>
+          </li>                   
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/capabilities/">Capabilities</a>
+          </li>              
+          <li class="nav-item">
+            <a class="nav-link" href="http://localhost:4000/policies/">Policies</a>
+          </li>                                                                                             
+        </ul>
+        <form class="d-flex">
+          <!--<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>-->
+        </form>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main class="flex-shrink-0">	
+<div class="container" style="padding-top: 70px;">
+	<div class="row align-top">
+		<div class="col-2"></div>
+		<div class="col-8">
+			
+				
+				
+			<style>
+	.autocomplete {
+	/*the container must be positioned relative:*/
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	}
+	input {
+	border: 1px solid transparent;
+	background-color: #f1f1f1;
+	padding: 10px;
+	font-size: 16px;
+	}
+	input[type=text] {
+	background-color: #f1f1f1;
+	width: 100%;
+	}
+	textarea {
+	background-color: #f1f1f1;
+	width: 100%;
+	}	
+	input[type=submit] {
+	background-color: DodgerBlue;
+	color: #fff;
+	}
+	.autocomplete-items {
+	position: absolute;
+	border: 1px solid #d4d4d4;
+	border-bottom: none;
+	border-top: none;
+	z-index: 99;
+	/*position the autocomplete items to be the same width as the container:*/
+	top: 100%;
+	left: 0;
+	right: 0;
+	}
+	.autocomplete-items div {
+	padding: 10px;
+	cursor: pointer;
+	background-color: #fff;
+	border-bottom: 1px solid #d4d4d4;
+	}
+	.autocomplete-items div:hover {
+	/*when hovering an item:*/
+	background-color: #e9e9e9;
+	}
+	.autocomplete-active {
+	/*when navigating through the items using the arrow keys:*/
+	background-color: DodgerBlue !important;
+	color: #ffffff;
+	}	
+</style>
+<script>
+    function saveCapability(g_count,p_count,c_count,path){
+
+        console.log("path: " + p_count);
+        console.log("capability: " + c_count);
+        console.log("path: " + path);
+
+        var g_store = JSON.parse(document.getElementById("gateway-" + g_count).value);    
+        var p_store = JSON.parse(document.getElementById("openapi-" + p_count).value);
+
+        var capability = document.getElementById("capability-" + c_count).value;
+        //console.log("capability: " + capability);
+        if(p_store['components']['x-policies']){}
+        else{
+            p_store['components']['x-policies'] = {};
+        }
+        p_store['components']['x-policies'][path] = capability;
+        //console.log(p_store.components);
+        document.getElementById("openapi-" + p_count).value = JSON.stringify(p_store);
+
+        var already = 0;
+        var capabilities = g_store.properties.gatewayCapabilities;
+        for (let i = 0; i < capabilities.length; i++) {
+            if(capability == capabilities[i]){
+                already = 1;
+            }
+        }
+        if(already == 0){
+            g_store.properties.gatewayCapabilities.push(capability);
+        }
+        document.getElementById("gateway-" + g_count).value = JSON.stringify(g_store);
+    }
+
+var c = '["AWS Cognito","Auth0","ACL (Access Control List)","API Key","API Key Authentication","AWS Cognito","AWS IAM roles and policies","AWS Integrations","AWS Kinesis","AWS Lambda integrations","AWS service integrations","Access Control Lists","Access Control Lists (ACL)","Adaption","Aggregation","Alerts","Amazon Web Services","App Dynamics","Audit Logs","Auth0","Auth0 Integration","Automatic HTTPS","Automatic Retries","Avro","Azure","Azure Event Hubs","Basic Authentication","BitBucket GitOps integration","Bot Detection","Bot Detector","CI/CD","CORS","Cabana","Cache Eviction","Cache Invalidation","Cache Lookup","Cache Population","Cache Storage","Cache Store","Cache Target Response","Cache Validation","Canary Release","Canary Releases","Circuit Breaker","Client ID and Secret (MuleSoft-specific API security model)","Clusters","Command Line Interface (CLI)","Compression","Concurrent Rate Limit","Concurrent Rate Limiting","Conditional Routing","Consul","Containers","Contains","Content Deliver Network","Content-Based Routing","Context Persistence","Cross-Origin Resource Sharing (CORS)","Custom Credentials","Custom Data Storage","Custom Exception Handling","Custom Policies","Custom Request Filters","Custom Resource Definitions (CRDs)","Custom Resources","DNS","Dapr integration","Data Collection","Database","Datadog","Declarative Policy Engine","Digital Signature Verification","Distributed Tracing","Docker","Dynamic Routing","Dynatrace","Edge Policy Console","Egress Controller","Envoy Proxy","Etcd","Events","Failover","FastCGI","GZip","GitHub GitOps integration","GitLab GitOps integration","Global Rate Limiting","Go Extensions","Google Cloud","Grafana","GraphQL Caching","GraphQL to REST","Graphing","Groups","HMAC","HTTP Callout","HTTP integrations","HashiCorp Vault Authentication","Header-based routing","Health Checks","Hot-Update","IP Access Rules","Integration Server services","Istio","JSON Threat Protection","JSON Validation","JSON to XML","JSONP","JWS","JWT Authorizers","JWT Filter","JWT Validation","JWT authorizers","JWT authorizers (Custom","JWT authorizers (Custom","Java","JavaScript","Kerberos","Keycloak Integration","Knative FaaS","Kubernetes","Kubernetes Ingress Controller","LDAP","LDAP Authentication","Lambda authorizers","Let&#39;s Encrypt","LinkerD","Load Balancer Routing","Lua Scripting","Managed Identity Authentication","Memcached","Message Inspection","Message Logging","Microsoft Azure","Mocking","Monetization Limits","Monitoring Integrations","Multi-Domain Authentication","Mutual TLS","Nacos","Notifications","OAuth 1.0","OAuth 2.0","OWASP Top 10","Okta","Open Policy Agent","OpenAPI Validation","OpenID Connect","PCI - DSS Compliance","Per-User Rate Limiting","PingFederate OAuth2.0 Token","Plans","Platform Data Lookup","Platform Integration","Plugins","Post Processing","Pre Processing","Private integrations","Progressive Delivery","Prometheus","Proxy Mirror","Python","Quota","Quota Reset","REST to SOAP","Rate Limiting","Rate Limiting (Dynamic)","Redaction","Regex Filters","Regions","Request Size Limiting","Request Termination","Request Transformation","Request Validation","Response Templates","Response Transformation","Reverse Proxy","Role Based Access Control (RBAC)","Role-Based Access Control","Roles","Routing Rules","SAML Assertion","SLA Management","SOAP Validation","SSO","Serverless","Serverless Integrations","Service Discovery","Service Mesh","Session Management","Session Persistence","Side-Car","Signatures","Single Sign On (SSO)","Spike Arrest","Spike Control","Statistics Collection","Telemetry","Throttling","Traffic Optimization","Traffic Shadowing","Traffic Split","Transformation Rules","URL Rewriting","WAF","WSS Username","XML Threat Protection","XML to JSON","XSL Tranformations","XSL Transformation","XSS Protection","gRPC Callout","Other"]';
+capabilities = JSON.parse(c); 
+
+    function autocomplete(inp, arr) {
+        /*the autocomplete function takes two arguments,
+        the text field element and an array of possible autocompleted values:*/
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input", function(e) {
+            var a, b, i, val = this.value;
+            /*close any already open lists of autocompleted values*/
+            closeAllLists();
+            if (!val) { return false;}
+            currentFocus = -1;
+            /*create a DIV element that will contain the items (values):*/
+            a = document.createElement("DIV");
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+            /*append the DIV element as a child of the autocomplete container:*/
+            this.parentNode.appendChild(a);
+            /*for each item in the array...*/
+            for (i = 0; i < arr.length; i++) {
+            /*check if the item starts with the same letters as the text field value:*/
+            //console.log(arr[i]);
+            if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                /*create a DIV element for each matching element:*/
+                b = document.createElement("DIV");
+                /*make the matching letters bold:*/
+                b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                b.innerHTML += arr[i].substr(val.length);
+                /*insert a input field that will hold the current array item's value:*/
+                b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                /*execute a function when someone clicks on the item value (DIV element):*/
+                    b.addEventListener("click", function(e) {
+                    /*insert the value for the autocomplete text field:*/
+                    //console.log("HERE:" + this.getElementsByTagName("input")[0].value);
+                    inp.value = this.getElementsByTagName("input")[0].value;
+                    /*close the list of autocompleted values,
+                    (or any other open lists of autocompleted values:*/
+                    closeAllLists();
+                    addExistingElement();
+                });
+                a.appendChild(b);
+            }
+            }
+        });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function(e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
+            if (e.keyCode == 40) {
+            /*If the arrow DOWN key is pressed,
+            increase the currentFocus variable:*/
+            currentFocus++;
+            /*and and make the current item more visible:*/
+            addActive(x);
+            } else if (e.keyCode == 38) { //up
+            /*If the arrow UP key is pressed,
+            decrease the currentFocus variable:*/
+            currentFocus--;
+            /*and and make the current item more visible:*/
+            addActive(x);
+            } else if (e.keyCode == 13) {
+            /*If the ENTER key is pressed, prevent the form from being submitted,*/
+            e.preventDefault();
+            if (currentFocus > -1) {
+                /*and simulate a click on the "active" item:*/
+                if (x) x[currentFocus].click();
+            }
+            }
+        });
+        function addActive(x) {
+        /*a function to classify an item as "active":*/
+        if (!x) return false;
+        /*start by removing the "active" class on all items:*/
+        removeActive(x);
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = (x.length - 1);
+        /*add class "autocomplete-active":*/
+        x[currentFocus].classList.add("autocomplete-active");
+        }
+        function removeActive(x) {
+        /*a function to remove the "active" class from all autocomplete items:*/
+        for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+        }
+        }
+        function closeAllLists(elmnt) {
+        /*close all autocomplete lists in the document,
+        except the one passed as an argument:*/
+        var x = document.getElementsByClassName("autocomplete-items");
+        for (var i = 0; i < x.length; i++) {
+            if (elmnt != x[i] && elmnt != inp) {
+            x[i].parentNode.removeChild(x[i]);
+        }
+        }
+    }
+    /*execute a function when someone clicks in the document:*/
+    document.addEventListener("click", function (e) {
+        closeAllLists(e.target);
+    });
+    }     
+</script>
+<h1>Priority Three</h1>
+<hr>
+										  
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.akana.com/products/api-platform/api-gateway" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/akana.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-2" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"Akana","provider":"Akana","slug":"akana","rating":3,"license":"Proprietary, Open Source (Apache-2.0)","status":"Pending Review","researchDate":"2022-11","description":"Akana is a provider of computer software products for application programming interface management. The company was founded as Digital Evolution and was later known as SOA Software. In November 2016, Akana was acquired by Rogue Wave Software.\n","platformCapabilities":["Design","Gateway","Analytics","Portal","Documentation","Governance"],"gatewayCapabilities":["Mediation","Protocol Transformation","Traffic Management","Versioning"],"customCodeSupport":["None"],"upstreamProtocols":["AMQP","GraphQL","HTTP/1.1","SOAP","JMS"],"downstreamProtocols":["AMQP","GraphQL","HTTP/1.1","SOAP","JMS"],"deliveryModels":["Customer Managed (Cloud)","Customer Managed (On-Premises)","Hybrid","SaaS"],"policies":[{"category":"Traffic Management","capabilities":["Cache Eviction","Cache Invalidation","Cache Lookup","Cache Population","Cache Storage","Cache Target Response","Cache Validation","Canary Release","Conditional Routing","Content-Based Routing","Dynamic Routing","GraphQL Caching","Quota","Quota Reset","Rate Limiting","Rate Limiting (Dynamic)","Request Size Limiting","Throttling"]},{"category":"Mediation","capabilities":["CORS","Cache Eviction","Cache Lookup","Cache Store","GraphQL","Request Size Limit","Request Termination","Request Transformation","Response Transformation","SOAP Validation","URL Rewriting","XML to JSON"]},{"category":"Security","capabilities":["Auth0","API Key","API Key Authentication","Access Control Lists (ACL)","Audit Logs","Basic Authentication","CORS","IP Access Rules","JWT Validation","JWT authorizers","JWT authorizers (Custom","LDAP","LDAP Authentication","Mutual TLS","OAuth 1.0","OAuth 2.0","Okta","OpenID Connect","PingFederate OAuth2.0 Token","SAML Assertion"]},{"category":"Extensions","capabilities":["AWS service integrations","Kubernetes","Docker"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://www.akana.com/products/api-platform/api-gateway"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://www.akana.com/products/api-platform/api-gateway"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/akana.png"}]}</textarea>
+        <h2>Akana</h2>
+        <p>Akana is a provider of computer software products for application programming interface management. The company was founded as Digital Evolution and was later known as SOA Software. In November 2016, Akana was acquired by Rogue Wave Software.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Design</li>
+        
+            <li>Gateway</li>
+        
+            <li>Analytics</li>
+        
+            <li>Portal</li>
+        
+            <li>Documentation</li>
+        
+            <li>Governance</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Mediation</li>
+        
+            <li>Protocol Transformation</li>
+        
+            <li>Traffic Management</li>
+        
+            <li>Versioning</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>AMQP</li>
+        
+            <li>GraphQL</li>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>SOAP</li>
+        
+            <li>JMS</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>AMQP</li>
+        
+            <li>GraphQL</li>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>SOAP</li>
+        
+            <li>JMS</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>Customer Managed (Cloud)</li>
+        
+            <li>Customer Managed (On-Premises)</li>
+        
+            <li>Hybrid</li>
+        
+            <li>SaaS</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Cache Eviction</li>
+            
+                <li>Cache Invalidation</li>
+            
+                <li>Cache Lookup</li>
+            
+                <li>Cache Population</li>
+            
+                <li>Cache Storage</li>
+            
+                <li>Cache Target Response</li>
+            
+                <li>Cache Validation</li>
+            
+                <li>Canary Release</li>
+            
+                <li>Conditional Routing</li>
+            
+                <li>Content-Based Routing</li>
+            
+                <li>Dynamic Routing</li>
+            
+                <li>GraphQL Caching</li>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Rate Limiting (Dynamic)</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Throttling</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>CORS</li>
+            
+                <li>Cache Eviction</li>
+            
+                <li>Cache Lookup</li>
+            
+                <li>Cache Store</li>
+            
+                <li>GraphQL</li>
+            
+                <li>Request Size Limit</li>
+            
+                <li>Request Termination</li>
+            
+                <li>Request Transformation</li>
+            
+                <li>Response Transformation</li>
+            
+                <li>SOAP Validation</li>
+            
+                <li>URL Rewriting</li>
+            
+                <li>XML to JSON</li>
+            
+            </ul> 
+        
+            <h4>Security</h4>
+            <ul>
+            
+                <li>Auth0</li>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>Access Control Lists (ACL)</li>
+            
+                <li>Audit Logs</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>CORS</li>
+            
+                <li>IP Access Rules</li>
+            
+                <li>JWT Validation</li>
+            
+                <li>JWT authorizers</li>
+            
+                <li>JWT authorizers (Custom</li>
+            
+                <li>LDAP</li>
+            
+                <li>LDAP Authentication</li>
+            
+                <li>Mutual TLS</li>
+            
+                <li>OAuth 1.0</li>
+            
+                <li>OAuth 2.0</li>
+            
+                <li>Okta</li>
+            
+                <li>OpenID Connect</li>
+            
+                <li>PingFederate OAuth2.0 Token</li>
+            
+                <li>SAML Assertion</li>
+            
+            </ul> 
+        
+            <h4>Extensions</h4>
+            <ul>
+            
+                <li>AWS service integrations</li>
+            
+                <li>Kubernetes</li>
+            
+                <li>Docker</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.akana.com/products/api-platform/api-gateway" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.akana.com/products/api-platform/api-gateway" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.getambassador.io/products/api-gateway/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/ambassador-emissary-ingress.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-4" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"Ambassador Emissary-Ingress","provider":"Ambassador Emissary-Ingress","slug":"ambassador-emissary-ingress","rating":3,"license":"Proprietary, Open Source (Apache-2.0)","status":"Pending Review","researchDate":"2021-10","description":"Emissary-Ingress is an open-source Kubernetes-native Gateway + Layer 7 load balancer + Kubernetes Ingress built on Envoy Proxy. Emissary-ingress is a CNCF incubation project (and was formerly known as Ambassador Gateway).\n","platformCapabilities":["Gateway","Analytics","Portal","Documentation"],"gatewayCapabilities":["Mediation","OpenAPI Integration","Protocol Transformation","Traffic Management","Versioning"],"customCodeSupport":["None"],"upstreamProtocols":["HTTP/1.1","HTTP/2","HTTP/2.0","WebSockets","gRPC","TCP"],"downstreamProtocols":["HTTP/1.1","HTTP/2","HTTP/2.0","WebSockets","gRPC","TCP"],"deliveryModels":["Customer Managed (Cloud)","Customer Managed (On-Premises)","Hybrid","SaaS"],"policies":[{"category":"Traffic Management","capabilities":["Automatic Retries","Canary Releases","Circuit Breaker","Clusters","Concurrent Rate Limit","Concurrent Rate Limiting","Conditional Routing","Global Rate Limiting","Per-User Rate Limiting","Content-Based Routing","Distributed Tracing","Dynamic Routing","Header-based routing","Load Balancer Routing","Progressive Delivery","Quota","Quota Reset","Rate Limiting","Rate Limiting (Dynamic)","Request Size Limiting","Service Mesh","Service Discovery","Traffic Shadowing","Throttling","Traffic Optimization"]},{"category":"Mediation","capabilities":["Cross-Origin Resource Sharing (CORS)","Custom Exception Handling","Custom Request Filters","Custom Resource Definitions (CRDs)","Declarative Policy Engine","Edge Policy Console","Request Size Limit","Request Termination","Request Transformation","Response Transformation","SOAP Validation","URL Rewriting","XML to JSON","XSL Tranformations","XSL Transformation"]},{"category":"Security","capabilities":["Auth0","ACL (Access Control List)","API Key","API Key Authentication","Access Control Lists","Audit Logs","Automatic HTTPS","Basic Authentication","CORS","HMAC","IP Access Rules","JWT Validation","JWT Filter","JWT Authorizers","LDAP","LDAP Authentication","Multi-Domain Authentication","Mutual TLS","OAuth 1.0","OAuth 2.0","Okta","OpenID Connect","Role Based Access Control (RBAC)","Session Management","SAML Assertion","WAF"]},{"category":"Extensions","capabilities":["Auth0 Integration","HTTP Callout","HTTP integrations","Kubernetes","Envoy Proxy","Kubernetes Ingress Controller","Consul","Istio","LinkerD","CI/CD"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://www.getambassador.io/products/api-gateway/"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://www.getambassador.io/products/api-gateway/"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/ambassador-emissary-ingress.png"}]}</textarea>
+        <h2>Ambassador Emissary-Ingress</h2>
+        <p>Emissary-Ingress is an open-source Kubernetes-native Gateway + Layer 7 load balancer + Kubernetes Ingress built on Envoy Proxy. Emissary-ingress is a CNCF incubation project (and was formerly known as Ambassador Gateway).
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Gateway</li>
+        
+            <li>Analytics</li>
+        
+            <li>Portal</li>
+        
+            <li>Documentation</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Mediation</li>
+        
+            <li>OpenAPI Integration</li>
+        
+            <li>Protocol Transformation</li>
+        
+            <li>Traffic Management</li>
+        
+            <li>Versioning</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>HTTP/2</li>
+        
+            <li>HTTP/2.0</li>
+        
+            <li>WebSockets</li>
+        
+            <li>gRPC</li>
+        
+            <li>TCP</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>HTTP/2</li>
+        
+            <li>HTTP/2.0</li>
+        
+            <li>WebSockets</li>
+        
+            <li>gRPC</li>
+        
+            <li>TCP</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>Customer Managed (Cloud)</li>
+        
+            <li>Customer Managed (On-Premises)</li>
+        
+            <li>Hybrid</li>
+        
+            <li>SaaS</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Automatic Retries</li>
+            
+                <li>Canary Releases</li>
+            
+                <li>Circuit Breaker</li>
+            
+                <li>Clusters</li>
+            
+                <li>Concurrent Rate Limit</li>
+            
+                <li>Concurrent Rate Limiting</li>
+            
+                <li>Conditional Routing</li>
+            
+                <li>Global Rate Limiting</li>
+            
+                <li>Per-User Rate Limiting</li>
+            
+                <li>Content-Based Routing</li>
+            
+                <li>Distributed Tracing</li>
+            
+                <li>Dynamic Routing</li>
+            
+                <li>Header-based routing</li>
+            
+                <li>Load Balancer Routing</li>
+            
+                <li>Progressive Delivery</li>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Rate Limiting (Dynamic)</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Service Mesh</li>
+            
+                <li>Service Discovery</li>
+            
+                <li>Traffic Shadowing</li>
+            
+                <li>Throttling</li>
+            
+                <li>Traffic Optimization</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>Cross-Origin Resource Sharing (CORS)</li>
+            
+                <li>Custom Exception Handling</li>
+            
+                <li>Custom Request Filters</li>
+            
+                <li>Custom Resource Definitions (CRDs)</li>
+            
+                <li>Declarative Policy Engine</li>
+            
+                <li>Edge Policy Console</li>
+            
+                <li>Request Size Limit</li>
+            
+                <li>Request Termination</li>
+            
+                <li>Request Transformation</li>
+            
+                <li>Response Transformation</li>
+            
+                <li>SOAP Validation</li>
+            
+                <li>URL Rewriting</li>
+            
+                <li>XML to JSON</li>
+            
+                <li>XSL Tranformations</li>
+            
+                <li>XSL Transformation</li>
+            
+            </ul> 
+        
+            <h4>Security</h4>
+            <ul>
+            
+                <li>Auth0</li>
+            
+                <li>ACL (Access Control List)</li>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>Access Control Lists</li>
+            
+                <li>Audit Logs</li>
+            
+                <li>Automatic HTTPS</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>CORS</li>
+            
+                <li>HMAC</li>
+            
+                <li>IP Access Rules</li>
+            
+                <li>JWT Validation</li>
+            
+                <li>JWT Filter</li>
+            
+                <li>JWT Authorizers</li>
+            
+                <li>LDAP</li>
+            
+                <li>LDAP Authentication</li>
+            
+                <li>Multi-Domain Authentication</li>
+            
+                <li>Mutual TLS</li>
+            
+                <li>OAuth 1.0</li>
+            
+                <li>OAuth 2.0</li>
+            
+                <li>Okta</li>
+            
+                <li>OpenID Connect</li>
+            
+                <li>Role Based Access Control (RBAC)</li>
+            
+                <li>Session Management</li>
+            
+                <li>SAML Assertion</li>
+            
+                <li>WAF</li>
+            
+            </ul> 
+        
+            <h4>Extensions</h4>
+            <ul>
+            
+                <li>Auth0 Integration</li>
+            
+                <li>HTTP Callout</li>
+            
+                <li>HTTP integrations</li>
+            
+                <li>Kubernetes</li>
+            
+                <li>Envoy Proxy</li>
+            
+                <li>Kubernetes Ingress Controller</li>
+            
+                <li>Consul</li>
+            
+                <li>Istio</li>
+            
+                <li>LinkerD</li>
+            
+                <li>CI/CD</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.getambassador.io/products/api-gateway/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.getambassador.io/products/api-gateway/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.apinizer.com/products/api-gateway/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/apinizer.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-8" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"Apinizer","provider":"Apinizer","slug":"apinizer","rating":3,"license":"Proprietary","status":"Pending Review","researchDate":"2022-11","description":"Apinizer helps enterprises tackle the hardest and most complex issues in building, connecting, and securing APIs. Helps digital transformation and provides secure and easy integration ability.\n","platformCapabilities":["Gateway","Design","Analytics","Threat Protection","Templates","Testing","Monitoring"],"gatewayCapabilities":["Mediation","Protocol Transformation","Traffic Management","Versioning"],"customCodeSupport":["None"],"upstreamProtocols":["HTTP/1.1","SOAP"],"downstreamProtocols":["HTTP/1.1","SOAP"],"deliveryModels":["SaaS"],"policies":[{"category":"Traffic Management","capabilities":["Cache Eviction","Cache Invalidation","Cache Lookup","Cache Population","Cache Storage","Cache Target Response","Cache Validation","Circuit Breaker","Conditional Routing","Content-Based Routing","Dynamic Routing","GraphQL Caching","Load Balancer Routing","Quota","Quota Reset","Rate Limiting","Request Size Limiting","Throttling","Traffic Optimization"]},{"category":"Mediation","capabilities":["CORS","Custom Exception Handling","Redaction","Request Size Limit","Request Termination","Request Transformation","Response Transformation","Regex Filters","SOAP Validation","URL Rewriting","XML to JSON"]},{"category":"Security","capabilities":["API Key","API Key Authentication","Access Control Lists (ACL)","Basic Authentication","CORS","Digital Signature Verification","IP Access Rules","JWT Validation","JWT authorizers","JWT authorizers (Custom","Mutual TLS","OAuth 1.0","OAuth 2.0","OpenID Connect","SAML Assertion"]},{"category":"Extensions","capabilities":["HTTP integrations"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://www.apinizer.com/products/api-gateway/"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://www.apinizer.com/products/api-gateway/"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/apinizer.png"}]}</textarea>
+        <h2>Apinizer</h2>
+        <p>Apinizer helps enterprises tackle the hardest and most complex issues in building, connecting, and securing APIs. Helps digital transformation and provides secure and easy integration ability.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Gateway</li>
+        
+            <li>Design</li>
+        
+            <li>Analytics</li>
+        
+            <li>Threat Protection</li>
+        
+            <li>Templates</li>
+        
+            <li>Testing</li>
+        
+            <li>Monitoring</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Mediation</li>
+        
+            <li>Protocol Transformation</li>
+        
+            <li>Traffic Management</li>
+        
+            <li>Versioning</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>SOAP</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>SOAP</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>SaaS</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Cache Eviction</li>
+            
+                <li>Cache Invalidation</li>
+            
+                <li>Cache Lookup</li>
+            
+                <li>Cache Population</li>
+            
+                <li>Cache Storage</li>
+            
+                <li>Cache Target Response</li>
+            
+                <li>Cache Validation</li>
+            
+                <li>Circuit Breaker</li>
+            
+                <li>Conditional Routing</li>
+            
+                <li>Content-Based Routing</li>
+            
+                <li>Dynamic Routing</li>
+            
+                <li>GraphQL Caching</li>
+            
+                <li>Load Balancer Routing</li>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Throttling</li>
+            
+                <li>Traffic Optimization</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>CORS</li>
+            
+                <li>Custom Exception Handling</li>
+            
+                <li>Redaction</li>
+            
+                <li>Request Size Limit</li>
+            
+                <li>Request Termination</li>
+            
+                <li>Request Transformation</li>
+            
+                <li>Response Transformation</li>
+            
+                <li>Regex Filters</li>
+            
+                <li>SOAP Validation</li>
+            
+                <li>URL Rewriting</li>
+            
+                <li>XML to JSON</li>
+            
+            </ul> 
+        
+            <h4>Security</h4>
+            <ul>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>Access Control Lists (ACL)</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>CORS</li>
+            
+                <li>Digital Signature Verification</li>
+            
+                <li>IP Access Rules</li>
+            
+                <li>JWT Validation</li>
+            
+                <li>JWT authorizers</li>
+            
+                <li>JWT authorizers (Custom</li>
+            
+                <li>Mutual TLS</li>
+            
+                <li>OAuth 1.0</li>
+            
+                <li>OAuth 2.0</li>
+            
+                <li>OpenID Connect</li>
+            
+                <li>SAML Assertion</li>
+            
+            </ul> 
+        
+            <h4>Extensions</h4>
+            <ul>
+            
+                <li>HTTP integrations</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.apinizer.com/products/api-gateway/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.apinizer.com/products/api-gateway/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://apisix.apache.org/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/apisix.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-9" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"APISIX","provider":"APISIX","slug":"apisix","rating":3,"license":"Open Source (Apache-2.0)","status":"Pending Review","researchDate":"2022-11","description":"Apache APISIX provides rich traffic management features like Load Balancing, Dynamic Upstream, Canary Release, Circuit Breaking, Authentication, Observability, etc.\n","platformCapabilities":["Gateway","Dashboards","Analytics"],"gatewayCapabilities":["Mediation","OpenAPI Integration","Traffic Management","Versioning"],"customCodeSupport":["Go","Java","JavaScript","Python","Lua","WASM"],"upstreamProtocols":["HTTP/1.1","RPC","WebSockets","gRPC","RPC","TCP","UDP","MQTT"],"downstreamProtocols":["HTTP/1.1","RPC","WebSockets","gRPC","RPC","TCP","UDP","MQTT"],"deliveryModels":["Customer Managed (On-Premises)"],"policies":[{"category":"Traffic Management","capabilities":["Cache Eviction","Cache Invalidation","Cache Lookup","Cache Population","Cache Storage","Cache Target Response","Cache Validation","Canary Release","Circuit Breaker","Conditional Routing","Content-Based Routing","Dynamic Routing","Ingress Controller","Traffic Split","Proxy Mirror","Load Balancer Routing","Quota","Quota Reset","Rate Limiting","Rate Limiting (Dynamic)","Request Size Limiting","Service Discovery","Throttling","Traffic Optimization"]},{"category":"Mediation","capabilities":["CORS","Context Persistence","Custom Data Storage","Custom Exception Handling","Request Size Limit","Request Termination","Request Transformation","Response Transformation","URL Rewriting"]},{"category":"Security","capabilities":["ACL (Access Control List)","API Key","API Key Authentication","Access Control Lists","Audit Logs","Basic Authentication","CORS","IP Access Rules","JWT Validation","JWT authorizers","JWT authorizers (Custom","Kerberos","LDAP","LDAP Authentication","Lambda authorizers","Let's Encrypt","Managed Identity Authentication","Message Inspection","Mutual TLS","OAuth 1.0","OAuth 2.0","Okta","OpenID Connect","PingFederate OAuth2.0 Token","SAML Assertion","SLA Management","WAF","WSS Username","XML Threat Protection","XSS Protection"]},{"category":"Extensions","capabilities":["Kubernetes","Containers"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://apisix.apache.org/"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://apisix.apache.org/"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/apisix.png"}]}</textarea>
+        <h2>APISIX</h2>
+        <p>Apache APISIX provides rich traffic management features like Load Balancing, Dynamic Upstream, Canary Release, Circuit Breaking, Authentication, Observability, etc.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Gateway</li>
+        
+            <li>Dashboards</li>
+        
+            <li>Analytics</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Mediation</li>
+        
+            <li>OpenAPI Integration</li>
+        
+            <li>Traffic Management</li>
+        
+            <li>Versioning</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>RPC</li>
+        
+            <li>WebSockets</li>
+        
+            <li>gRPC</li>
+        
+            <li>RPC</li>
+        
+            <li>TCP</li>
+        
+            <li>UDP</li>
+        
+            <li>MQTT</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>RPC</li>
+        
+            <li>WebSockets</li>
+        
+            <li>gRPC</li>
+        
+            <li>RPC</li>
+        
+            <li>TCP</li>
+        
+            <li>UDP</li>
+        
+            <li>MQTT</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>Go</li>
+        
+            <li>Java</li>
+        
+            <li>JavaScript</li>
+        
+            <li>Python</li>
+        
+            <li>Lua</li>
+        
+            <li>WASM</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>Customer Managed (On-Premises)</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Cache Eviction</li>
+            
+                <li>Cache Invalidation</li>
+            
+                <li>Cache Lookup</li>
+            
+                <li>Cache Population</li>
+            
+                <li>Cache Storage</li>
+            
+                <li>Cache Target Response</li>
+            
+                <li>Cache Validation</li>
+            
+                <li>Canary Release</li>
+            
+                <li>Circuit Breaker</li>
+            
+                <li>Conditional Routing</li>
+            
+                <li>Content-Based Routing</li>
+            
+                <li>Dynamic Routing</li>
+            
+                <li>Ingress Controller</li>
+            
+                <li>Traffic Split</li>
+            
+                <li>Proxy Mirror</li>
+            
+                <li>Load Balancer Routing</li>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Rate Limiting (Dynamic)</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Service Discovery</li>
+            
+                <li>Throttling</li>
+            
+                <li>Traffic Optimization</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>CORS</li>
+            
+                <li>Context Persistence</li>
+            
+                <li>Custom Data Storage</li>
+            
+                <li>Custom Exception Handling</li>
+            
+                <li>Request Size Limit</li>
+            
+                <li>Request Termination</li>
+            
+                <li>Request Transformation</li>
+            
+                <li>Response Transformation</li>
+            
+                <li>URL Rewriting</li>
+            
+            </ul> 
+        
+            <h4>Security</h4>
+            <ul>
+            
+                <li>ACL (Access Control List)</li>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>Access Control Lists</li>
+            
+                <li>Audit Logs</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>CORS</li>
+            
+                <li>IP Access Rules</li>
+            
+                <li>JWT Validation</li>
+            
+                <li>JWT authorizers</li>
+            
+                <li>JWT authorizers (Custom</li>
+            
+                <li>Kerberos</li>
+            
+                <li>LDAP</li>
+            
+                <li>LDAP Authentication</li>
+            
+                <li>Lambda authorizers</li>
+            
+                <li>Let's Encrypt</li>
+            
+                <li>Managed Identity Authentication</li>
+            
+                <li>Message Inspection</li>
+            
+                <li>Mutual TLS</li>
+            
+                <li>OAuth 1.0</li>
+            
+                <li>OAuth 2.0</li>
+            
+                <li>Okta</li>
+            
+                <li>OpenID Connect</li>
+            
+                <li>PingFederate OAuth2.0 Token</li>
+            
+                <li>SAML Assertion</li>
+            
+                <li>SLA Management</li>
+            
+                <li>WAF</li>
+            
+                <li>WSS Username</li>
+            
+                <li>XML Threat Protection</li>
+            
+                <li>XSS Protection</li>
+            
+            </ul> 
+        
+            <h4>Extensions</h4>
+            <ul>
+            
+                <li>Kubernetes</li>
+            
+                <li>Containers</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://apisix.apache.org/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://apisix.apache.org/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://apigateway.shephertz.com/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/app42.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-10" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"App42","provider":"App42","slug":"app42","rating":3,"license":"Proprietary","status":"Pending Review","researchDate":"2022-11","description":"ShepHertz helps enterprises in their digital transformation journey by providing multiple solutions as one single platform. The platform not only provides APIs to build Omni-Channel Apps but also provides Actionable Big Data solution (Marketing Automation & Lead/Campaign Management) to grow their digital properties by increasing user acquisition, engagement, retention & conversion.\n","platformCapabilities":["Design","Gateway","Analytics","Portal","Documentation","Monetization","Monitoring","Testing","SDK"],"gatewayCapabilities":["Custom Code Execution","Mediation","Traffic Management"],"customCodeSupport":["None"],"upstreamProtocols":["HTTP/1.1","SOAP"],"downstreamProtocols":["HTTP/1.1","SOAP"],"deliveryModels":["Customer Managed (Cloud)","Customer Managed (On-Premises)","Hybrid","SaaS"],"policies":[{"category":"Traffic Management","capabilities":["Cache Eviction","Cache Invalidation","Cache Lookup","Cache Population","Cache Storage","Cache Target Response","Cache Validation","Conditional Routing","Content-Based Routing","Pre Processing","Post Processing","Quota","Quota Reset","Rate Limiting","Request Size Limiting","Throttling","Traffic Optimization"]},{"category":"Mediation","capabilities":["CORS","Request Size Limit","Request Termination","Request Transformation","Response Transformation"]},{"category":"Security","capabilities":["API Key","API Key Authentication","AWS IAM roles and policies","AWS IAM roles and policies","Access Control Lists","Audit Logs","Basic Authentication","CORS","Mutual TLS","OAuth 1.0","OAuth 2.0"]},{"category":"Extensions","capabilities":null}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://apigateway.shephertz.com/"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://apigateway.shephertz.com/"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/app42.png"}]}</textarea>
+        <h2>App42</h2>
+        <p>ShepHertz helps enterprises in their digital transformation journey by providing multiple solutions as one single platform. The platform not only provides APIs to build Omni-Channel Apps but also provides Actionable Big Data solution (Marketing Automation & Lead/Campaign Management) to grow their digital properties by increasing user acquisition, engagement, retention & conversion.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Design</li>
+        
+            <li>Gateway</li>
+        
+            <li>Analytics</li>
+        
+            <li>Portal</li>
+        
+            <li>Documentation</li>
+        
+            <li>Monetization</li>
+        
+            <li>Monitoring</li>
+        
+            <li>Testing</li>
+        
+            <li>SDK</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Custom Code Execution</li>
+        
+            <li>Mediation</li>
+        
+            <li>Traffic Management</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>SOAP</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>SOAP</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>Customer Managed (Cloud)</li>
+        
+            <li>Customer Managed (On-Premises)</li>
+        
+            <li>Hybrid</li>
+        
+            <li>SaaS</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Cache Eviction</li>
+            
+                <li>Cache Invalidation</li>
+            
+                <li>Cache Lookup</li>
+            
+                <li>Cache Population</li>
+            
+                <li>Cache Storage</li>
+            
+                <li>Cache Target Response</li>
+            
+                <li>Cache Validation</li>
+            
+                <li>Conditional Routing</li>
+            
+                <li>Content-Based Routing</li>
+            
+                <li>Pre Processing</li>
+            
+                <li>Post Processing</li>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Throttling</li>
+            
+                <li>Traffic Optimization</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>CORS</li>
+            
+                <li>Request Size Limit</li>
+            
+                <li>Request Termination</li>
+            
+                <li>Request Transformation</li>
+            
+                <li>Response Transformation</li>
+            
+            </ul> 
+        
+            <h4>Security</h4>
+            <ul>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>AWS IAM roles and policies</li>
+            
+                <li>AWS IAM roles and policies</li>
+            
+                <li>Access Control Lists</li>
+            
+                <li>Audit Logs</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>CORS</li>
+            
+                <li>Mutual TLS</li>
+            
+                <li>OAuth 1.0</li>
+            
+                <li>OAuth 2.0</li>
+            
+            </ul> 
+        
+            <h4>Extensions</h4>
+            <ul>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://apigateway.shephertz.com/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://apigateway.shephertz.com/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.ibm.com/in-en/cloud/api-connect" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/ibm-api-connect.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-21" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"IBM API Connect","provider":"IBM API Connect","slug":"ibm-api-connect","rating":3,"license":"Proprietary, Open Source (Apache-2.0)","status":"Pending Review","researchDate":"2021-10","description":"IBM® API Connect® is a secure API management solution that utilizes an intuitive experience to help consistently create, manage, secure, socialize and monetize APIs, helping power digital transformation on premises and across clouds. This means you and your customers can power digital apps and spur innovation in real time. IBM API Connect is also available with other capabilities as part of IBM Cloud Pak® for Integration, which can help you automate application modernization and API management as part of your journey to cloud.\n","platformCapabilities":["Design","Gateway","Analytics","Portal","Documentation","Monetization"],"gatewayCapabilities":["Mediation","Traffic Management","Versioning"],"customCodeSupport":["None"],"upstreamProtocols":["HTTP/1.1"],"downstreamProtocols":["HTTP/1.1"],"deliveryModels":["SaaS"],"policies":[{"category":"Traffic Management","capabilities":["Content-Based Routing","Quota","Quota Reset","Rate Limiting","Request Size Limiting","Service Discovery","Throttling"]},{"category":"Mediation","capabilities":["CORS","Request Size Limit","Request Termination","Request Transformation","Response Transformation","URL Rewriting"]},{"category":"Security","capabilities":["API Key","API Key Authentication","Access Control Lists (ACL)","Audit Logs","Basic Authentication","CORS","IP Access Rules","Mutual TLS","OAuth 1.0","OAuth 2.0"]},{"category":"Extensions","capabilities":["HTTP Callout","HTTP integrations"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://www.ibm.com/in-en/cloud/api-connect"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://www.ibm.com/in-en/cloud/api-connect"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/ibm-api-connect.png"}]}</textarea>
+        <h2>IBM API Connect</h2>
+        <p>IBM® API Connect® is a secure API management solution that utilizes an intuitive experience to help consistently create, manage, secure, socialize and monetize APIs, helping power digital transformation on premises and across clouds. This means you and your customers can power digital apps and spur innovation in real time. IBM API Connect is also available with other capabilities as part of IBM Cloud Pak® for Integration, which can help you automate application modernization and API management as part of your journey to cloud.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Design</li>
+        
+            <li>Gateway</li>
+        
+            <li>Analytics</li>
+        
+            <li>Portal</li>
+        
+            <li>Documentation</li>
+        
+            <li>Monetization</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Mediation</li>
+        
+            <li>Traffic Management</li>
+        
+            <li>Versioning</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>SaaS</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Content-Based Routing</li>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Service Discovery</li>
+            
+                <li>Throttling</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>CORS</li>
+            
+                <li>Request Size Limit</li>
+            
+                <li>Request Termination</li>
+            
+                <li>Request Transformation</li>
+            
+                <li>Response Transformation</li>
+            
+                <li>URL Rewriting</li>
+            
+            </ul> 
+        
+            <h4>Security</h4>
+            <ul>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>Access Control Lists (ACL)</li>
+            
+                <li>Audit Logs</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>CORS</li>
+            
+                <li>IP Access Rules</li>
+            
+                <li>Mutual TLS</li>
+            
+                <li>OAuth 1.0</li>
+            
+                <li>OAuth 2.0</li>
+            
+            </ul> 
+        
+            <h4>Extensions</h4>
+            <ul>
+            
+                <li>HTTP Callout</li>
+            
+                <li>HTTP integrations</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.ibm.com/in-en/cloud/api-connect" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.ibm.com/in-en/cloud/api-connect" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://nevatech.com/how-it-works/api-gateway" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/nevatech.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-26" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"Nevatech","provider":"Nevatech","slug":"nevatech","rating":3,"license":"Proprietary","status":"Pending Review","researchDate":"2022-11","description":"Nevatech Sentinet is a powerful, flexible, lightweight and scalable API Management and API Governance software platform that will comprehensively address all your API Management needs. Think of any API Management feature or deployment model - and you will find it covered by Sentinet with unprecedented ease of use and completeness of capabilities.\n","platformCapabilities":["Gateway","Analytics","Portal","Documentation","Monetization","Monitoring","Testing","Catalog"],"gatewayCapabilities":["Mediation","Traffic Management","Versioning"],"customCodeSupport":["None"],"upstreamProtocols":["HTTP/1.1","SOAP"],"downstreamProtocols":["HTTP/1.1","SOAP"],"deliveryModels":["SaaS"],"policies":[{"category":"Traffic Management","capabilities":["Quota","Quota Reset","Rate Limiting","Request Size Limiting","Service Discovery","Throttling","Traffic Optimization"]},{"category":"Mediation","capabilities":["CORS","Request Size Limit","Request Termination","Request Transformation","Response Transformation"]},{"category":"Security","capabilities":["API Key","API Key Authentication","Access Control Lists (ACL)","Audit Logs","Basic Authentication","CORS","IP Access Rules","JWT","JWT Validation","JWT authorizers","JWT authorizers (Custom","Mutual TLS","OAuth 1.0","OAuth 2.0","OpenID Connect"]},{"category":"Extensions","capabilities":["HTTP Callout","HTTP integrations","Azure"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://nevatech.com/how-it-works/api-gateway"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://nevatech.com/how-it-works/api-gateway"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/nevatech.png"}]}</textarea>
+        <h2>Nevatech</h2>
+        <p>Nevatech Sentinet is a powerful, flexible, lightweight and scalable API Management and API Governance software platform that will comprehensively address all your API Management needs. Think of any API Management feature or deployment model - and you will find it covered by Sentinet with unprecedented ease of use and completeness of capabilities.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Gateway</li>
+        
+            <li>Analytics</li>
+        
+            <li>Portal</li>
+        
+            <li>Documentation</li>
+        
+            <li>Monetization</li>
+        
+            <li>Monitoring</li>
+        
+            <li>Testing</li>
+        
+            <li>Catalog</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Mediation</li>
+        
+            <li>Traffic Management</li>
+        
+            <li>Versioning</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>SOAP</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>SOAP</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>SaaS</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Service Discovery</li>
+            
+                <li>Throttling</li>
+            
+                <li>Traffic Optimization</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>CORS</li>
+            
+                <li>Request Size Limit</li>
+            
+                <li>Request Termination</li>
+            
+                <li>Request Transformation</li>
+            
+                <li>Response Transformation</li>
+            
+            </ul> 
+        
+            <h4>Security</h4>
+            <ul>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>Access Control Lists (ACL)</li>
+            
+                <li>Audit Logs</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>CORS</li>
+            
+                <li>IP Access Rules</li>
+            
+                <li>JWT</li>
+            
+                <li>JWT Validation</li>
+            
+                <li>JWT authorizers</li>
+            
+                <li>JWT authorizers (Custom</li>
+            
+                <li>Mutual TLS</li>
+            
+                <li>OAuth 1.0</li>
+            
+                <li>OAuth 2.0</li>
+            
+                <li>OpenID Connect</li>
+            
+            </ul> 
+        
+            <h4>Extensions</h4>
+            <ul>
+            
+                <li>HTTP Callout</li>
+            
+                <li>HTTP integrations</li>
+            
+                <li>Azure</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://nevatech.com/how-it-works/api-gateway" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://nevatech.com/how-it-works/api-gateway" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://docs.oracle.com/en-us/iaas/Content/APIGateway/home.htm" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/oracle.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-28" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"Oracle","provider":"Oracle","slug":"oracle","rating":3,"license":"Proprietary","status":"Pending Review","researchDate":"2022-11","description":"The Gateway service enables you to publish APIs with private endpoints that are accessible from within your network, and which you can expose with public IP addresses if you want them to accept internet traffic. The endpoints support API validation, request and response transformation, CORS, authentication and authorization, and request limiting.\n","platformCapabilities":["Gateway","Analytics","Portal","Documentation","SDK"],"gatewayCapabilities":["Mediation","Traffic Management","Versioning"],"customCodeSupport":["None"],"upstreamProtocols":["HTTP/1.1"],"downstreamProtocols":["HTTP/1.1"],"deliveryModels":["Customer Managed (Cloud)","Customer Managed (On-Premises)","Hybrid"],"policies":[{"category":"Traffic Management","capabilities":["Cache Eviction","Cache Invalidation","Cache Lookup","Cache Population","Cache Storage","Cache Target Response","Cache Validation","Quota","Quota Reset","Rate Limiting","Request Size Limiting","Regions","Throttling","Traffic Optimization"]},{"category":"Mediation","capabilities":["API Key","API Key Authentication","Access Control Lists (ACL)","Audit Logs","Basic Authentication","CORS","IP Access Rules","Message Inspection","Mutual TLS","OAuth 1.0","OAuth 2.0"]},{"category":"Extensions","capabilities":["HTTP Callout","HTTP integrations","Command Line Interface (CLI)"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://docs.oracle.com/en-us/iaas/Content/APIGateway/home.htm"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://docs.oracle.com/en-us/iaas/Content/APIGateway/home.htm"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/oracle.png"}]}</textarea>
+        <h2>Oracle</h2>
+        <p>The Gateway service enables you to publish APIs with private endpoints that are accessible from within your network, and which you can expose with public IP addresses if you want them to accept internet traffic. The endpoints support API validation, request and response transformation, CORS, authentication and authorization, and request limiting.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Gateway</li>
+        
+            <li>Analytics</li>
+        
+            <li>Portal</li>
+        
+            <li>Documentation</li>
+        
+            <li>SDK</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Mediation</li>
+        
+            <li>Traffic Management</li>
+        
+            <li>Versioning</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>Customer Managed (Cloud)</li>
+        
+            <li>Customer Managed (On-Premises)</li>
+        
+            <li>Hybrid</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Cache Eviction</li>
+            
+                <li>Cache Invalidation</li>
+            
+                <li>Cache Lookup</li>
+            
+                <li>Cache Population</li>
+            
+                <li>Cache Storage</li>
+            
+                <li>Cache Target Response</li>
+            
+                <li>Cache Validation</li>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Regions</li>
+            
+                <li>Throttling</li>
+            
+                <li>Traffic Optimization</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>Access Control Lists (ACL)</li>
+            
+                <li>Audit Logs</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>CORS</li>
+            
+                <li>IP Access Rules</li>
+            
+                <li>Message Inspection</li>
+            
+                <li>Mutual TLS</li>
+            
+                <li>OAuth 1.0</li>
+            
+                <li>OAuth 2.0</li>
+            
+            </ul> 
+        
+            <h4>Extensions</h4>
+            <ul>
+            
+                <li>HTTP Callout</li>
+            
+                <li>HTTP integrations</li>
+            
+                <li>Command Line Interface (CLI)</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://docs.oracle.com/en-us/iaas/Content/APIGateway/home.htm" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://docs.oracle.com/en-us/iaas/Content/APIGateway/home.htm" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.sensedia.com" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/sensedia.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-30" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"Sensedia","provider":"Sensedia","slug":"sensedia","rating":3,"license":"Proprietary, Open Source (Apache-2.0)","status":"Pending Review","researchDate":"2022-11","description":"Sensedia is a leading integration solutions provider with more than +200 enterprise clients across a range of sectors. Its world-class portfolio includes: an API Management Platform, Adaptive Governance, Events Hub, Service Mesh, Cloud Connectors and Strategic Professional Services' teams.\n","platformCapabilities":["Design","Gateway","Analytics","Portal","Documentation","Monetization","SDK","Performance","Dashboards","Teams"],"gatewayCapabilities":["Mediation","Mocking","OpenAPI Integration","Traffic Management","Versioning"],"customCodeSupport":["None"],"upstreamProtocols":["HTTP/1.1","SOAP","Database","ERP"],"downstreamProtocols":["HTTP/1.1","SOAP"],"deliveryModels":["SaaS"],"policies":[{"category":"Traffic Management","capabilities":["Cache Eviction","Cache Invalidation","Cache Lookup","Cache Population","Cache Storage","Cache Target Response","Cache Validation","Plans","Quota","Quota Reset","Rate Limiting","Request Size Limiting","Regions","Spike Arrest","Spike Control","Throttling","Traffic Optimization"]},{"category":"Mediation","capabilities":["Cache Eviction","Cache Lookup","Cache Store","CORS","Request Size Limit","Request Termination","Request Transformation","Response Transformation","SOAP Validation","URL Rewriting"]},{"category":"Security","capabilities":["API Key","API Key Authentication","Access Control Lists (ACL)","Audit Logs","Basic Authentication","CORS","IP Access Rules","JWS","JWT Validation","JWT authorizers","Message Inspection","Mutual TLS","OAuth 1.0","OAuth 2.0","PCI - DSS Compliance"]},{"category":"Extensions","capabilities":["HTTP Callout","HTTP integrations","Alerts"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://www.sensedia.com"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://www.sensedia.com/api-management-platform"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/sensedia.png"}]}</textarea>
+        <h2>Sensedia</h2>
+        <p>Sensedia is a leading integration solutions provider with more than +200 enterprise clients across a range of sectors. Its world-class portfolio includes: an API Management Platform, Adaptive Governance, Events Hub, Service Mesh, Cloud Connectors and Strategic Professional Services' teams.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Design</li>
+        
+            <li>Gateway</li>
+        
+            <li>Analytics</li>
+        
+            <li>Portal</li>
+        
+            <li>Documentation</li>
+        
+            <li>Monetization</li>
+        
+            <li>SDK</li>
+        
+            <li>Performance</li>
+        
+            <li>Dashboards</li>
+        
+            <li>Teams</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Mediation</li>
+        
+            <li>Mocking</li>
+        
+            <li>OpenAPI Integration</li>
+        
+            <li>Traffic Management</li>
+        
+            <li>Versioning</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>SOAP</li>
+        
+            <li>Database</li>
+        
+            <li>ERP</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>SOAP</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>SaaS</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Cache Eviction</li>
+            
+                <li>Cache Invalidation</li>
+            
+                <li>Cache Lookup</li>
+            
+                <li>Cache Population</li>
+            
+                <li>Cache Storage</li>
+            
+                <li>Cache Target Response</li>
+            
+                <li>Cache Validation</li>
+            
+                <li>Plans</li>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Regions</li>
+            
+                <li>Spike Arrest</li>
+            
+                <li>Spike Control</li>
+            
+                <li>Throttling</li>
+            
+                <li>Traffic Optimization</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>Cache Eviction</li>
+            
+                <li>Cache Lookup</li>
+            
+                <li>Cache Store</li>
+            
+                <li>CORS</li>
+            
+                <li>Request Size Limit</li>
+            
+                <li>Request Termination</li>
+            
+                <li>Request Transformation</li>
+            
+                <li>Response Transformation</li>
+            
+                <li>SOAP Validation</li>
+            
+                <li>URL Rewriting</li>
+            
+            </ul> 
+        
+            <h4>Security</h4>
+            <ul>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>Access Control Lists (ACL)</li>
+            
+                <li>Audit Logs</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>CORS</li>
+            
+                <li>IP Access Rules</li>
+            
+                <li>JWS</li>
+            
+                <li>JWT Validation</li>
+            
+                <li>JWT authorizers</li>
+            
+                <li>Message Inspection</li>
+            
+                <li>Mutual TLS</li>
+            
+                <li>OAuth 1.0</li>
+            
+                <li>OAuth 2.0</li>
+            
+                <li>PCI - DSS Compliance</li>
+            
+            </ul> 
+        
+            <h4>Extensions</h4>
+            <ul>
+            
+                <li>HTTP Callout</li>
+            
+                <li>HTTP integrations</li>
+            
+                <li>Alerts</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.sensedia.com" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.sensedia.com/api-management-platform" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.snaplogic.com/products/api-management-development" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/snaplogic.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-31" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"SnapLogic","provider":"SnapLogic","slug":"snaplogic","rating":3,"license":"Proprietary, Open Source (Apache-2.0)","status":"Pending Review","researchDate":"2022-11","description":"SnapLogic is a commercial software company that provides integration platform as a service tools for connecting Cloud data sources, SaaS applications and on-premises business software applications. SnapLogic was founded in 2006, and its headquarters are in San Mateo, CA.\n","platformCapabilities":["Gateway","Analytics","Portal","Documentation","Dashboard"],"gatewayCapabilities":["Mediation","OpenAPI Integration","Traffic Management","Versioning"],"customCodeSupport":["None"],"upstreamProtocols":["HTTP/1.1","Database","ERP"],"downstreamProtocols":["HTTP/1.1"],"deliveryModels":["Customer Managed (Cloud)","Customer Managed (On-Premises)","Hybrid"],"policies":[{"category":"Traffic Management","capabilities":["Quota","Quota Reset","Rate Limiting","Request Size Limiting","Throttling"]},{"category":"Mediation","capabilities":["CORS","Request Size Limit","Request Termination","Request Transformation","Response Transformation","URL Rewriting"]},{"category":"Security","capabilities":["API Key","API Key Authentication","Access Control Lists (ACL)","Audit Logs","Basic Authentication","CORS","IP Access Rules","JWT","JWT Validation","JWT authorizers","Message Inspection","Mutual TLS","OAuth 1.0","OAuth 2.0"]},{"category":"Extensions","capabilities":["HTTP Callout","HTTP integrations","Integration Server services"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://www.snaplogic.com/products/api-management-development"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://www.snaplogic.com/products/api-management-development"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/snaplogic.png"}]}</textarea>
+        <h2>SnapLogic</h2>
+        <p>SnapLogic is a commercial software company that provides integration platform as a service tools for connecting Cloud data sources, SaaS applications and on-premises business software applications. SnapLogic was founded in 2006, and its headquarters are in San Mateo, CA.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Gateway</li>
+        
+            <li>Analytics</li>
+        
+            <li>Portal</li>
+        
+            <li>Documentation</li>
+        
+            <li>Dashboard</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Mediation</li>
+        
+            <li>OpenAPI Integration</li>
+        
+            <li>Traffic Management</li>
+        
+            <li>Versioning</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>Database</li>
+        
+            <li>ERP</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>Customer Managed (Cloud)</li>
+        
+            <li>Customer Managed (On-Premises)</li>
+        
+            <li>Hybrid</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Throttling</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>CORS</li>
+            
+                <li>Request Size Limit</li>
+            
+                <li>Request Termination</li>
+            
+                <li>Request Transformation</li>
+            
+                <li>Response Transformation</li>
+            
+                <li>URL Rewriting</li>
+            
+            </ul> 
+        
+            <h4>Security</h4>
+            <ul>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>Access Control Lists (ACL)</li>
+            
+                <li>Audit Logs</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>CORS</li>
+            
+                <li>IP Access Rules</li>
+            
+                <li>JWT</li>
+            
+                <li>JWT Validation</li>
+            
+                <li>JWT authorizers</li>
+            
+                <li>Message Inspection</li>
+            
+                <li>Mutual TLS</li>
+            
+                <li>OAuth 1.0</li>
+            
+                <li>OAuth 2.0</li>
+            
+            </ul> 
+        
+            <h4>Extensions</h4>
+            <ul>
+            
+                <li>HTTP Callout</li>
+            
+                <li>HTTP integrations</li>
+            
+                <li>Integration Server services</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.snaplogic.com/products/api-management-development" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.snaplogic.com/products/api-management-development" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://spring.io/projects/spring-cloud-gateway" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/spring-cloud.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-33" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"Spring Cloud","provider":"Spring Cloud","slug":"spring-cloud","rating":3,"license":"Open Source (Apache-2.0)","status":"Pending Review","researchDate":"2022-11","description":"This project provides an Gateway built on top of the Spring Ecosystem, including: Spring 5, Spring Boot 2 and Project Reactor. Spring Cloud Gateway aims to provide a simple, yet effective way to route to APIs and provide cross cutting concerns to them such as: security, monitoring/metrics, and resiliency.\n","platformCapabilities":["Gateway","Testing","Performance"],"gatewayCapabilities":["Mediation","Traffic Management","Versioning"],"customCodeSupport":["None"],"upstreamProtocols":["HTTP/1.1"],"downstreamProtocols":["HTTP/1.1"],"deliveryModels":["SaaS"],"policies":[{"category":"Traffic Management","capabilities":["Circuit Breaker","Conditional Routing","Content-Based Routing","Clusters","Dynamic Routing","Load Balancer Routing","Quota","Quota Reset","Rate Limiting","Request Size Limiting","Throttling"]},{"category":"Mediation","capabilities":["CORS","Request Size Limit","Request Termination","Request Transformation","Response Transformation","URL Rewriting"]},{"category":"Security","capabilities":["API Key","API Key Authentication","Access Control Lists (ACL)","Audit Logs","Basic Authentication","CORS","IP Access Rules","JWS","JWT Validation","JWT authorizers","Mutual TLS","OAuth 1.0","OAuth 2.0","OpenID Connect","Role-Based Access Control","SSO"]},{"category":"Extensions","capabilities":["HTTP Callout","HTTP integrations","Kubernetes","CI/CD","Containers"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://spring.io/projects/spring-cloud-gateway"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://spring.io/projects/spring-cloud-gateway"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/spring-cloud.png"}]}</textarea>
+        <h2>Spring Cloud</h2>
+        <p>This project provides an Gateway built on top of the Spring Ecosystem, including: Spring 5, Spring Boot 2 and Project Reactor. Spring Cloud Gateway aims to provide a simple, yet effective way to route to APIs and provide cross cutting concerns to them such as: security, monitoring/metrics, and resiliency.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Gateway</li>
+        
+            <li>Testing</li>
+        
+            <li>Performance</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Mediation</li>
+        
+            <li>Traffic Management</li>
+        
+            <li>Versioning</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>SaaS</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Circuit Breaker</li>
+            
+                <li>Conditional Routing</li>
+            
+                <li>Content-Based Routing</li>
+            
+                <li>Clusters</li>
+            
+                <li>Dynamic Routing</li>
+            
+                <li>Load Balancer Routing</li>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Throttling</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>CORS</li>
+            
+                <li>Request Size Limit</li>
+            
+                <li>Request Termination</li>
+            
+                <li>Request Transformation</li>
+            
+                <li>Response Transformation</li>
+            
+                <li>URL Rewriting</li>
+            
+            </ul> 
+        
+            <h4>Security</h4>
+            <ul>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>Access Control Lists (ACL)</li>
+            
+                <li>Audit Logs</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>CORS</li>
+            
+                <li>IP Access Rules</li>
+            
+                <li>JWS</li>
+            
+                <li>JWT Validation</li>
+            
+                <li>JWT authorizers</li>
+            
+                <li>Mutual TLS</li>
+            
+                <li>OAuth 1.0</li>
+            
+                <li>OAuth 2.0</li>
+            
+                <li>OpenID Connect</li>
+            
+                <li>Role-Based Access Control</li>
+            
+                <li>SSO</li>
+            
+            </ul> 
+        
+            <h4>Extensions</h4>
+            <ul>
+            
+                <li>HTTP Callout</li>
+            
+                <li>HTTP integrations</li>
+            
+                <li>Kubernetes</li>
+            
+                <li>CI/CD</li>
+            
+                <li>Containers</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://spring.io/projects/spring-cloud-gateway" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://spring.io/projects/spring-cloud-gateway" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.tibco.com/products/api-management/gateway" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/tibco.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-34" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"Tibco","provider":"Tibco","slug":"tibco","rating":3,"license":"Proprietary","status":"Pending Review","researchDate":"2022-11","description":"Employ a wide range of policies to gain control over how, when, and from where your user community can access your APIs. The API Management Control Center lets you fully control your APIs. The traffic manager polices your servers to safeguard them against unauthorized access and overloading. The gateway is available across on-premises and cloud environments, allowing for a single view of all gateways.\n","platformCapabilities":["Gateway","Analytics","Portal","Documentation","Monetization","Performance","SDK"],"gatewayCapabilities":["Mediation","Traffic Management","Versioning"],"customCodeSupport":["None"],"upstreamProtocols":["HTTP/1.1"],"downstreamProtocols":["HTTP/1.1"],"deliveryModels":["Customer Managed (Cloud)","Customer Managed (On-Premises)","Hybrid"],"policies":[{"category":"Traffic Management","capabilities":["Cache Eviction","Cache Invalidation","Cache Lookup","Cache Population","Cache Storage","Cache Target Response","Cache Validation","Concurrent Rate Limit","Concurrent Rate Limiting","Conditional Routing","Content-Based Routing","Load Balancer Routing","Quota","Quota Reset","Rate Limiting","Request Size Limiting","Throttling","Traffic Optimization"]},{"category":"Mediation","capabilities":["CORS","Request Size Limit","Request Termination","Request Transformation","Response Transformation"]},{"category":"Security","capabilities":["API Key","API Key Authentication","Access Control Lists (ACL)","Audit Logs","Basic Authentication","CORS","IP Access Rules","JWS","JWT Validation","JWT authorizers","Message Inspection","Mutual TLS","OAuth 1.0","OAuth 2.0","OpenID Connect"]},{"category":"Extensions","capabilities":["HTTP Callout","HTTP integrations","Serverless","Containers","Docker","Kubernetes","Amazon Web Services","Azure","Google"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://www.tibco.com/products/api-management/gateway"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://www.tibco.com/products/api-management/gateway"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/tibco.png"}]}</textarea>
+        <h2>Tibco</h2>
+        <p>Employ a wide range of policies to gain control over how, when, and from where your user community can access your APIs. The API Management Control Center lets you fully control your APIs. The traffic manager polices your servers to safeguard them against unauthorized access and overloading. The gateway is available across on-premises and cloud environments, allowing for a single view of all gateways.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Gateway</li>
+        
+            <li>Analytics</li>
+        
+            <li>Portal</li>
+        
+            <li>Documentation</li>
+        
+            <li>Monetization</li>
+        
+            <li>Performance</li>
+        
+            <li>SDK</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Mediation</li>
+        
+            <li>Traffic Management</li>
+        
+            <li>Versioning</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>Customer Managed (Cloud)</li>
+        
+            <li>Customer Managed (On-Premises)</li>
+        
+            <li>Hybrid</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Cache Eviction</li>
+            
+                <li>Cache Invalidation</li>
+            
+                <li>Cache Lookup</li>
+            
+                <li>Cache Population</li>
+            
+                <li>Cache Storage</li>
+            
+                <li>Cache Target Response</li>
+            
+                <li>Cache Validation</li>
+            
+                <li>Concurrent Rate Limit</li>
+            
+                <li>Concurrent Rate Limiting</li>
+            
+                <li>Conditional Routing</li>
+            
+                <li>Content-Based Routing</li>
+            
+                <li>Load Balancer Routing</li>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Throttling</li>
+            
+                <li>Traffic Optimization</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>CORS</li>
+            
+                <li>Request Size Limit</li>
+            
+                <li>Request Termination</li>
+            
+                <li>Request Transformation</li>
+            
+                <li>Response Transformation</li>
+            
+            </ul> 
+        
+            <h4>Security</h4>
+            <ul>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>Access Control Lists (ACL)</li>
+            
+                <li>Audit Logs</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>CORS</li>
+            
+                <li>IP Access Rules</li>
+            
+                <li>JWS</li>
+            
+                <li>JWT Validation</li>
+            
+                <li>JWT authorizers</li>
+            
+                <li>Message Inspection</li>
+            
+                <li>Mutual TLS</li>
+            
+                <li>OAuth 1.0</li>
+            
+                <li>OAuth 2.0</li>
+            
+                <li>OpenID Connect</li>
+            
+            </ul> 
+        
+            <h4>Extensions</h4>
+            <ul>
+            
+                <li>HTTP Callout</li>
+            
+                <li>HTTP integrations</li>
+            
+                <li>Serverless</li>
+            
+                <li>Containers</li>
+            
+                <li>Docker</li>
+            
+                <li>Kubernetes</li>
+            
+                <li>Amazon Web Services</li>
+            
+                <li>Azure</li>
+            
+                <li>Google</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.tibco.com/products/api-management/gateway" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.tibco.com/products/api-management/gateway" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://apim.docs.wso2.com/en/latest/deploy-and-publish/deploy-on-gateway/api-gateway/overview-of-the-api-gateway/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/wso2.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-37" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"WSO2","provider":"WSO2","slug":"wso2","rating":3,"license":"Open Source (Apache-2.0)","status":"Pending Review","researchDate":"2022-11","description":"WSO2 Gateway provides a runtime and a backend component (an API proxy) for API calls. It secures, protects, manages, and scales API calls by intercepting API requests and applying policies, such as throttling and security, using handlers and managing API statistics. Upon validation of a policy, the Gateway passes Web service calls to the actual backend. If the service call is a token request, the Gateway passes it directly to the Key Manager.\n","platformCapabilities":["Gateway","Analytics","Portal","Documentation","Monetization","Monitoring","SDK"],"gatewayCapabilities":["Custom Code Execution","Mediation","Mocking","OpenAPI Integration","OpenAPI Enforcement","Traffic Management","Versioning"],"customCodeSupport":["None"],"upstreamProtocols":["HTTP/1.1","GraphQL"],"downstreamProtocols":["HTTP/1.1","GraphQL"],"deliveryModels":["SaaS"],"policies":[{"category":"Traffic Management","capabilities":["Cache Eviction","Cache Invalidation","Cache Lookup","Cache Population","Cache Storage","Cache Target Response","Cache Validation","Canary Release","Circuit Breaker","Conditional Routing","Content-Based Routing","Load Balancer Routing","Mocking","Quota","Quota Reset","Rate Limiting","Request Size Limiting","Throttling"]},{"category":"Mediation","capabilities":["CORS","Cache Eviction","Cache Lookup","Cache Store","GraphQL","GraphQL to REST","JSON Validation","OpenAPI Validation","Request Size Limit","Request Termination","Request Transformation","Response Transformation","SOAP Validation","URL Rewriting","XML to JSON"]},{"category":"Security","capabilities":["Auth0","API Key","API Key Authentication","Access Control Lists (ACL)","Audit Logs","Basic Authentication","Bot Detection","Bot Detector","CORS","IP Access Rules","JWT","JWT Validation","JWT authorizers","LDAP","LDAP Authentication","Message Inspection","Mutual TLS","OAuth 1.0","OAuth 2.0","Okta","OpenID Connect","SAML Assertion"]},{"category":"Extensions","capabilities":["HTTP Callout","HTTP integrations"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://apim.docs.wso2.com/en/latest/deploy-and-publish/deploy-on-gateway/api-gateway/overview-of-the-api-gateway/"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://apim.docs.wso2.com/en/latest/deploy-and-publish/deploy-on-gateway/api-gateway/overview-of-the-api-gateway/"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/wso2.png"}]}</textarea>
+        <h2>WSO2</h2>
+        <p>WSO2 Gateway provides a runtime and a backend component (an API proxy) for API calls. It secures, protects, manages, and scales API calls by intercepting API requests and applying policies, such as throttling and security, using handlers and managing API statistics. Upon validation of a policy, the Gateway passes Web service calls to the actual backend. If the service call is a token request, the Gateway passes it directly to the Key Manager.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Gateway</li>
+        
+            <li>Analytics</li>
+        
+            <li>Portal</li>
+        
+            <li>Documentation</li>
+        
+            <li>Monetization</li>
+        
+            <li>Monitoring</li>
+        
+            <li>SDK</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Custom Code Execution</li>
+        
+            <li>Mediation</li>
+        
+            <li>Mocking</li>
+        
+            <li>OpenAPI Integration</li>
+        
+            <li>OpenAPI Enforcement</li>
+        
+            <li>Traffic Management</li>
+        
+            <li>Versioning</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>GraphQL</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>GraphQL</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>SaaS</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Cache Eviction</li>
+            
+                <li>Cache Invalidation</li>
+            
+                <li>Cache Lookup</li>
+            
+                <li>Cache Population</li>
+            
+                <li>Cache Storage</li>
+            
+                <li>Cache Target Response</li>
+            
+                <li>Cache Validation</li>
+            
+                <li>Canary Release</li>
+            
+                <li>Circuit Breaker</li>
+            
+                <li>Conditional Routing</li>
+            
+                <li>Content-Based Routing</li>
+            
+                <li>Load Balancer Routing</li>
+            
+                <li>Mocking</li>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Throttling</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>CORS</li>
+            
+                <li>Cache Eviction</li>
+            
+                <li>Cache Lookup</li>
+            
+                <li>Cache Store</li>
+            
+                <li>GraphQL</li>
+            
+                <li>GraphQL to REST</li>
+            
+                <li>JSON Validation</li>
+            
+                <li>OpenAPI Validation</li>
+            
+                <li>Request Size Limit</li>
+            
+                <li>Request Termination</li>
+            
+                <li>Request Transformation</li>
+            
+                <li>Response Transformation</li>
+            
+                <li>SOAP Validation</li>
+            
+                <li>URL Rewriting</li>
+            
+                <li>XML to JSON</li>
+            
+            </ul> 
+        
+            <h4>Security</h4>
+            <ul>
+            
+                <li>Auth0</li>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>Access Control Lists (ACL)</li>
+            
+                <li>Audit Logs</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>Bot Detection</li>
+            
+                <li>Bot Detector</li>
+            
+                <li>CORS</li>
+            
+                <li>IP Access Rules</li>
+            
+                <li>JWT</li>
+            
+                <li>JWT Validation</li>
+            
+                <li>JWT authorizers</li>
+            
+                <li>LDAP</li>
+            
+                <li>LDAP Authentication</li>
+            
+                <li>Message Inspection</li>
+            
+                <li>Mutual TLS</li>
+            
+                <li>OAuth 1.0</li>
+            
+                <li>OAuth 2.0</li>
+            
+                <li>Okta</li>
+            
+                <li>OpenID Connect</li>
+            
+                <li>SAML Assertion</li>
+            
+            </ul> 
+        
+            <h4>Extensions</h4>
+            <ul>
+            
+                <li>HTTP Callout</li>
+            
+                <li>HTTP integrations</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://apim.docs.wso2.com/en/latest/deploy-and-publish/deploy-on-gateway/api-gateway/overview-of-the-api-gateway/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://apim.docs.wso2.com/en/latest/deploy-and-publish/deploy-on-gateway/api-gateway/overview-of-the-api-gateway/" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+
+
+		</div>				
+	</div>
+	<div class="col-2"></div>	
+</div>
+
+
+</main>
+
+<footer class="footer mt-auto py-3 bg-light">
+  <div class="container">
+    <span class="text-muted">Footer</span>
+  </div>
+</footer>
+
+<script src="http://localhost:4000/assets/js/bootstrap.js"></script>    
+<script src="http://localhost:4000/assets/js/js-yaml.min.js"></script>   
+  </body>
+</html>

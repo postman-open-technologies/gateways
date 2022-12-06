@@ -1,7 +1,6 @@
 ---
 class:
-  - gateway
-
+- gateway
 properties:
   name: Amazon Gateway
   provider: Amazon Web Services
@@ -10,79 +9,79 @@ properties:
   license: Proprietary
   status: Pending Review
   researchDate: 2021-10
-  description: >
-    Amazon is one of the first cloud providers to offer an Gateway. The gateway supports a few different options: HTTP, REST, and WebSockets. Integrations with other AWS services are abundant.  Amazon Gateway includes a set of [OpenAPI extensions](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-swagger-extensions.html) to make integration more seamless.
+  description: 'Amazon is one of the first cloud providers to offer an Gateway. The
+    gateway supports a few different options: HTTP, REST, and WebSockets. Integrations
+    with other AWS services are abundant.'
   platformCapabilities:
-    - Gateway
-    - Portal
-    - Monitoring
-    - Threat Protection
-    - Analytics
-    - Documentation
-    - SDK
+  - Gateway
+  - Portal
+  - Monitoring
+  - Threat Protection
+  - Analytics
+  - Documentation
+  - SDK
   gatewayCapabilities:
-    - Custom Code Execution
-    - Mediation
-    - Traffic Management
-    - OpenAPI Integration
-    - OpenAPI Import
-    - OpenAPI Export
-    - Versioning
-    - Mocking
+  - Custom Code Execution
+  - Mediation
+  - Traffic Management
+  - OpenAPI Integration
+  - OpenAPI Import
+  - OpenAPI Export
+  - Versioning
+  - Mocking
   customCodeSupport:
-    - Lambda
+  - Lambda
   upstreamProtocols:
-    - HTTP/1.1
-    - WebSockets
+  - HTTP/1.1
+  - WebSockets
   downstreamProtocols:
-    - HTTP/1.1
-    - WebSockets
+  - HTTP/1.1
+  - WebSockets
   deliveryModels:
-    - SaaS
+  - SaaS
   policies:
-    - category: Security
-      capabilities:
-        - Lambda authorizers
-        - JWT authorizers
-        - AWS IAM roles and policies
-        - CORS
-        - Mutual TLS
-        - WAF
-    - category: Traffic Management
-      capabilities:
-        - Cache Lookup
-        - Cache Invalidation
-        - Throttling
-    - category: Mediation
-      capabilities:
-        - Request Transformation
-        - Response Transformation
-        - OpenAPI Validation
-    - category: Extensions
-      capabilities:
-        - AWS Lambda integrations
-        - HTTP integrations
-        - AWS service integrations
-        - Private integrations
-
+  - category: Security
+    capabilities:
+    - Lambda authorizers
+    - JWT authorizers
+    - AWS IAM roles and policies
+    - CORS
+    - Mutual TLS
+    - WAF
+  - category: Traffic Management
+    capabilities:
+    - Cache Lookup
+    - Cache Invalidation
+    - Throttling
+  - category: Mediation
+    capabilities:
+    - Request Transformation
+    - Response Transformation
+    - OpenAPI Validation
+  - category: Extensions
+    capabilities:
+    - AWS Lambda integrations
+    - HTTP integrations
+    - AWS service integrations
+    - Private integrations
 links:
-  - rel:
-      - urn:gateway:product
-    title: Product
-    href: https://aws.amazon.com/api-gateway/
-  - rel:
-      - urn:gateway:docs
-    title: Documentation
-    href: https://aws.amazon.com/api-gateway/resources/
-  - rel:
-      - urn:gateway:logo
-    title: Logo
-    href: /images/gateways/amazon-api-gateway.webp
-  - rel:
-      - urn:gateway:screenshot
-    title: Screenshot
-    href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/amazon-api-gateway.png     
-  - rel:
-      - urn:gateway:collection
-    title: Collection
-    href: https://www.postman.com/api-evangelist/workspace/aws-api-gateway/documentation/35240-73e404a5-9067-413e-855b-66ee60d211aa?entity=&branch=&version=
+- rel:
+  - urn:gateway:product
+  title: Product
+  href: https://aws.amazon.com/api-gateway/
+- rel:
+  - urn:gateway:docs
+  title: Documentation
+  href: https://aws.amazon.com/api-gateway/resources/
+- rel:
+  - urn:gateway:logo
+  title: Logo
+  href: "/images/gateways/amazon-api-gateway.webp"
+- rel:
+  - urn:gateway:screenshot
+  title: Screenshot
+  href: https://kinlane-productions2.s3.amazonaws.com/api-gateways/amazon-api-gateway.png
+- rel:
+  - urn:gateway:collection
+  title: Collection
+  href: https://www.postman.com/api-evangelist/workspace/aws-api-gateway/documentation/35240-73e404a5-9067-413e-855b-66ee60d211aa?entity=&branch=&version=

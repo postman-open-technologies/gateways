@@ -1,0 +1,1654 @@
+
+<!doctype html>
+<html lang="en" class="h-100">
+<head>
+
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="description" content="">
+   <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+   <meta name="generator" content="Hugo 0.88.1">
+   
+   <title>Gateways</title>
+
+   <!---<link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/sticky-footer-navbar/">--->
+   <link href="http://localhost:4000/assets/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+   <meta name="theme-color" content="#7952b3">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Cookies.js - http://github.com/ScottHamper/Cookies -->
+    <script src="http://localhost:4000/assets/js/cookies.js"></script>
+
+    <script>
+
+        function getUrlVar(key){
+            var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search);
+            return result && unescape(result[1]) || "";
+        }
+
+    </script>
+
+  </head>
+  <body class="d-flex flex-column h-100">
+    
+<header>
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="http://localhost:4000/">Gateways</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/providers/">Providers</a>
+          </li>   
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/providers/two/">2</a>
+          </li>     
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/providers/three/">3</a>
+          </li> 
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/providers/four/">4</a>
+          </li>                           
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/providers/outline/">Outline</a>
+          </li>                   
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://localhost:4000/capabilities/">Capabilities</a>
+          </li>              
+          <li class="nav-item">
+            <a class="nav-link" href="http://localhost:4000/policies/">Policies</a>
+          </li>                                                                                             
+        </ul>
+        <form class="d-flex">
+          <!--<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>-->
+        </form>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main class="flex-shrink-0">	
+<div class="container" style="padding-top: 70px;">
+	<div class="row align-top">
+		<div class="col-2"></div>
+		<div class="col-8">
+
+				
+				
+			<style>
+	.autocomplete {
+	/*the container must be positioned relative:*/
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	}
+	input {
+	border: 1px solid transparent;
+	background-color: #f1f1f1;
+	padding: 10px;
+	font-size: 16px;
+	}
+	input[type=text] {
+	background-color: #f1f1f1;
+	width: 100%;
+	}
+	textarea {
+	background-color: #f1f1f1;
+	width: 100%;
+	}	
+	input[type=submit] {
+	background-color: DodgerBlue;
+	color: #fff;
+	}
+	.autocomplete-items {
+	position: absolute;
+	border: 1px solid #d4d4d4;
+	border-bottom: none;
+	border-top: none;
+	z-index: 99;
+	/*position the autocomplete items to be the same width as the container:*/
+	top: 100%;
+	left: 0;
+	right: 0;
+	}
+	.autocomplete-items div {
+	padding: 10px;
+	cursor: pointer;
+	background-color: #fff;
+	border-bottom: 1px solid #d4d4d4;
+	}
+	.autocomplete-items div:hover {
+	/*when hovering an item:*/
+	background-color: #e9e9e9;
+	}
+	.autocomplete-active {
+	/*when navigating through the items using the arrow keys:*/
+	background-color: DodgerBlue !important;
+	color: #ffffff;
+	}	
+</style>
+<script>
+    function saveCapability(g_count,p_count,c_count,path){
+
+        console.log("path: " + p_count);
+        console.log("capability: " + c_count);
+        console.log("path: " + path);
+
+        var g_store = JSON.parse(document.getElementById("gateway-" + g_count).value);    
+        var p_store = JSON.parse(document.getElementById("openapi-" + p_count).value);
+
+        var capability = document.getElementById("capability-" + c_count).value;
+        //console.log("capability: " + capability);
+        if(p_store['components']['x-policies']){}
+        else{
+            p_store['components']['x-policies'] = {};
+        }
+        p_store['components']['x-policies'][path] = capability;
+        //console.log(p_store.components);
+        document.getElementById("openapi-" + p_count).value = JSON.stringify(p_store);
+
+        var already = 0;
+        var capabilities = g_store.properties.gatewayCapabilities;
+        for (let i = 0; i < capabilities.length; i++) {
+            if(capability == capabilities[i]){
+                already = 1;
+            }
+        }
+        if(already == 0){
+            g_store.properties.gatewayCapabilities.push(capability);
+        }
+        document.getElementById("gateway-" + g_count).value = JSON.stringify(g_store);
+    }
+
+var c = '["AWS Cognito","Auth0","ACL (Access Control List)","API Key","API Key Authentication","AWS Cognito","AWS IAM roles and policies","AWS Integrations","AWS Kinesis","AWS Lambda integrations","AWS service integrations","Access Control Lists","Access Control Lists (ACL)","Adaption","Aggregation","Alerts","Amazon Web Services","App Dynamics","Audit Logs","Auth0","Auth0 Integration","Automatic HTTPS","Automatic Retries","Avro","Azure","Azure Event Hubs","Basic Authentication","BitBucket GitOps integration","Bot Detection","Bot Detector","CI/CD","CORS","Cabana","Cache Eviction","Cache Invalidation","Cache Lookup","Cache Population","Cache Storage","Cache Store","Cache Target Response","Cache Validation","Canary Release","Canary Releases","Circuit Breaker","Client ID and Secret (MuleSoft-specific API security model)","Clusters","Command Line Interface (CLI)","Compression","Concurrent Rate Limit","Concurrent Rate Limiting","Conditional Routing","Consul","Containers","Contains","Content Deliver Network","Content-Based Routing","Context Persistence","Cross-Origin Resource Sharing (CORS)","Custom Credentials","Custom Data Storage","Custom Exception Handling","Custom Policies","Custom Request Filters","Custom Resource Definitions (CRDs)","Custom Resources","DNS","Dapr integration","Data Collection","Database","Datadog","Declarative Policy Engine","Digital Signature Verification","Distributed Tracing","Docker","Dynamic Routing","Dynatrace","Edge Policy Console","Egress Controller","Envoy Proxy","Etcd","Events","Failover","FastCGI","GZip","GitHub GitOps integration","GitLab GitOps integration","Global Rate Limiting","Go Extensions","Google Cloud","Grafana","GraphQL Caching","GraphQL to REST","Graphing","Groups","HMAC","HTTP Callout","HTTP integrations","HashiCorp Vault Authentication","Header-based routing","Health Checks","Hot-Update","IP Access Rules","Integration Server services","Istio","JSON Threat Protection","JSON Validation","JSON to XML","JSONP","JWS","JWT Authorizers","JWT Filter","JWT Validation","JWT authorizers","JWT authorizers (Custom","JWT authorizers (Custom","Java","JavaScript","Kerberos","Keycloak Integration","Knative FaaS","Kubernetes","Kubernetes Ingress Controller","LDAP","LDAP Authentication","Lambda authorizers","Let&#39;s Encrypt","LinkerD","Load Balancer Routing","Lua Scripting","Managed Identity Authentication","Memcached","Message Inspection","Message Logging","Microsoft Azure","Mocking","Monetization Limits","Monitoring Integrations","Multi-Domain Authentication","Mutual TLS","Nacos","Notifications","OAuth 1.0","OAuth 2.0","OWASP Top 10","Okta","Open Policy Agent","OpenAPI Validation","OpenID Connect","PCI - DSS Compliance","Per-User Rate Limiting","PingFederate OAuth2.0 Token","Plans","Platform Data Lookup","Platform Integration","Plugins","Post Processing","Pre Processing","Private integrations","Progressive Delivery","Prometheus","Proxy Mirror","Python","Quota","Quota Reset","REST to SOAP","Rate Limiting","Rate Limiting (Dynamic)","Redaction","Regex Filters","Regions","Request Size Limiting","Request Termination","Request Transformation","Request Validation","Response Templates","Response Transformation","Reverse Proxy","Role Based Access Control (RBAC)","Role-Based Access Control","Roles","Routing Rules","SAML Assertion","SLA Management","SOAP Validation","SSO","Serverless","Serverless Integrations","Service Discovery","Service Mesh","Session Management","Session Persistence","Side-Car","Signatures","Single Sign On (SSO)","Spike Arrest","Spike Control","Statistics Collection","Telemetry","Throttling","Traffic Optimization","Traffic Shadowing","Traffic Split","Transformation Rules","URL Rewriting","WAF","WSS Username","XML Threat Protection","XML to JSON","XSL Tranformations","XSL Transformation","XSS Protection","gRPC Callout","Other"]';
+capabilities = JSON.parse(c); 
+
+    function autocomplete(inp, arr) {
+        /*the autocomplete function takes two arguments,
+        the text field element and an array of possible autocompleted values:*/
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input", function(e) {
+            var a, b, i, val = this.value;
+            /*close any already open lists of autocompleted values*/
+            closeAllLists();
+            if (!val) { return false;}
+            currentFocus = -1;
+            /*create a DIV element that will contain the items (values):*/
+            a = document.createElement("DIV");
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+            /*append the DIV element as a child of the autocomplete container:*/
+            this.parentNode.appendChild(a);
+            /*for each item in the array...*/
+            for (i = 0; i < arr.length; i++) {
+            /*check if the item starts with the same letters as the text field value:*/
+            //console.log(arr[i]);
+            if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                /*create a DIV element for each matching element:*/
+                b = document.createElement("DIV");
+                /*make the matching letters bold:*/
+                b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                b.innerHTML += arr[i].substr(val.length);
+                /*insert a input field that will hold the current array item's value:*/
+                b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                /*execute a function when someone clicks on the item value (DIV element):*/
+                    b.addEventListener("click", function(e) {
+                    /*insert the value for the autocomplete text field:*/
+                    //console.log("HERE:" + this.getElementsByTagName("input")[0].value);
+                    inp.value = this.getElementsByTagName("input")[0].value;
+                    /*close the list of autocompleted values,
+                    (or any other open lists of autocompleted values:*/
+                    closeAllLists();
+                    addExistingElement();
+                });
+                a.appendChild(b);
+            }
+            }
+        });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function(e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
+            if (e.keyCode == 40) {
+            /*If the arrow DOWN key is pressed,
+            increase the currentFocus variable:*/
+            currentFocus++;
+            /*and and make the current item more visible:*/
+            addActive(x);
+            } else if (e.keyCode == 38) { //up
+            /*If the arrow UP key is pressed,
+            decrease the currentFocus variable:*/
+            currentFocus--;
+            /*and and make the current item more visible:*/
+            addActive(x);
+            } else if (e.keyCode == 13) {
+            /*If the ENTER key is pressed, prevent the form from being submitted,*/
+            e.preventDefault();
+            if (currentFocus > -1) {
+                /*and simulate a click on the "active" item:*/
+                if (x) x[currentFocus].click();
+            }
+            }
+        });
+        function addActive(x) {
+        /*a function to classify an item as "active":*/
+        if (!x) return false;
+        /*start by removing the "active" class on all items:*/
+        removeActive(x);
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = (x.length - 1);
+        /*add class "autocomplete-active":*/
+        x[currentFocus].classList.add("autocomplete-active");
+        }
+        function removeActive(x) {
+        /*a function to remove the "active" class from all autocomplete items:*/
+        for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+        }
+        }
+        function closeAllLists(elmnt) {
+        /*close all autocomplete lists in the document,
+        except the one passed as an argument:*/
+        var x = document.getElementsByClassName("autocomplete-items");
+        for (var i = 0; i < x.length; i++) {
+            if (elmnt != x[i] && elmnt != inp) {
+            x[i].parentNode.removeChild(x[i]);
+        }
+        }
+    }
+    /*execute a function when someone clicks in the document:*/
+    document.addEventListener("click", function (e) {
+        closeAllLists(e.target);
+    });
+    }     
+</script>
+<h1>Priority Four</h1>
+<hr>
+										  
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.3scale.net/" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/3scale.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-1" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"3Scale","provider":"3Scale","slug":"3scale","rating":4,"license":"Proprietary, Open Source (Apache-2.0)","status":"Pending Review","researchDate":"2022-11","description":"Red Hat 3scale API Management makes it easy to manage your APIs for internal or external users. Share, secure, distribute, control, and monetize your APIs on an infrastructure platform built with performance, customer control, and future growth in mind. 3scale components can be deployed on-premise, in the cloud, as a managed service, or on any combination required.\n","platformCapabilities":["Gateway","Analytics","Portal","Documentation","Monetization"],"gatewayCapabilities":["Mediation","Traffic Management"],"customCodeSupport":["None"],"upstreamProtocols":["HTTP/1.1"],"downstreamProtocols":["HTTP/1.1"],"deliveryModels":["Customer Managed (On-Premises)"],"policies":[{"category":"Traffic Management","capabilities":["Cache Eviction","Cache Invalidation","Cache Lookup","Cache Population","Cache Storage","Cache Target Response","Cache Validation","Conditional Routing","Content-Based Routing","Mocking","Quota","Quota Reset","Rate Limiting","Rate Limiting (Dynamic)","Request Size Limiting","Service Discovery","Throttling","Traffic Optimization"]},{"category":"Mediation","capabilities":["CORS","Cache Eviction","Cache Lookup","Cache Store","Custom Exception Handling","Request Size Limit","Request Termination","Request Transformation","Response Transformation","URL Rewriting"]},{"category":"Security","capabilities":["Auth0","ACL (Access Control List)","API Key","API Key Authentication","Access Control Lists","Audit Logs","Basic Authentication","CORS","HMAC","IP Access Rules","JSON Threat Protection","JWT Validation","JWT authorizers","Mutual TLS","OAuth 1.0","OAuth 2.0","Okta","OpenID Connect"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://www.3scale.net/"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://www.redhat.com/en/technologies/jboss-middleware/3scale"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/3scale.png"}]}</textarea>
+        <h2>3Scale</h2>
+        <p>Red Hat 3scale API Management makes it easy to manage your APIs for internal or external users. Share, secure, distribute, control, and monetize your APIs on an infrastructure platform built with performance, customer control, and future growth in mind. 3scale components can be deployed on-premise, in the cloud, as a managed service, or on any combination required.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Gateway</li>
+        
+            <li>Analytics</li>
+        
+            <li>Portal</li>
+        
+            <li>Documentation</li>
+        
+            <li>Monetization</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Mediation</li>
+        
+            <li>Traffic Management</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>Customer Managed (On-Premises)</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Cache Eviction</li>
+            
+                <li>Cache Invalidation</li>
+            
+                <li>Cache Lookup</li>
+            
+                <li>Cache Population</li>
+            
+                <li>Cache Storage</li>
+            
+                <li>Cache Target Response</li>
+            
+                <li>Cache Validation</li>
+            
+                <li>Conditional Routing</li>
+            
+                <li>Content-Based Routing</li>
+            
+                <li>Mocking</li>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Rate Limiting (Dynamic)</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Service Discovery</li>
+            
+                <li>Throttling</li>
+            
+                <li>Traffic Optimization</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>CORS</li>
+            
+                <li>Cache Eviction</li>
+            
+                <li>Cache Lookup</li>
+            
+                <li>Cache Store</li>
+            
+                <li>Custom Exception Handling</li>
+            
+                <li>Request Size Limit</li>
+            
+                <li>Request Termination</li>
+            
+                <li>Request Transformation</li>
+            
+                <li>Response Transformation</li>
+            
+                <li>URL Rewriting</li>
+            
+            </ul> 
+        
+            <h4>Security</h4>
+            <ul>
+            
+                <li>Auth0</li>
+            
+                <li>ACL (Access Control List)</li>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>Access Control Lists</li>
+            
+                <li>Audit Logs</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>CORS</li>
+            
+                <li>HMAC</li>
+            
+                <li>IP Access Rules</li>
+            
+                <li>JSON Threat Protection</li>
+            
+                <li>JWT Validation</li>
+            
+                <li>JWT authorizers</li>
+            
+                <li>Mutual TLS</li>
+            
+                <li>OAuth 1.0</li>
+            
+                <li>OAuth 2.0</li>
+            
+                <li>Okta</li>
+            
+                <li>OpenID Connect</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.3scale.net/" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.redhat.com/en/technologies/jboss-middleware/3scale" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://api-umbrella.readthedocs.io/en/latest/admin/other-docs.html" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/api-umbrella.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-5" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"API Umbrella","provider":"API Umbrella","slug":"api-umbrella","rating":4,"license":"Proprietary, Open Source (Apache-2.0)","status":"Pending Review","researchDate":"2022-11","description":"API Umbrella is an open source API management platform for exposing web service APIs. The basic goal of API Umbrella is to make life easier for both API creators and API consumers.\n","platformCapabilities":["Gateway","Analytics","Documentation"],"gatewayCapabilities":["Traffic Management","Versioning"],"customCodeSupport":["None"],"upstreamProtocols":["HTTP/1.1","SMTP"],"downstreamProtocols":["HTTP/1.1"],"deliveryModels":["Customer Managed (On-Premises)"],"policies":[{"category":"Traffic Management","capabilities":["Quota","Quota Reset","Rate Limiting","Rate Limiting (Dynamic)","Request Size Limiting","Throttling"]},{"category":"Mediation","capabilities":["CORS","Request Size Limit"]},{"category":"Security","capabilities":["API Key","API Key Authentication","Basic Authentication","CORS","Roles","Groups"]},{"category":"Extensions","capabilities":["Message Logging","Containers","Database"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://api-umbrella.readthedocs.io/en/latest/admin/other-docs.html"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://api-umbrella.readthedocs.io/en/latest/admin/other-docs.html"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/api-umbrella.png"}]}</textarea>
+        <h2>API Umbrella</h2>
+        <p>API Umbrella is an open source API management platform for exposing web service APIs. The basic goal of API Umbrella is to make life easier for both API creators and API consumers.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Gateway</li>
+        
+            <li>Analytics</li>
+        
+            <li>Documentation</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Traffic Management</li>
+        
+            <li>Versioning</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>SMTP</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>Customer Managed (On-Premises)</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Rate Limiting (Dynamic)</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Throttling</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>CORS</li>
+            
+                <li>Request Size Limit</li>
+            
+            </ul> 
+        
+            <h4>Security</h4>
+            <ul>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>CORS</li>
+            
+                <li>Roles</li>
+            
+                <li>Groups</li>
+            
+            </ul> 
+        
+            <h4>Extensions</h4>
+            <ul>
+            
+                <li>Message Logging</li>
+            
+                <li>Containers</li>
+            
+                <li>Database</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://api-umbrella.readthedocs.io/en/latest/admin/other-docs.html" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://api-umbrella.readthedocs.io/en/latest/admin/other-docs.html" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://boomi.com/platform/api-management#/3f0574" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/boomi.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-13" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"Boomi","provider":"Boomi","slug":"boomi","rating":4,"license":"Proprietary","status":"Pending Review","researchDate":"2022-11","description":"Boomi is a software company that specializes in integration platform as a service, API management, master data management and data preparation. Boomi was founded in Berwyn, Pennsylvania, and first launched its services in 2007.\n","platformCapabilities":["Gateway","Analytics","Portal","Catalog","Dashboards"],"gatewayCapabilities":["Mediation","Traffic Management"],"customCodeSupport":["None"],"upstreamProtocols":["HTTP/1.1","FTP","Database"],"downstreamProtocols":["HTTP/1.1"],"deliveryModels":["SaaS"],"policies":[{"category":"Traffic Management","capabilities":["Content-Based Routing","Dynamic Routing","Quota","Quota Reset","Rate Limiting","Rate Limiting (Dynamic)","Request Size Limiting","Throttling"]},{"category":"Mediation","capabilities":["CORS","Request Size Limit","Request Termination","Request Transformation","Response Transformation","URL Rewriting"]},{"category":"Security","capabilities":["API Key","API Key Authentication","Access Control Lists (ACL)","Audit Logs","Basic Authentication","CORS","JWT Validation","JWT authorizers","JWT authorizers (Custom","IP Access Rules","Mutual TLS","OAuth 1.0","OAuth 2.0","OpenID Connect"]},{"category":"Extensions","capabilities":["HTTP Callout","HTTP integrations","Integration Server services"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://boomi.com/platform/api-management#/3f0574"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://boomi.com/platform/api-management#/3f0574"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/boomi.png"}]}</textarea>
+        <h2>Boomi</h2>
+        <p>Boomi is a software company that specializes in integration platform as a service, API management, master data management and data preparation. Boomi was founded in Berwyn, Pennsylvania, and first launched its services in 2007.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Gateway</li>
+        
+            <li>Analytics</li>
+        
+            <li>Portal</li>
+        
+            <li>Catalog</li>
+        
+            <li>Dashboards</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Mediation</li>
+        
+            <li>Traffic Management</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+            <li>FTP</li>
+        
+            <li>Database</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>SaaS</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Content-Based Routing</li>
+            
+                <li>Dynamic Routing</li>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Rate Limiting (Dynamic)</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Throttling</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>CORS</li>
+            
+                <li>Request Size Limit</li>
+            
+                <li>Request Termination</li>
+            
+                <li>Request Transformation</li>
+            
+                <li>Response Transformation</li>
+            
+                <li>URL Rewriting</li>
+            
+            </ul> 
+        
+            <h4>Security</h4>
+            <ul>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>Access Control Lists (ACL)</li>
+            
+                <li>Audit Logs</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>CORS</li>
+            
+                <li>JWT Validation</li>
+            
+                <li>JWT authorizers</li>
+            
+                <li>JWT authorizers (Custom</li>
+            
+                <li>IP Access Rules</li>
+            
+                <li>Mutual TLS</li>
+            
+                <li>OAuth 1.0</li>
+            
+                <li>OAuth 2.0</li>
+            
+                <li>OpenID Connect</li>
+            
+            </ul> 
+        
+            <h4>Extensions</h4>
+            <ul>
+            
+                <li>HTTP Callout</li>
+            
+                <li>HTTP integrations</li>
+            
+                <li>Integration Server services</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://boomi.com/platform/api-management#/3f0574" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://boomi.com/platform/api-management#/3f0574" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.broadcom.com/products/software/api-management/layer7-api-gateways" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/broadcom-layer7.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-14" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"Broadcom Layer7","provider":"Broadcom Layer7","slug":"broadcom-layer7","rating":4,"license":"Proprietary","status":"Pending Review","researchDate":"2022-11","description":"Transform legacy, connect systems and apply consistent security and governance to your APIs. Layer7 Gateways are an extensible, scalable, high-performance gateway to connect your most important data and applications across any combination of cloud, container or on-premises environments. Layer7 Gateways are available as a standalone solution or as part of Layer7 API Management.\n","platformCapabilities":["Gateway","Analytics","Portal","Documentation","Monitoring"],"gatewayCapabilities":["Mediation","Traffic Management","Versioning"],"customCodeSupport":["None"],"upstreamProtocols":["HTTP/1.1"],"downstreamProtocols":["HTTP/1.1"],"deliveryModels":["Customer Managed (Cloud)","Customer Managed (On-Premises)","Hybrid"],"policies":[{"category":"Traffic Management","capabilities":["Content-Based Routing","Dynamic Routing","Load Balancer Routing","Quota","Quota Reset","Rate Limiting","Request Size Limiting","Throttling"]},{"category":"Mediation","capabilities":["CORS","Request Size Limit","Request Termination","Request Transformation","Response Transformation","URL Rewriting"]},{"category":"Security","capabilities":["AWS Cognito","API Key","API Key Authentication","Access Control Lists (ACL)","Basic Authentication","CORS","IP Access Rules","Message Inspection","Mutual TLS","OAuth 1.0","OAuth 2.0","OpenID Connect"]},{"category":"Extensions","capabilities":["AWS Lambda integrations","AWS service integrations","HTTP Callout","HTTP integrations","Integration Server services","Azure","Google Cloud"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://www.broadcom.com/products/software/api-management/layer7-api-gateways"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://www.broadcom.com/products/software/api-management/layer7-api-gateways"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/broadcom-layer7.png"}]}</textarea>
+        <h2>Broadcom Layer7</h2>
+        <p>Transform legacy, connect systems and apply consistent security and governance to your APIs. Layer7 Gateways are an extensible, scalable, high-performance gateway to connect your most important data and applications across any combination of cloud, container or on-premises environments. Layer7 Gateways are available as a standalone solution or as part of Layer7 API Management.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Gateway</li>
+        
+            <li>Analytics</li>
+        
+            <li>Portal</li>
+        
+            <li>Documentation</li>
+        
+            <li>Monitoring</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Mediation</li>
+        
+            <li>Traffic Management</li>
+        
+            <li>Versioning</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>Customer Managed (Cloud)</li>
+        
+            <li>Customer Managed (On-Premises)</li>
+        
+            <li>Hybrid</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Content-Based Routing</li>
+            
+                <li>Dynamic Routing</li>
+            
+                <li>Load Balancer Routing</li>
+            
+                <li>Quota</li>
+            
+                <li>Quota Reset</li>
+            
+                <li>Rate Limiting</li>
+            
+                <li>Request Size Limiting</li>
+            
+                <li>Throttling</li>
+            
+            </ul> 
+        
+            <h4>Mediation</h4>
+            <ul>
+            
+                <li>CORS</li>
+            
+                <li>Request Size Limit</li>
+            
+                <li>Request Termination</li>
+            
+                <li>Request Transformation</li>
+            
+                <li>Response Transformation</li>
+            
+                <li>URL Rewriting</li>
+            
+            </ul> 
+        
+            <h4>Security</h4>
+            <ul>
+            
+                <li>AWS Cognito</li>
+            
+                <li>API Key</li>
+            
+                <li>API Key Authentication</li>
+            
+                <li>Access Control Lists (ACL)</li>
+            
+                <li>Basic Authentication</li>
+            
+                <li>CORS</li>
+            
+                <li>IP Access Rules</li>
+            
+                <li>Message Inspection</li>
+            
+                <li>Mutual TLS</li>
+            
+                <li>OAuth 1.0</li>
+            
+                <li>OAuth 2.0</li>
+            
+                <li>OpenID Connect</li>
+            
+            </ul> 
+        
+            <h4>Extensions</h4>
+            <ul>
+            
+                <li>AWS Lambda integrations</li>
+            
+                <li>AWS service integrations</li>
+            
+                <li>HTTP Callout</li>
+            
+                <li>HTTP integrations</li>
+            
+                <li>Integration Server services</li>
+            
+                <li>Azure</li>
+            
+                <li>Google Cloud</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.broadcom.com/products/software/api-management/layer7-api-gateways" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.broadcom.com/products/software/api-management/layer7-api-gateways" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    							
+
+        <a href="https://www.fiorano.com/products/fiorano_api_management" target="_blank"><img src="https://kinlane-productions2.s3.amazonaws.com/api-gateways/fiorano.png" width="400" align="right" style="padding: 15px;"></a>
+        <textarea id="gateway-19" rows="1" cols="5">{"class":["gateway"],"properties":{"name":"Fiorano","provider":"Fiorano","slug":"fiorano","rating":4,"license":"Proprietary","status":"Pending Review","researchDate":"2022-11","description":"APIs are the backbone of the digital ecosystem and critical to reaching digital maturity. Accelerate development velocity, respond to digital disruption, improve customer experience and scale your enterprise – all with Fiorano.\n","platformCapabilities":["Gateway","Analytics","Monitoring"],"gatewayCapabilities":["Mediation","Traffic Management","Versioning"],"customCodeSupport":["None"],"upstreamProtocols":["HTTP/1.1"],"downstreamProtocols":["HTTP/1.1"],"deliveryModels":["SaaS"],"policies":[{"category":"Traffic Management","capabilities":["Rate Limiting"]}]},"links":[{"rel":["urn:gateway:product"],"title":"Product","href":"https://www.fiorano.com/products/fiorano_api_management"},{"rel":["urn:gateway:docs"],"title":"Documentation","href":"https://www.fiorano.com/products/fiorano_api_management"},{"rel":["urn:gateway:logo"],"title":"Logo","href":"/images/gateways/name.svg"},{"rel":["urn:gateway:screenshot"],"title":"Screenshot","href":"https://kinlane-productions2.s3.amazonaws.com/api-gateways/fiorano.png"}]}</textarea>
+        <h2>Fiorano</h2>
+        <p>APIs are the backbone of the digital ecosystem and critical to reaching digital maturity. Accelerate development velocity, respond to digital disruption, improve customer experience and scale your enterprise – all with Fiorano.
+</p>
+
+        <h3>Platform Capabilities</h3>
+        <p>These are the wider capabilities beyond the gateway they offer.</p>
+        <ul>
+        
+            <li>Gateway</li>
+        
+            <li>Analytics</li>
+        
+            <li>Monitoring</li>
+        
+        </ul>
+
+        <h3>Gateway Capabilities</h3>
+        <p>These are the capabilities the gateway supports.</p>
+        <ul>
+        
+            <li>Mediation</li>
+        
+            <li>Traffic Management</li>
+        
+            <li>Versioning</li>
+        
+        </ul>    
+        
+        <h3>Upstream Protocols</h3>
+        <p>The different protocols they support upstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>  
+
+        <h3>Downtream Protocols</h3>
+        <p>The different protocols they support downstream.</p>
+        <ul>
+        
+            <li>HTTP/1.1</li>
+        
+        </ul>   
+
+        <h3>Custom Code</h3>
+        <p>If they offer plugin, extension, and custom coding options.</p>
+        <ul>
+        
+            <li>None</li>
+        
+        </ul>         
+        
+        <h3>Delivery Models</h3>
+        <p>These are they ways you can deliver this solution.</p>
+        <ul>
+        
+            <li>SaaS</li>
+        
+        </ul>   
+              
+        <h3>Policies</h3>
+        <p>These are the policies available across the gateway capabilities.</p>
+        
+            <h4>Traffic Management</h4>
+            <ul>
+            
+                <li>Rate Limiting</li>
+            
+            </ul> 
+        
+
+        <h3>API Resources</h3>
+        <table border="0">
+        
+        
+        
+        
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+                    
+            	            
+         
+        	
+                <tr><td>No API Resources</tr></td>
+        	  
+        </table>
+                      
+        <p align="center">
+        	
+            (<a href="https://www.fiorano.com/products/fiorano_api_management" target="_blank">Product</a>)
+        	
+        	
+            (<a href="https://www.fiorano.com/products/fiorano_api_management" target="_blank">Docs</a>)
+        			
+        </p>															
+
+        <hr>	
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+	
+    	
+    	
+    	
+    
+    
+    
+    	
+
+    
+			
+
+		</div>				
+	</div>
+	<div class="col-2"></div>	
+</div>
+
+
+</main>
+
+<footer class="footer mt-auto py-3 bg-light">
+  <div class="container">
+    <span class="text-muted">Footer</span>
+  </div>
+</footer>
+
+<script src="http://localhost:4000/assets/js/bootstrap.js"></script>    
+<script src="http://localhost:4000/assets/js/js-yaml.min.js"></script>   
+  </body>
+</html>
